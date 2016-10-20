@@ -1,12 +1,11 @@
-## Portal Bersepadu Juruteknik Komputer Negeri Perak (JTKPK)
+# Portal Bersepadu - Juruteknik Komputer Negeri Perak (JTKPK)
 
-Repository ini digunakan untuk penambahbaikan bagi Portal Bersepadu
-untuk Juruteknik Komputer Negeri Perak (JTKPK).
+## NOTIS: Repository ini digunakan untuk pembangunan Portal Bersepadu JTKPK.
 
-Sebarang maklumat lanjut, bolehlah berhubung.
+[![Versi Pembangunan](http://img.shields.io/badge/Versi%20Pembangunan-v1.0-orange.svg)]
 
-Zulkifli Mohamed
-Juruteknik Komputer
-SK SERI MANJUNG (ABA1028)
-SERI MANJUNG, PERAK
-zulkifli [at] moe [dot] edu [dot] my
+
+Repository ini mengandungi projek sumber terbuka Framework Laravel yang digunakan dalam pembangunan Portal Bersepadu JTKPK. Sila hubungi untuk maklumat lanjut berkaitan dengan repository ini.
+
+Zulkifli Mohamed.
+zulkifli@moe.edu.my
