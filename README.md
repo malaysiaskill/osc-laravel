@@ -1,5 +1,4 @@
-# jtkpk
-Portal Bersepadu Juruteknik Komputer Negeri Perak (JTKPK)
+## Portal Bersepadu Juruteknik Komputer Negeri Perak (JTKPK)
 
 Repository ini digunakan untuk penambahbaikan bagi Portal Bersepadu
 untuk Juruteknik Komputer Negeri Perak (JTKPK).
