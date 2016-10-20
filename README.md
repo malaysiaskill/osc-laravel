@@ -7,5 +7,5 @@
 
 Repository ini mengandungi projek sumber terbuka Framework Laravel yang digunakan dalam pembangunan Portal Bersepadu JTKPK. Sila hubungi untuk maklumat lanjut berkaitan dengan repository ini.
 
-Zulkifli Mohamed (@putera) :smile:
+Zulkifli Mohamed ( @putera ) :smile:
 zulkifli@moe.edu.my
