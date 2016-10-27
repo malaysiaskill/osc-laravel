@@ -1,11 +1,11 @@
-# Portal Bersepadu - Juruteknik Komputer Negeri Perak (JTKPK)
+# Template Sistem (Web-Based) - Juruteknik Komputer Negeri Perak (JTKPK)
 
-### NOTIS: Repository ini digunakan untuk pembangunan Portal Bersepadu JTKPK. :+1:
+### NOTIS: Repository ini digunakan untuk pembangunan sistem bagi Kumpulan DEV-TEAM JTKPK. :+1:
 
-![Versi Pembangunan](http://img.shields.io/badge/Versi%20Pembangunan-v1.0-orange.svg)
+![Versi Template](http://img.shields.io/badge/Versi%20Template-v0.0.1-orange.svg)
 
-
-Repository ini mengandungi projek sumber terbuka Framework Laravel yang digunakan dalam pembangunan Portal Bersepadu JTKPK. Sila hubungi untuk maklumat lanjut berkaitan dengan repository ini.
+Nota Ringkas:
+Repository ini mengandungi projek sumber terbuka Framework Laravel (PHP) yang digunapakai dalam pembangunan sistem web-based bagi JTKPK. Sila hubungi untuk maklumat lanjut berkaitan dengan repository ini.
 
 Zulkifli Mohamed (@putera)
 SK SERI MANJUNG
