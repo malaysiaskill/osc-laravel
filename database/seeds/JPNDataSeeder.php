@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class jpn_data extends Seeder
+class JPNDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -11,7 +11,7 @@ class jpn_data extends Seeder
      */
     public function run()
     {
-        // JPN PERAK
+        // JPN
         DB::table('jpn')->insert(['KODNEGERI' => '08', 'KODJPN' => '08', 'JPN' => 'JABATAN PENDIDIKAN NEGERI PERAK']);
     }
 }

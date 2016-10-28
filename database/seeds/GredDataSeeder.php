@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 
-class gred_data extends Seeder
+class GredDataSeeder extends Seeder
 {
     /**
      * Run the database seeds.

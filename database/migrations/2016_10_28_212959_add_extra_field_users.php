@@ -15,10 +15,8 @@ class AddExtraFieldUsers extends Migration
     {
         Schema::table('users', function(Blueprint $table)
         {
-            $table->integer('gred');            # Gred Jawatan
-            $table->integer('kod_jabatan');     # Kod Jabatan
-            $table->integer('role');            # Role Pentadbir
-            $table->integer('user_group');      # Kumpulan Pengguna
+            $table->integer('GRED');            # Gred Jawatan
+            $table->integer('KODJABATAN');      # Kod Jabatan
         });
     }
 
@@ -31,10 +29,8 @@ class AddExtraFieldUsers extends Migration
     {
         Schema::table('users', function(Blueprint $table)
         {
-            $table->dropColumn('gred');
-            $table->dropColumn('kod_jabatan');
-            $table->dropColumn('role');
-            $table->dropColumn('user_group');
+            $table->dropColumn('GRED');
+            $table->dropColumn('KODJABATAN');
         });
     }
 }

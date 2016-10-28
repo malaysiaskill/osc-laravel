@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PpdTable extends Migration
+class CreateJpnTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,14 @@ class PpdTable extends Migration
      */
     public function up()
     {
-        Schema::create('ppd', function (Blueprint $table)
+        Schema::create('jpn', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';
 
             $table->increments('id');
-            $table->string('KODJPN');
-            $table->string('KODPPD')->unique();
-            $table->string('PPD');
+            $table->string('KODNEGERI');
+            $table->string('KODJPN')->unique();
+            $table->string('JPN');
         });
     }
 
@@ -31,6 +31,6 @@ class PpdTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ppd');
+        Schema::drop('jpn');
     }
 }

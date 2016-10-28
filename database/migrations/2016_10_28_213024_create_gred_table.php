@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class JpnTable extends Migration
+class CreateGredTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class JpnTable extends Migration
      */
     public function up()
     {
-        Schema::create('jpn', function (Blueprint $table)
+        Schema::create('gred', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';
-
+            
             $table->increments('id');
-            $table->string('KODNEGERI');
-            $table->string('KODJPN')->unique();
-            $table->string('JPN');
+            $table->string('GRED')->unique();
+            $table->string('NAMAJAWATAN');
         });
     }
 
@@ -31,6 +30,6 @@ class JpnTable extends Migration
      */
     public function down()
     {
-        Schema::drop('jpn');
+        Schema::drop('gred');
     }
 }
