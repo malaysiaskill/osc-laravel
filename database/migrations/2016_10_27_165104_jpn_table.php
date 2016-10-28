@@ -16,6 +16,7 @@ class JpnTable extends Migration
         Schema::create('jpn', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';
+
             $table->increments('id');
             $table->string('KODNEGERI');
             $table->string('KODJPN')->unique();

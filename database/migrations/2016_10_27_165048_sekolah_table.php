@@ -16,6 +16,7 @@ class SekolahTable extends Migration
         Schema::create('sekolah', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';
+            
             $table->increments('id');
             $table->string('IDSEKOLAH')->nullable();
             $table->string('KODSEKOLAH')->unique();

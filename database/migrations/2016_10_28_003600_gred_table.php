@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class PpdTable extends Migration
+class GredTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,13 @@ class PpdTable extends Migration
      */
     public function up()
     {
-        Schema::create('ppd', function (Blueprint $table)
+        Schema::create('gred', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';
-
+            
             $table->increments('id');
-            $table->string('KODJPN');
-            $table->string('KODPPD')->unique();
-            $table->string('PPD');
+            $table->string('GRED')->unique();
+            $table->string('NAMAJAWATAN');
         });
     }
 
@@ -31,6 +30,6 @@ class PpdTable extends Migration
      */
     public function down()
     {
-        Schema::drop('ppd');
+        Schema::drop('gred');
     }
 }
