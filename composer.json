@@ -6,7 +6,13 @@
     "type": "project",
     "require": {
         "php": ">=5.6.4",
-        "laravel/framework": "5.3.*"
+        "laravel/framework": "5.3.*",
+        "tcg/voyager": "^0.9.12",
+        "dompdf/dompdf": "^0.7.0",
+        "facebook/graph-sdk": "^5.4",
+        "abraham/twitteroauth": "^0.7.0",
+        "emojione/emojione": "^2.2",
+        "google/recaptcha": "^1.1"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
