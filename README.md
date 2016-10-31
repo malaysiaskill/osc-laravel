@@ -34,9 +34,9 @@ git clone https://github.com/putera/jtkpk.git
 DB_CONNECTION=mysql
 DB_HOST=localhost
 DB_PORT=3306
-DB_DATABASE=**<NAMA_DATABASE_ANDA>**
-DB_USERNAME=**<DATABASE_USER>**
-DB_PASSWORD=**<DATABASE_PASSWORD>**
+DB_DATABASE=<NAMA_DATABASE_ANDA>
+DB_USERNAME=<DATABASE_USER>
+DB_PASSWORD=<DATABASE_PASSWORD>
 ```
 
 **Langkah 3 :** Migrate Pangkalan Data
@@ -55,15 +55,15 @@ php artisan serve
 ```
 
 ```
-**Layari : ** http://localhost:8000
+Layari : http://localhost:8000
 ```
 
 Itu sahaja ! Mudah kan ?
 
 **Pengguna & Kata Laluan Administrator default adalah :**
 ```
-**ID Pengguna/Email :** admin@domain.com
-**Kata Laluan :** password
+ID Pengguna/Email : admin@domain.com
+Kata Laluan : password
 ```
 
 Sebarang masalah boleh berhubung terus dengan saudara Zulkifli Mohamed [(@putera)](https://github.com/putera). Terima kasih.
