@@ -16,6 +16,6 @@ class DatabaseSeeder extends Seeder
         $this->call(JPNDataSeeder::class);
         $this->call(PPDDataSeeder::class);
         $this->call(SekolahDataSeeder::class);
-        $this->call(UserDataSeeder::class);
+        $this->call(UsersDataSeeder::class);
     }
 }
