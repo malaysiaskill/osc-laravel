@@ -1,67 +1,64 @@
-@extends('layouts.app')
+@extends('master.single')
+@section('title', 'Reset Kata Laluan')
+@section('site.description', 'Reset Kata Laluan')
 
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reset Password</div>
+<div class="bg-white push-50-t">
+    <div class="content content-boxed overflow-hidden">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+                <div class="push-50 animated fadeIn">
+                    <!-- Reset Password Title -->
+                    <div class="text-center">
+                        <img src="{{ asset('/img/logo.png') }}" width="100">
+                        <p class="text-muted push-10-t font-w300">Sistem Bersepadu Juruteknik Komputer Negeri Perak (JTKPK)</p>
+                    </div>
+                    <!-- END Reset Password Title -->
 
-                <div class="panel-body">
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/password/reset') }}">
+                    <!-- Reset Password Form -->
+                    <form class="js-validation-reset-password form-horizontal push-30-t" action="{{ url('/password/reset') }}" method="post">
                         {{ csrf_field() }}
 
                         <input type="hidden" name="token" value="{{ $token }}">
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ $email or old('email') }}" required autofocus>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required>
-
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group{{ $errors->has('password_confirmation') ? ' has-error' : '' }}">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-
-                                @if ($errors->has('password_confirmation'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password_confirmation') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
                         <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Reset Password
+                            <div class="col-xs-12">
+                                <div class="form-material form-material-success">
+                                    <input class="form-control" type="email" id="email" name="email" placeholder="Alamat e-mel anda" required>
+                                    <label for="email">Alamat E-mel</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <div class="form-material form-material-success">
+                                    <input class="form-control" type="password" id="password" name="password" placeholder="Kata laluan anda">
+                                    <label for="password">Kata Laluan</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <div class="form-material form-material-success">
+                                    <input class="form-control" type="password" id="password-confirm" name="password_confirmation" placeholder="Sahkan sekali lagi">
+                                    <label for="password-confirm">Pengesahan Kata Laluan</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group push-30-t">
+                            <div class="col-xs-6">
+                                <button class="btn btn-block btn-primary" type="submit">
+                                    <i class="fa fa-send push-5-r"></i>Reset Kata Laluan
                                 </button>
+                            </div>
+                            <div class="col-xs-6">
+                                <a href="{{ url('/login') }}" class="btn btn-block btn-success">
+                                    <i class="fa fa-sign-in push-5-r"></i>Log Masuk
+                                </a>
                             </div>
                         </div>
                     </form>
+                    <!-- END Reset Password Form -->
                 </div>
             </div>
         </div>

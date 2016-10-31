@@ -1203,6 +1203,176 @@ var App = function() {
         });
     };
 
+    var initValidationLogin = function(){
+        jQuery('.js-validation-login').validate({
+            errorClass: 'help-block text-right animated fadeInDown',
+            errorElement: 'div',
+            errorPlacement: function(error, e) {
+                jQuery(e).parents('.form-group > div').append(error);
+            },
+            highlight: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error').addClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            success: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            rules: {
+                'email': {
+                    required: true,
+                    email: true
+                },
+                'password': {
+                    required: true,
+                    minlength: 6
+                }
+            },
+            messages: {
+                'email': {
+                    required: 'Sila masukkan alamat e-mel anda',
+                    email: 'Sila masukkan alamat e-mel anda dengan betul (user@domain)'
+                },
+                'password': {
+                    required: 'Sila masukkan kata laluan anda',
+                    minlength: 'Kata laluan anda hendaklah minima 6 aksara'
+                }
+            }
+        });
+    };
+
+    var initValidationRegister = function(){
+        jQuery('.js-validation-register').validate({
+            errorClass: 'help-block text-right animated fadeInDown',
+            errorElement: 'div',
+            errorPlacement: function(error, e) {
+                jQuery(e).parents('.form-group > div').append(error);
+            },
+            highlight: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error').addClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            success: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            rules: {
+                'name': {
+                    required: true
+                },
+                'email': {
+                    required: true,
+                    email: true
+                },
+                'password': {
+                    required: true,
+                    minlength: 6
+                },
+                'password_confirmation': {
+                    required: true,
+                    equalTo: '#password'
+                },
+                'register-terms': {
+                    required: true
+                }
+            },
+            messages: {
+                'name': {
+                    required: 'Sila masukkan nama penuh anda'
+                },
+                'email': {
+                    required: 'Sila masukkan alamat e-mel anda',
+                    email: 'Sila masukkan alamat e-mel anda dengan betul (user@domain)'
+                },
+                'password': {
+                    required: 'Sila masukkan kata laluan anda',
+                    minlength: 'Kata laluan anda hendaklah minima 6 aksara'
+                },
+                'password_confirmation': {
+                    required: 'Sila sahkan kata laluan anda',
+                    equalTo: 'Sila masukkan nilai yang sama seperti di atas'
+                },
+                'register-terms': 'Sila bersetuju dengan terma dan syarat!'
+            }
+        });
+    };
+
+    var initValidationReminder = function(){
+        jQuery('.js-validation-reminder').validate({
+            errorClass: 'help-block text-right animated fadeInDown',
+            errorElement: 'div',
+            errorPlacement: function(error, e) {
+                jQuery(e).parents('.form-group > div').append(error);
+            },
+            highlight: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error').addClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            success: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            rules: {
+                'email': {
+                    required: true,
+                    email: true
+                }
+            },
+            messages: {
+                'email': {
+                    required: 'Sila masukkan alamat e-mel anda',
+                    email: 'Sila masukkan alamat e-mel anda dengan betul (user@domain)'
+                }
+            }
+        });
+    };
+
+    var initValidationReset = function(){
+        jQuery('.js-validation-reset-password').validate({
+            errorClass: 'help-block text-right animated fadeInDown',
+            errorElement: 'div',
+            errorPlacement: function(error, e) {
+                jQuery(e).parents('.form-group > div').append(error);
+            },
+            highlight: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error').addClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            success: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            rules: {
+                'email': {
+                    required: true,
+                    email: true
+                },
+                'password': {
+                    required: true,
+                    minlength: 6
+                },
+                'password_confirmation': {
+                    required: true,
+                    equalTo: '#password'
+                }
+            },
+            messages: {
+                'email': {
+                    required: 'Sila masukkan alamat e-mel anda',
+                    email: 'Sila masukkan alamat e-mel anda dengan betul (user@domain)'
+                },
+                'password': {
+                    required: 'Sila masukkan kata laluan anda',
+                    minlength: 'Kata laluan anda hendaklah minima 6 aksara'
+                },
+                'password_confirmation': {
+                    required: 'Sila sahkan kata laluan anda',
+                    equalTo: 'Sila masukkan nilai yang sama seperti di atas'
+                }
+            }
+        });
+    };
+
     return {
         init: function($func) {
             switch ($func) {
@@ -1248,6 +1418,11 @@ var App = function() {
                     uiScrollTo();
                     uiYearCopy();
                     uiLoader('hide');
+
+                    initValidationLogin();
+                    initValidationRegister();
+                    initValidationReminder();
+                    initValidationReset();
             }
         },
         layout: function($mode) {

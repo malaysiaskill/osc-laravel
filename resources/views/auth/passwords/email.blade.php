@@ -1,44 +1,52 @@
-@extends('layouts.app')
+@extends('master.single')
+@section('title', 'Lupa Kata Laluan')
+@section('site.description', 'Lupa Kata Laluan')
 
-<!-- Main Content -->
 @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Reset Password</div>
-                <div class="panel-body">
+<div class="bg-white push-50-t">
+    <div class="content content-boxed overflow-hidden">
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+                <div class="push-50 animated fadeIn">
+                    <!-- Reset Password Title -->
+                    <div class="text-center">
+                        <img src="{{ asset('/img/logo.png') }}" width="100">
+                        <p class="text-muted push-10-t font-w300">Sistem Bersepadu Juruteknik Komputer Negeri Perak (JTKPK)</p>
+                    </div>
+                    <!-- END Reset Password Title -->
+
                     @if (session('status'))
                         <div class="alert alert-success">
                             {{ session('status') }}
                         </div>
                     @endif
 
-                    <form class="form-horizontal" role="form" method="POST" action="{{ url('/password/email') }}">
+                    <!-- Reset Password Form -->
+                    <form class="js-validation-reminder form-horizontal push-30-t" action="{{ url('/password/email') }}" method="post">
                         {{ csrf_field() }}
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
-
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <div class="form-material form-material-primary floating">
+                                    <input class="form-control" type="email" id="email" name="email" value="{{ old('email') }}" required autofocus>
+                                    <label for="email">Alamat E-mel</label>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Send Password Reset Link
+                        <div class="form-group push-30-t">
+                            <div class="col-xs-6">
+                                <button class="btn btn-block btn-primary" type="submit">
+                                    <i class="fa fa-send push-5-r"></i>Reset Kata Laluan
                                 </button>
+                            </div>
+                            <div class="col-xs-6">
+                                <a href="{{ url('/login') }}" class="btn btn-block btn-success">
+                                    <i class="fa fa-sign-in push-5-r"></i>Log Masuk
+                                </a>
                             </div>
                         </div>
                     </form>
+                    <!-- END Reset Password Form -->
                 </div>
             </div>
         </div>
