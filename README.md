@@ -12,7 +12,7 @@ Template sistem ini mengandungi:
 
 * Modul Pendaftaran Pengguna bagi sistem (Full authentication).
 * Maklumat JPN, PPD, dan Sekolah di dalam Negeri PERAK sahaja (buat masa ini).
-* Dimurnikan lagi dengan template Themes (Kredit @putera) yang sangat cantik dan fluid untuk mobile.
+* Dimurnikan lagi dengan template Themes (Kredit [@putera](https://github.com/putera)) yang sangat cantik dan fluid untuk mobile.
 
 Plugins yang telah dimasukkan antaranya ialah:
 
