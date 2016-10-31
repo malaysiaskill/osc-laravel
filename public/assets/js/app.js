@@ -1373,6 +1373,68 @@ var App = function() {
         });
     };
 
+    var initValidationProfile = function(){
+        jQuery('.js-validation-profile').validate({
+            errorClass: 'help-block text-right animated fadeInDown',
+            errorElement: 'div',
+            errorPlacement: function(error, e) {
+                jQuery(e).parents('.form-group > div').append(error);
+            },
+            highlight: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error').addClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            success: function(e) {
+                jQuery(e).closest('.form-group').removeClass('has-error');
+                jQuery(e).closest('.help-block').remove();
+            },
+            rules: {
+                'name': {
+                    required: true
+                },
+                'email': {
+                    required: true,
+                    email: true
+                },
+                'gred': {
+                    required: true
+                },
+                'jabatan': {
+                    required: true
+                },
+                'pwd': {
+                    minlength: 6
+                },
+                'rpwd': {
+                    minlength: 6,
+                    equalTo: '#pwd'
+                }
+            },
+            messages: {
+                'name': {
+                    required: 'Sila masukkan nama penuh anda'
+                },
+                'email': {
+                    required: 'Sila masukkan alamat e-mel anda',
+                    email: 'Sila masukkan alamat e-mel anda dengan betul (user@domain)'
+                },
+                'gred': {
+                    required: 'Sila pilih gred jawatan anda'
+                },
+                'jabatan': {
+                    required: 'Sila pilih jabatan anda'
+                },
+                'pwd': {
+                    minlength: 'Kata laluan anda hendaklah minima 6 aksara'
+                },
+                'rpwd': {
+                    minlength: 'Kata laluan anda hendaklah minima 6 aksara',
+                    equalTo: 'Sila masukkan nilai yang sama seperti di atas'
+                }
+            }
+        });
+    };
+
     return {
         init: function($func) {
             switch ($func) {
@@ -1423,6 +1485,7 @@ var App = function() {
                     initValidationRegister();
                     initValidationReminder();
                     initValidationReset();
+                    initValidationProfile();
             }
         },
         layout: function($mode) {

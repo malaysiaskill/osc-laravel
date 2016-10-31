@@ -21,8 +21,13 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function Index()
     {
         return view('home');
+    }
+
+    public function AccessDenied()
+    {
+        return view('errors.access-denied');
     }
 }

@@ -116,6 +116,11 @@
                                         <i class="si si-speedometer"></i><span class="sidebar-mini-hide">Dashboard</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a class="" href="{{ url('/profil') }}">
+                                        <i class="fa fa-user"></i><span class="sidebar-mini-hide">Profil</span>
+                                    </a>
+                                </li>
 
                                 <!-- MODULES MENU -->
 

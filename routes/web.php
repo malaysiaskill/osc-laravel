@@ -11,8 +11,25 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
-
+Route::get('/', 'HomeController@Index');
 Auth::routes();
+Route::get('/home', 'HomeController@Index');
+Route::get('/access-denied', 'HomeController@AccessDenied');
 
-Route::get('/home', 'HomeController@index');
+/**
+	
+	Pentadbir Sistem
+
+*/
+Route::group(['middleware' => ['role:administrator']], function()
+{
+	# Mengawalselia Pengguna
+	Route::get('/admin', 'AdminController@Index');
+	Route::get('/admin/users', 'AdminController@Users');
+});
+
+/**
+	Juruteknik Profil
+*/
+Route::get('/profil', 'JTKController@Profil');
+Route::put('/profil', 'JTKController@SaveProfil');
