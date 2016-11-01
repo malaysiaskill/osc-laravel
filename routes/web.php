@@ -33,6 +33,8 @@ Route::group(['middleware' => ['role:administrator']], function()
 
 	# Mengawalselia Pengguna
 	Route::get('/admin/users', 'AdminController@Users');
+	Route::post('/admin/users', 'AdminController@SaveUser');
+	Route::post('/admin/users/getuser/{id}', 'AdminController@GetUser');
 	Route::get('/admin/users/{id}/delete', 'AdminController@DeleteUser');
 });
 

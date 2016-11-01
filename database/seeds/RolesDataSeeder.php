@@ -12,11 +12,11 @@ class RolesDataSeeder extends Seeder
     public function run()
     {
         // Roles
-        DB::table('roles')->insert(['role' => 'super-admin', 'role_name' => 'Super Administrator']);
-        DB::table('roles')->insert(['role' => 'admin', 'role_name' => 'Administrator']);
-        DB::table('roles')->insert(['role' => 'monitor', 'role_name' => 'Monitoring User (View Only)']);
-        DB::table('roles')->insert(['role' => 'jpn', 'role_name' => 'JPN User']);
-        DB::table('roles')->insert(['role' => 'ppd', 'role_name' => 'PPD User']);
-        DB::table('roles')->insert(['role' => 'user', 'role_name' => 'Normal User']);
+        DB::table('roles')->insert(['role' => 'super-admin', 'role_name' => 'Pentadbir Tertinggi']);
+        DB::table('roles')->insert(['role' => 'admin', 'role_name' => 'Pentadbir']);
+        DB::table('roles')->insert(['role' => 'monitor', 'role_name' => 'Pemerhati (Lihat Sahaja)']);
+        DB::table('roles')->insert(['role' => 'jpn', 'role_name' => 'Pengguna JPN']);
+        DB::table('roles')->insert(['role' => 'ppd', 'role_name' => 'Pengguna PPD']);
+        DB::table('roles')->insert(['role' => 'user', 'role_name' => 'Pengguna Juruteknik']);
     }
 }

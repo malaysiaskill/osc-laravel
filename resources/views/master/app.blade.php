@@ -54,6 +54,11 @@
         <link rel="stylesheet" id="css-main" href="/assets/css/oneui.css">
         <link rel="stylesheet" href="/assets/css/custom.css">
         <!-- END Stylesheets -->
+        <script>
+            window.Laravel = <?php echo json_encode([
+                'csrfToken' => csrf_token(),
+            ]); ?>
+        </script>
     </head>
     <body>
         <div id="page-container" class="sidebar-l sidebar-mini sidebar-o side-scroll header-navbar-fixed enable-cookies">
@@ -136,6 +141,9 @@
                                         @endif
                                         <li>
                                             <a class="{{ (Request::path()=='admin/users') ? 'active':'' }}" href="{{ url('/admin/users') }}">Pengguna</a>
+                                        </li>
+                                        <li>
+                                            <a class="{{ (Request::path()=='admin/usergroups') ? 'active':'' }}" href="{{ url('/admin/usergroups') }}">Kumpulan Pengguna</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -246,6 +254,8 @@
         <script src="/assets/js/core/jquery.placeholder.min.js"></script>
         <script src="/assets/js/core/js.cookie.min.js"></script>
         <script src="/assets/js/app.js"></script>
+        <script src="/js/ajax.js"></script>
+        <script src="/js/custom.js"></script>
 
         <!-- Page JS Plugins -->
         <script src="/assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
@@ -255,6 +265,9 @@
         <script src="/assets/js/plugins/bootstrap-colorpicker/bootstrap-colorpicker.min.js"></script>
         <script src="/assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
         <script src="/assets/js/plugins/select2/select2.full.min.js"></script>
+        <script type="text/javascript">
+            $.fn.modal.Constructor.prototype.enforceFocus = function () {};
+        </script>
         <script src="/assets/js/plugins/masked-inputs/jquery.maskedinput.min.js"></script>
         <script src="/assets/js/plugins/jquery-auto-complete/jquery.auto-complete.min.js"></script>
         <script src="/assets/js/plugins/ion-rangeslider/js/ion.rangeSlider.min.js"></script>

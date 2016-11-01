@@ -53,6 +53,77 @@ class AdminController extends Controller
     {
     	return view('admin.users', ['users' => User::all()]);
     }
+    public function SaveUser(Request $r)
+    {
+        if ($r->_uid != 0 || $r->_uid != '0')
+        {
+            # Update User Data
+            $user = User::find($r->_uid);
+            $user->name = $r->_name;
+            $user->email = $r->_email;
+            if (strlen($r->_pwd) != 0) {
+                $user->password = bcrypt($r->_pwd);
+            }
+            $user->role = $r->_usergroups;
+            $user->gred = $r->_gred;
+            if (strtolower($r->_usergroups) == 'jpn') {
+                $user->kod_jabatan = $r->_kodjpn;
+            } else if (strtolower($r->_usergroups) == 'ppd') {
+                $user->kod_jabatan = $r->_kodjpn;
+            } else if (strtolower($r->_usergroups) == 'user') {
+                $user->kod_jabatan = $r->_kodsek;
+            } else {
+                // nothing
+            }
+            $user->save();
+        }
+        else
+        {
+            # Create New User
+            $user = new User;
+            $user->name = $r->_name;
+            $user->email = $r->_email;
+            $user->password = bcrypt($r->_pwd);
+            $user->role = $r->_usergroups;
+            $user->gred = $r->_gred;
+            if (strtolower($r->_usergroups) == 'jpn') {
+                $user->kod_jabatan = $r->_kodjpn;
+            } else if (strtolower($r->_usergroups) == 'ppd') {
+                $user->kod_jabatan = $r->_kodjpn;
+            } else if (strtolower($r->_usergroups) == 'user') {
+                $user->kod_jabatan = $r->_kodsek;
+            } else {
+                // nothing
+            }
+            $user->save();
+        }
+
+        return redirect('/admin/users');
+    }
+    public function GetUser(Request $r, $id)
+    {
+        $user = User::find($id);
+        $name = $user->name;
+        $email = $user->email;
+        $role = $user->role;
+        $gred = $user->gred;
+        $kodjab = $user->kod_jabatan;
+        
+        echo "$('#_uid').val('$id');";
+        echo "$('#UserDialog').modal('show');";
+
+        echo "$('#_name').val('$name');";
+        echo "$('#_email').val('$email');";
+        echo "$('#_usergroups').val(\"$role\").trigger(\"change\");";
+        echo "$('#_gred').val(\"$gred\").trigger(\"change\");";
+        if (strtolower($role) == 'jpn') {
+            echo "$('#_kodjpn').val(\"$kodjab\").trigger(\"change\");";
+        } else if (strtolower($role) == 'ppd') {
+            echo "$('#_kodppd').val(\"$kodjab\").trigger(\"change\");";
+        } else if (strtolower($role) == 'user') {
+            echo "$('#_kodsek').val(\"$kodjab\").trigger(\"change\");";
+        } else {}
+    }
     public function DeleteUser($id)
     {
         $package = User::destroy($id);
