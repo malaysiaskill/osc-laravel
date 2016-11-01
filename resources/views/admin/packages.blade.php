@@ -70,7 +70,7 @@ $('#Packages').DataTable({ responsive: true });
                                         </span>
                                     @endif
                                 </td>
-                                <td class="text-center" width="150">
+                                <td class="text-center" width="100">
                                     @if ($package->package_status==1)
                                         <a href="{{ url('/admin/packages/'.$package->id.'/deactivate') }}" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Lumpuhkan Pakej">
                                             <i class="fa fa-arrow-circle-down"></i>
