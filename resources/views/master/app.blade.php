@@ -46,11 +46,13 @@
         <link rel="stylesheet" href="/assets/js/plugins/ion-rangeslider/css/ion.rangeSlider.skinHTML5.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/dropzonejs/dropzone.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css">
+        <link rel="stylesheet" href="/assets/js/plugins/datatables/jquery.dataTables.min.css">
         @yield('css')
 
         <!-- Bootstrap and OneUI CSS framework -->
         <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
         <link rel="stylesheet" id="css-main" href="/assets/css/oneui.css">
+        <link rel="stylesheet" href="/assets/css/custom.css">
         <!-- END Stylesheets -->
     </head>
     <body>
@@ -112,17 +114,43 @@
                         <div class="side-content">
                             <ul class="nav-main">
                                 <li>
-                                    <a class="" href="{{ url('/') }}">
+                                    <a class="{{ (Request::path()=='/' || Request::path()=='home') ? 'active':'' }}" href="{{ url('/') }}">
                                         <i class="si si-speedometer"></i><span class="sidebar-mini-hide">Dashboard</span>
                                     </a>
                                 </li>
                                 <li>
-                                    <a class="" href="{{ url('/profil') }}">
+                                    <a class="{{ (Request::path()=='profil') ? 'active':'' }}" href="{{ url('/profil') }}">
                                         <i class="fa fa-user"></i><span class="sidebar-mini-hide">Profil</span>
                                     </a>
                                 </li>
+                                @if (Auth::user()->role == 'super-admin' || Auth::user()->role == 'admin')
+                                <li>
+                                    <a class="nav-submenu" data-toggle="nav-submenu" href="#">
+                                        <i class="si si-support"></i><span class="sidebar-mini-hide">Pentadbiran</span>
+                                    </a>
+                                    <ul>
+                                        @if (Auth::user()->role == 'super-admin')
+                                            <li>
+                                                <a class="{{ (Request::path()=='admin/packages') ? 'active':'' }}" href="{{ url('/admin/packages') }}">Pakej Sistem</a>
+                                            </li>
+                                        @endif
+                                        <li>
+                                            <a class="{{ (Request::path()=='admin/users') ? 'active':'' }}" href="{{ url('/admin/users') }}">Pengguna</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                @endif
 
-                                <!-- MODULES MENU -->
+                                <!-- PAKEJ MENU -->
+                                @foreach (App\Packages::all() as $package)
+                                    @if ($package->package_status == 1)
+                                        <li>
+                                            <a class="{{ (Request::path() == substr($package->package_url,1)) ? 'active':'' }}" href="{{ url(''.$package->package_url.'') }}">
+                                                <i class="fa {{ $package->package_icon_text }}"></i><span class="sidebar-mini-hide">{{ $package->package_title }}</span>
+                                            </a>
+                                        </li>
+                                    @endif
+                                @endforeach
 
                                 <li>
                                     <a class="" href="{{ url('/logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
@@ -232,6 +260,8 @@
         <script src="/assets/js/plugins/ion-rangeslider/js/ion.rangeSlider.min.js"></script>
         <script src="/assets/js/plugins/dropzonejs/dropzone.min.js"></script>
         <script src="/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.js"></script>
+        <script src="/assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
+        <script src="/assets/js/pages/base_tables_datatables.js"></script>
         @yield('js')
 
         <script>

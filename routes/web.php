@@ -23,9 +23,17 @@ Route::get('/access-denied', 'HomeController@AccessDenied');
 */
 Route::group(['middleware' => ['role:administrator']], function()
 {
+	/**
+		Super Administrator Only
+	*/
+	Route::get('/admin/packages', 'AdminController@Packages');
+	Route::get('/admin/packages/{id}/activate', 'AdminController@ActivatePackages');
+	Route::get('/admin/packages/{id}/deactivate', 'AdminController@DeactivatePackages');
+	Route::get('/admin/packages/{id}/delete', 'AdminController@DeletePackages');
+
 	# Mengawalselia Pengguna
-	Route::get('/admin', 'AdminController@Index');
 	Route::get('/admin/users', 'AdminController@Users');
+	Route::get('/admin/users/{id}/delete', 'AdminController@DeleteUser');
 });
 
 /**

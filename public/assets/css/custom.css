@@ -1,0 +1,415 @@
+.font-s8 {
+  font-size: 8px !important;
+}
+.font-s9 {
+  font-size: 9px !important;
+}
+.font-s10 {
+  font-size: 10px !important;
+}
+.font-s11 {
+  font-size: 11px !important;
+}
+
+.nopadding {
+  padding: 0;
+}
+.padding-5-all {
+  padding: 5px !important;
+}
+.padding-5 {
+  padding-bottom: 5px !important;
+}
+.padding-5-t {
+  padding-top: 5px !important;
+}
+.padding-5-r {
+  padding-right: 5px !important;
+}
+.padding-5-l {
+  padding-left: 5px !important;
+}
+.padding-10-all {
+  padding: 10px !important;
+}
+.padding-10 {
+  padding-bottom: 10px !important;
+}
+.padding-10-t {
+  padding-top: 10px !important;
+}
+.padding-10-r {
+  padding-right: 10px !important;
+}
+.padding-10-l {
+  padding-left: 10px !important;
+}
+.padding-15-all {
+  padding: 15px !important;
+}
+.padding-15 {
+  padding-bottom: 15px !important;
+}
+.padding-15-t {
+  padding-top: 15px !important;
+}
+.padding-15-r {
+  padding-right: 15px !important;
+}
+.padding-15-l {
+  padding-left: 15px !important;
+}
+.padding-20-all {
+  padding: 20px !important;
+}
+.padding-20 {
+  padding-bottom: 20px !important;
+}
+.padding-20-t {
+  padding-top: 20px !important;
+}
+.padding-20-r {
+  padding-right: 20px !important;
+}
+.padding-20-l {
+  padding-left: 20px !important;
+}
+.padding-30-all {
+  padding: 30px !important;
+}
+.padding-30 {
+  padding-bottom: 30px !important;
+}
+.padding-30-t {
+  padding-top: 30px !important;
+}
+.padding-30-r {
+  padding-right: 30px !important;
+}
+.padding-30-l {
+  padding-left: 30px !important;
+}
+.padding-50-all {
+  padding: 50px !important;
+}
+.padding-50 {
+  padding-bottom: 50px !important;
+}
+.padding-50-t {
+  padding-top: 50px !important;
+}
+.padding-50-r {
+  padding-right: 50px !important;
+}
+.padding-50-l {
+  padding-left: 50px !important;
+}
+.padding-100-all {
+  padding: 100px !important;
+}
+.padding-100 {
+  padding-bottom: 100px !important;
+}
+.padding-100-t {
+  padding-top: 100px !important;
+}
+.padding-100-r {
+  padding-right: 100px !important;
+}
+.padding-100-l {
+  padding-left: 100px !important;
+}
+.padding-150-all {
+  padding: 150px !important;
+}
+.padding-150 {
+  padding-bottom: 150px !important;
+}
+.padding-150-t {
+  padding-top: 150px !important;
+}
+.padding-150-r {
+  padding-right: 150px !important;
+}
+.padding-150-l {
+  padding-left: 150px !important;
+}
+
+/***** ADDED BY ZUL *****/
+.img-front-ads {
+  display: inline-block !important;
+}
+.online-64 {
+  border-radius: 64px;
+  display: inline-block;;
+  border: 2px solid #5CB85C;
+  padding: 2px;
+}
+.offline-64 {
+  border-radius: 64px;
+  display: inline-block;;
+  border: 2px solid #999999;
+  padding: 2px;
+}
+/***** LOCKED SCREEN ********/
+
+.locked {
+    background: rgba(0,0,0,0.75);
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+}
+
+.lockedpanel {
+    width: 280px;
+    margin: 10% auto 0 auto;
+    text-align: center;
+    background-color: #fff;
+    padding: 20px;
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.lockedpanel .loginuser {
+    text-align: center;
+}
+
+.lockedpanel .logged {
+    margin-top: 20px;
+}
+
+.lockedpanel .logged h4 {
+    margin: 0;
+    font-size: 21px;
+    color: #333;
+}
+
+.lockedpanel form {
+    margin-top: 20px;
+}
+
+.lockedpanel form .btn {
+    display: block;
+    margin-top: 10px;
+}
+.outline-333 {
+    -webkit-text-stroke: 1px #333333;
+    text-shadow:
+   -1px -1px 0 #333,  
+    1px -1px 0 #333,
+    -1px 1px 0 #333,
+     1px 1px 0 #333;
+}
+.outline-f9 {
+    -webkit-text-stroke: 1px #f9f9f9;
+    text-shadow:
+   -1px -1px 0 #f9f9f9,  
+    1px -1px 0 #f9f9f9,
+    -1px 1px 0 #f9f9f9,
+     1px 1px 0 #f9f9f9;
+}
+
+.bg-primary-dark-op-10 {
+  background-color: rgba(62, 74, 89, 0.1);
+}
+.bg-primary-dark-op-20 {
+  background-color: rgba(62, 74, 89, 0.2);
+}
+.bg-primary-dark-op-30 {
+  background-color: rgba(62, 74, 89, 0.3);
+}
+.bg-primary-dark-op-40 {
+  background-color: rgba(62, 74, 89, 0.4);
+}
+.bg-primary-dark-op-50 {
+  background-color: rgba(62, 74, 89, 0.5);
+}
+
+.op-100 { opacity: 1.0; }
+.op-50 { opacity: 0.5; }
+.op-25 { opacity: 0.25; }
+.op-20 { opacity: 0.20; }
+.bg-op-20 { background-color: rgba(255,255,255, 0.2); }
+.bg-op-30 { background-color: rgba(255,255,255, 0.3); }
+.bg-op-50 { background-color: rgba(255,255,255, 0.5); }
+.bg-op-dark-20 { background-color: rgba(0,0,0, 0.2); }
+.bg-op-dark-30 { background-color: rgba(0,0,0, 0.3); }
+.bg-op-dark-50 { background-color: rgba(0,0,0, 0.5); }
+.nav-feeds {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.nav-feeds > li:last-child {
+  border-bottom: none;
+}
+.nav-feeds li {
+  position: relative;
+  padding: 12px 8px 8px 71px;
+  display: block;
+  min-height: 62px;
+  font-weight: 600;
+  border-bottom: 1px solid #f3f3f3;
+}
+.nav-feeds li > img {
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+}
+.nav-feeds li > i {
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  background-color: #fff;
+  border-radius: 50%;
+}
+.nav-feeds blockquote:hover {
+  background-color: #f9f9f9;
+}
+.nav-feeds li > div > blockquote > a > img {
+  float: left;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+}
+.nav-feeds li > div > blockquote > div {
+  margin-left: 40px;
+}
+.nav-feeds li > div > blockquote > small {
+  margin-left: 40px;
+}
+blockquote span{display:block;font-size:70%;line-height:1.42857143;color:#777}
+.hover div:hover {
+  background-color: #f5f5f5;
+}
+@-webkit-keyframes splash {
+    from {background-color: #f4bdc2;}
+    to {background-color: #ffffff;}
+}
+
+@keyframes splash {
+    from {background-color: #f4bdc2;}
+    to {background-color: #ffffff;}
+}
+.splash {
+  -webkit-animation-name: splash; /* Chrome, Safari, Opera */
+  animation-name: splash;
+}
+
+/* Frontpage Animate BG */
+@-webkit-keyframes GradientBG {
+    0%{background-position:0% 76%}
+    50%{background-position:100% 25%}
+    100%{background-position:0% 76%}
+}
+@-moz-keyframes GradientBG {
+    0%{background-position:0% 76%}
+    50%{background-position:100% 25%}
+    100%{background-position:0% 76%}
+}
+@-o-keyframes GradientBG {
+    0%{background-position:0% 76%}
+    50%{background-position:100% 25%}
+    100%{background-position:0% 76%}
+}
+@keyframes GradientBG {
+    0%{background-position:0% 76%}
+    50%{background-position:100% 25%}
+    100%{background-position:0% 76%}
+}
+.frontpage-animate-bg {
+  min-width:100%;
+  min-height:100%;
+  text-align:center;
+  background: linear-gradient(252deg, #3d72d4, #279572, #bae10a, #c90ae1);
+  background-size:300% 300%;
+
+  -webkit-animation: GradientBG 100s ease infinite;
+  -moz-animation: GradientBG 100s ease infinite;
+  -o-animation: GradientBG 100s ease infinite;
+  animation: GradientBG 100s ease infinite;
+}
+
+
+/* Gradient Portal Main */
+@-webkit-keyframes PortalGradient {
+    0%{background-position:0% 84%}
+    50%{background-position:100% 17%}
+    100%{background-position:0% 84%}
+}
+@-moz-keyframes PortalGradient {
+    0%{background-position:0% 84%}
+    50%{background-position:100% 17%}
+    100%{background-position:0% 84%}
+}
+@-o-keyframes PortalGradient {
+    0%{background-position:0% 84%}
+    50%{background-position:100% 17%}
+    100%{background-position:0% 84%}
+}
+@keyframes PortalGradient {
+    0%{background-position:0% 84%}
+    50%{background-position:100% 17%}
+    100%{background-position:0% 84%}
+}
+.bg-animate-portal {
+  background: linear-gradient(246deg, #24821d, #299690, #0216f4, #8302f4, #f40225);
+  background-size: 1000% 1000%;  
+
+  -webkit-animation: PortalGradient 100s ease infinite;
+  -moz-animation: PortalGradient 100s ease infinite;
+  -o-animation: PortalGradient 100s ease infinite;
+  animation: PortalGradient 100s ease infinite;
+}
+
+.bar-fixed {
+  position: fixed;
+  top: 0;
+  z-index: 9999;
+  min-width: 320px;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
+}
+
+.tooltipflot {
+  background-color: rgba(0,0,0,0.8);
+  padding: 5px 10px;
+  font-size: 11px;
+  color: #fff;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+}
+.flotLegend {
+  margin-bottom: 10px;
+}
+.flotLegend table tr td {
+    padding-right: 5px;
+}
+.flotGraph {
+  width: 100%;
+  height: 300px;
+}
+.width100p {
+  width: 100%;
+}
+.uppercase {
+  text-transform: uppercase;
+}
+.cursor-pointer {
+  cursor: pointer;
+}

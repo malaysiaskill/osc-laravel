@@ -16,8 +16,8 @@ class JTKController extends Controller
     public function Profil(Request $r)
     {
     	return view('jtk.profil',[
-    		'greds' => \App\Gred::get(),
-    		'sekolah' => \App\Sekolah::get(),
+    		'greds' => \App\Gred::all(),
+    		'sekolah' => \App\Sekolah::all(),
             'status' => $r->status
     	]);
     }

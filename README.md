@@ -18,7 +18,7 @@ Repository ini mengandungi projek sumber terbuka Framework Laravel (PHP) yang di
 
 * facebook/php-graph-sdk (Facebook Graph API)
 * abraham/twitteroauth (Twitter API)
-* dompdf/dompdf (Untuk generate fail PDF (HTML->PDF))
+* dompdf/dompdf (Untuk generate fail PDF)
 * google/recaptcha (reCAPTCHA untuk mengelakkan SPAM dan ABUSE)
 * dan akan ditambah dari masa ke semasa mengikut kepada keperluan.
 
