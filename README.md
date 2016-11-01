@@ -13,7 +13,7 @@ Repository ini mengandungi projek sumber terbuka Framework Laravel (PHP) yang di
 * Modul Pendaftaran Pengguna bagi sistem (Full authentication).
 * Maklumat JPN, PPD, dan Sekolah di dalam Negeri PERAK sahaja (buat masa ini).
 * Dimurnikan lagi dengan template Themes (Kredit [@putera](https://github.com/putera)) yang sangat cantik dan fluid untuk mobile.
-* Dibangunkan khusus untuk SMART DEVELOPMENT TEAM bagi JTKPK.
+* Dibangunkan khusus untuk **SMART DEVELOPMENT TEAM** bagi JTKPK.
 
 **Plug-ins yang telah dimasukkan antaranya ialah :**
 
