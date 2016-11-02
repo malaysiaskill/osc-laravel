@@ -99,7 +99,7 @@ $('#Users').DataTable({ responsive: true });
                         <div class="form-group items-push border-b">
                             <label class="col-sm-4 control-label">Kata Laluan :</label>
                             <div class="col-sm-8">
-                                <input type="password" id="_pwd" name="_pwd" class="form-control" maxlength="255" placeholder="Kata Laluan">
+                                <input type="password" id="_pwd" name="_pwd" class="form-control" maxlength="255" placeholder="Kata Laluan" autocomplete="off">
                             </div>
                         </div>
                         <div class="form-group items-push border-b">
@@ -130,7 +130,7 @@ $('#Users').DataTable({ responsive: true });
                                 <select id="_kodjpn" name="_kodjpn" data-placeholder="JPN" class="form-control js-select2" style="width:100%;">
                                     <option></option>
                                     @foreach (App\JPN::all() as $jpn)
-                                        <option value="{{ $jpn->id }}">{{ $jpn->jpn }}</option>
+                                        <option value="{{ $jpn->kod_jpn }}">{{ $jpn->jpn }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -141,7 +141,7 @@ $('#Users').DataTable({ responsive: true });
                                 <select id="_kodppd" name="_kodppd" data-placeholder="PPD" class="form-control js-select2" style="width:100%;">
                                     <option></option>
                                     @foreach (App\PPD::all() as $ppd)
-                                        <option value="{{ $ppd->id }}">{{ $ppd->ppd }}</option>
+                                        <option value="{{ $ppd->kod_ppd }}">{{ $ppd->ppd }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -152,7 +152,7 @@ $('#Users').DataTable({ responsive: true });
                                 <select id="_kodsek" name="_kodsek" data-placeholder="Sekolah" class="form-control js-select2" style="width:100%;">
                                     <option></option>
                                     @foreach (App\Sekolah::all() as $sek)
-                                        <option value="{{ $sek->id }}">{{ $sek->kod_sekolah }} - {{ $sek->nama_sekolah }}</option>
+                                        <option value="{{ $sek->kod_sekolah }}">{{ $sek->kod_sekolah }} - {{ $sek->nama_sekolah }}</option>
                                     @endforeach
                                 </select>
                             </div>

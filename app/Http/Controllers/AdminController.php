@@ -10,7 +10,9 @@ class AdminController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('role:super-admin', ['only' => ['Packages']]);
+        $this->middleware('role:super-admin',[
+            'only' => ['Packages', 'ActivatePackages', 'DeactivatePackages', 'DeletePackages']
+        ]);
     }
 
     /**
@@ -66,11 +68,15 @@ class AdminController extends Controller
             }
             $user->role = $r->_usergroups;
             $user->gred = $r->_gred;
+
             if (strtolower($r->_usergroups) == 'jpn') {
-                $user->kod_jabatan = $r->_kodjpn;
+                $user->kod_jpn = $r->_kodjpn;
             } else if (strtolower($r->_usergroups) == 'ppd') {
-                $user->kod_jabatan = $r->_kodjpn;
-            } else if (strtolower($r->_usergroups) == 'user') {
+                $user->kod_jpn = $r->_kodjpn;
+                $user->kod_ppd = $r->_kodppd;
+            } else if (strtolower($r->_usergroups) == 'leader' || strtolower($r->_usergroups) == 'user') {
+                $user->kod_jpn = $r->_kodjpn;
+                $user->kod_ppd = $r->_kodppd;
                 $user->kod_jabatan = $r->_kodsek;
             } else {
                 // nothing
@@ -87,10 +93,13 @@ class AdminController extends Controller
             $user->role = $r->_usergroups;
             $user->gred = $r->_gred;
             if (strtolower($r->_usergroups) == 'jpn') {
-                $user->kod_jabatan = $r->_kodjpn;
+                $user->kod_jpn = $r->_kodjpn;
             } else if (strtolower($r->_usergroups) == 'ppd') {
-                $user->kod_jabatan = $r->_kodjpn;
-            } else if (strtolower($r->_usergroups) == 'user') {
+                $user->kod_jpn = $r->_kodjpn;
+                $user->kod_ppd = $r->_kodppd;
+            } else if (strtolower($r->_usergroups) == 'leader' || strtolower($r->_usergroups) == 'user') {
+                $user->kod_jpn = $r->_kodjpn;
+                $user->kod_ppd = $r->_kodppd;
                 $user->kod_jabatan = $r->_kodsek;
             } else {
                 // nothing
@@ -107,6 +116,9 @@ class AdminController extends Controller
         $email = $user->email;
         $role = $user->role;
         $gred = $user->gred;
+
+        $kodjpn = $user->kod_jpn;
+        $kodppd = $user->kod_ppd;
         $kodjab = $user->kod_jabatan;
         
         echo "$('#_uid').val('$id');";
@@ -117,10 +129,13 @@ class AdminController extends Controller
         echo "$('#_usergroups').val(\"$role\").trigger(\"change\");";
         echo "$('#_gred').val(\"$gred\").trigger(\"change\");";
         if (strtolower($role) == 'jpn') {
-            echo "$('#_kodjpn').val(\"$kodjab\").trigger(\"change\");";
+            echo "$('#_kodjpn').val(\"$kodjpn\").trigger(\"change\");";
         } else if (strtolower($role) == 'ppd') {
-            echo "$('#_kodppd').val(\"$kodjab\").trigger(\"change\");";
-        } else if (strtolower($role) == 'user') {
+            echo "$('#_kodjpn').val(\"$kodjpn\").trigger(\"change\");";
+            echo "$('#_kodppd').val(\"$kodppd\").trigger(\"change\");";
+        } else if (strtolower($role) == 'user' || strtolower($role) == 'leader') {
+            echo "$('#_kodjpn').val(\"$kodjpn\").trigger(\"change\");";
+            echo "$('#_kodppd').val(\"$kodppd\").trigger(\"change\");";
             echo "$('#_kodsek').val(\"$kodjab\").trigger(\"change\");";
         } else {}
     }

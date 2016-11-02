@@ -39,7 +39,20 @@ Route::group(['middleware' => ['role:administrator']], function()
 });
 
 /**
+
 	Juruteknik Profil
+
 */
 Route::get('/profil', 'JTKController@Profil');
 Route::put('/profil', 'JTKController@SaveProfil');
+
+/**
+
+	Development Team
+
+*/
+Route::get('/dev-team', 'JTKController@DevTeam');
+Route::post('/dev-team', 'JTKController@SaveDevTeam');
+Route::get('/dev-team/{id}', 'JTKController@DevTeam');
+Route::post('/dev-team/edit/{id}', 'JTKController@getDevTeam');
+Route::post('/dev-team/delete/{id}', 'JTKController@DeleteDevTeam');

@@ -36,4 +36,9 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Gred', 'id', 'gred');
     }
+
+    public function jabatan()
+    {
+        return $this->hasOne('App\Sekolah', 'kod_sekolah', 'kod_jabatan');
+    }
 }

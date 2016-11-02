@@ -7,7 +7,14 @@
         $('#gred').val("{{ Auth::user()->gred }}").trigger("change");
     @endif
 
-    @if (!empty(Auth::user()->kod_jabatan))
+    @if (Auth::user()->role == 'jpn')
+        $('#jabatan_jpn').val("{{ Auth::user()->kod_jpn }}").trigger("change");
+    @elseif (Auth::user()->role == 'ppd')
+        $('#jabatan_jpn').val("{{ Auth::user()->kod_jpn }}").trigger("change");
+        $('#jabatan_ppd').val("{{ Auth::user()->kod_ppd }}").trigger("change");
+    @elseif (Auth::user()->role == 'leader' || Auth::user()->role == 'user')
+        $('#jabatan_jpn').val("{{ Auth::user()->kod_jpn }}").trigger("change");
+        $('#jabatan_ppd').val("{{ Auth::user()->kod_ppd }}").trigger("change");
         $('#jabatan').val("{{ Auth::user()->kod_jabatan }}").trigger("change");
     @endif
 @endsection
@@ -101,23 +108,52 @@
                             <div class="col-sm-9">
                                 <select id="gred" name="gred" data-placeholder="Sila pilih gred jawatan" class="form-control js-select2" style="width: 100%" required>
                                     <option></option>
-                                    @foreach ($greds as $gred)
+                                    @foreach (App\Gred::all() as $gred)
                                         <option value="{{ $gred->id }}">{{ $gred->gred }} - {{ $gred->nama_jawatan }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                        
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label" for="jabatan_jpn">Jabatan (JPN)</label>
+                            <div class="col-sm-9">
+                                <select id="jabatan_jpn" name="jabatan_jpn" data-placeholder="Sila pilih jabatan" class="form-control js-select2" style="width: 100%" required>
+                                    <option></option>
+                                    @foreach (App\JPN::all() as $jpn)
+                                        <option value="{{ $jpn->kod_jpn }}">{{ $jpn->kod_jpn }} - {{ $jpn->jpn }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+
+                        @if (Auth::user()->role == 'ppd' || Auth::user()->role == 'leader' || Auth::user()->role == 'user')
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label" for="jabatan_ppd">Jabatan (PPD)</label>
+                            <div class="col-sm-9">
+                                <select id="jabatan_ppd" name="jabatan_ppd" data-placeholder="Sila pilih jabatan" class="form-control js-select2" style="width: 100%" required>
+                                    <option></option>
+                                    @foreach (App\PPD::all() as $ppd)
+                                        <option value="{{ $ppd->kod_ppd }}">{{ $ppd->kod_ppd }} - {{ $ppd->ppd }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        @endif
+
+                        @if (Auth::user()->role == 'leader' || Auth::user()->role == 'user')
                         <div class="form-group clearfix">
                             <label class="col-sm-3 control-label" for="jabatan">Jabatan</label>
                             <div class="col-sm-9">
                                 <select id="jabatan" name="jabatan" data-placeholder="Sila pilih jabatan" class="form-control js-select2" style="width: 100%" required>
                                     <option></option>
-                                    @foreach ($sekolah as $sek)
-                                        <option value="{{ $sek->id }}">{{ $sek->kod_sekolah }} - {{ $sek->nama_sekolah }}</option>
+                                    @foreach (App\Sekolah::all() as $sek)
+                                        <option value="{{ $sek->kod_sekolah }}">{{ $sek->kod_sekolah }} - {{ $sek->nama_sekolah }}</option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
 

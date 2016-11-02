@@ -23,7 +23,9 @@ class CreateUsersTable extends Migration
             $table->rememberToken();
             $table->string('role')->default('user');
             $table->integer('gred')->nullable();
-            $table->integer('kod_jabatan')->nullable();
+            $table->string('kod_jpn')->nullable();
+            $table->string('kod_ppd')->nullable();
+            $table->string('kod_jabatan')->nullable();
             $table->timestamps();
         });
     }

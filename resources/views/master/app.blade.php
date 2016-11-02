@@ -47,6 +47,7 @@
         <link rel="stylesheet" href="/assets/js/plugins/dropzonejs/dropzone.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/datatables/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="/assets/js/plugins/sweetalert/sweetalert.min.css">
         @yield('css')
 
         <!-- Bootstrap and OneUI CSS framework -->
@@ -128,6 +129,11 @@
                                         <i class="fa fa-user"></i><span class="sidebar-mini-hide">Profil</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a class="{{ (Request::path()=='dev-team') ? 'active':'' }}" href="{{ url('/dev-team') }}">
+                                        <i class="fa fa-users"></i><span class="sidebar-mini-hide">Development Team</span>
+                                    </a>
+                                </li>
                                 @if (Auth::user()->role == 'super-admin' || Auth::user()->role == 'admin')
                                 <li>
                                     <a class="nav-submenu" data-toggle="nav-submenu" href="#">
@@ -141,9 +147,6 @@
                                         @endif
                                         <li>
                                             <a class="{{ (Request::path()=='admin/users') ? 'active':'' }}" href="{{ url('/admin/users') }}">Pengguna</a>
-                                        </li>
-                                        <li>
-                                            <a class="{{ (Request::path()=='admin/usergroups') ? 'active':'' }}" href="{{ url('/admin/usergroups') }}">Kumpulan Pengguna</a>
                                         </li>
                                     </ul>
                                 </li>
@@ -275,6 +278,7 @@
         <script src="/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.js"></script>
         <script src="/assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
         <script src="/assets/js/pages/base_tables_datatables.js"></script>
+        <script src="/assets/js/plugins/sweetalert/sweetalert.min.js"></script>
         @yield('js')
 
         <script>
