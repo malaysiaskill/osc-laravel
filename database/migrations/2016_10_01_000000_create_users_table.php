@@ -26,6 +26,8 @@ class CreateUsersTable extends Migration
             $table->string('kod_jpn')->nullable();
             $table->string('kod_ppd')->nullable();
             $table->string('kod_jabatan')->nullable();
+            $table->string('avatarType')->nullable();
+            $table->binary('avatar')->nullable();
             $table->timestamps();
         });
     }

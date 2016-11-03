@@ -29,6 +29,88 @@ class JTKController extends Controller
     		'status' => $r->status
     	]);
     }
+
+    public function Avatar($id = null)
+    {
+        if ($id != null)
+        {
+            // Show User Avatar
+            $user = User::find($id);
+            $avatarType = $user->avatarType;
+            $avatar = $user->avatar;
+
+            if (strlen($avatarType) != 0)
+            {
+                header("Cache-Control: no-cache, must-revalidate");
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+                header("Content-Type: $avatarType");
+                echo $avatar;
+            }
+            else
+            {
+                header("Cache-Control: no-cache, must-revalidate");
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+                header("Content-Type: image/jpg");
+                echo file_get_contents(public_path()."/img/default_avatar.jpg");
+            }
+        }
+        else
+        {
+            // Logged User Avatar
+            $avatarType = Auth::user()->avatarType;
+            $avatar = Auth::user()->avatar;
+
+            if (strlen($avatarType) != 0)
+            {
+                header("Cache-Control: no-cache, must-revalidate");
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+                header("Content-Type: $avatarType");
+                echo $avatar;
+            }
+            else
+            {
+                header("Cache-Control: no-cache, must-revalidate");
+                header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+                header("Content-Type: image/jpg");
+                echo file_get_contents(public_path()."/img/default_avatar.jpg");
+            }
+        }
+    }
+
+    public function DeleteAvatar()
+    {
+        $user = Auth::user();
+        $user->avatarType = '';
+        $user->avatar = '';
+        $user->save();
+        echo "window.location.href='/profil';";
+    }
+
+    public function UploadAvatar(Request $r)
+    {
+        $FileType = strtolower($_FILES['file']['type']);
+        $tmpName = $_FILES['file']['tmp_name']; 
+        $isUploadedFile = is_uploaded_file($_FILES['file']['tmp_name']);
+        if ($isUploadedFile == true)
+        {
+            /*$fp = fopen($tmpName, 'r');
+            $content = fread($fp, filesize($tmpName));
+            $content = addslashes($content);
+            fclose($fp);*/
+
+            $user = Auth::user();
+            $user->avatarType = $FileType;
+            $user->avatar = (file_get_contents($tmpName));//$content;
+            $user->save();
+        
+            echo "OK";
+        }
+        else
+        {
+            echo "KO";
+        }
+    }
+
     public function SaveProfil(Request $r)
     {
     	$Nama = $r->input('name');

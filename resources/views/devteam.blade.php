@@ -76,7 +76,7 @@
                                                     <?php $_user = App\User::find($userid); ?>
                                                     <tr>
                                                         <td class="text-center">
-                                                            <img class="img-avatar img-avatar48" src="/assets/img/avatars/avatar8.jpg" title="nama">
+                                                            <img class="img-avatar img-avatar48" src="/avatar/{{ $_user->id }}" title="{{ $_user->name }}">
                                                         </td>
                                                         <td>
                                                             @if ($devteam->ketua_kumpulan == $userid)

@@ -17,6 +17,43 @@
         $('#jabatan_ppd').val("{{ Auth::user()->kod_ppd }}").trigger("change");
         $('#jabatan').val("{{ Auth::user()->kod_jabatan }}").trigger("change");
     @endif
+
+    $("#btn-delete-avatar").click(function(){
+        var ajax = new sack();
+        ajax.requestFile = "/avatar/delete";
+        Ajx(ajax);
+    });
+
+    var UserAvatar = $("#btn-avatar").dropzone({ 
+        url: '{{ url('/avatar/upload') }}',
+        params: {
+            _token: "{{ csrf_token() }}"
+        },
+        acceptedFiles: 'image/jpg,image/jpeg,image/png',
+        maxFilesize: 2,
+        maxFiles: 1,
+        createImageThumbnails: false,
+        previewTemplate : '<div style="display:none"></div>',
+        init: function()
+        {
+            this.on("processing", function(file) {
+                $("#btn-avatar").html('<i class="fa fa-cog fa-spin push-5-r"></i>');
+            });
+            this.on("success", function(file) {
+                var ret = file.xhr.response;
+                if (ret == "OK") {
+                    var randomId = new Date().getTime();
+                    $("#btn-avatar").html('Tukar Avatar');
+                    $(".img-avatar").attr("src","/avatar?cache="+randomId);
+                }
+            });
+            this.on("complete", function() {
+                if (this.getQueuedFiles().length == 0 && this.getUploadingFiles().length == 0) {
+                    this.removeAllFiles();
+                }
+            });
+        }
+    });
 @endsection
 
 @section('content')
@@ -36,8 +73,19 @@
         {{ csrf_field() }}
         <input type="hidden" name="_method" value="PUT">
         <div class="row">
+
+            <div class="col-xs-12 remove-margin-b">
+                <div class="block block-themed block-rounded">
+                    <div class="block-content block-content-full block-content-mini border-b text-right">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fa fa-save push-5-r"></i> Simpan Maklumat Profil
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <!-- Avatar -->
-            <!--<div class="col-sm-12 col-md-4 col-md-push-8">
+            <div class="col-sm-12 col-md-4 col-md-push-8">
                 <div class="block block-themed block-rounded">
                     <div class="block-header bg-primary-dark">
                         <ul class="block-options">
@@ -48,15 +96,15 @@
                             </li>
                         </ul>
                         <h3 class="block-title">
-                            <i class="fa fa-camera push-10-r"></i>{AVATAR}
+                            <i class="fa fa-camera push-10-r"></i>Avatar
                         </h3>
                     </div>
                     <div class="block-content">
                         <div class="form-group clearfix">
                             <div class="col-xs-12 text-center">
-                                <img class="img-avatar img-avatar96" title="#_fullname#" src="#_avatar#" width="100"><br><br>
+                                <img class="img-avatar img-avatar96" title="{{ Auth::user()->name }}" src="/avatar" width="100"><br><br>
                                 <button type="button" id="btn-avatar" class="btn btn-sm btn-primary">
-                                    <i class="fa fa-user push-5-r"></i>{CHANGE_AVATAR}
+                                    <i class="fa fa-user push-5-r"></i>Tukar Avatar
                                 </button>
                                 <button type="button" id="btn-delete-avatar" class="btn btn-sm btn-danger">
                                     <i class="fa fa-trash-o"></i>
@@ -66,11 +114,9 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-12 col-md-8 col-md-pull-4">
-            -->
             
             <!-- Profile -->
-            <div class="col-xs-12">
+            <div class="col-sm-12 col-md-8 col-md-pull-4">
                 @if ($status == 'success')
                     <div class="alert alert-success alert-dismissable">
                         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -188,17 +234,7 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="block block-themed block-rounded">
-                    <div class="block-content block-content-full block-content-mini border-b text-center">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa fa-save push-5-r"></i> Simpan Maklumat Profil
-                        </button>
-                    </div>
-                </div>
-
-
-            </div>            
+            </div>
         </div>
     </form>
 </div>

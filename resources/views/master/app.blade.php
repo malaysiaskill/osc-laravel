@@ -190,7 +190,7 @@
                         @else
                             <div class="btn-group">
                                 <button class="btn btn-default btn-image dropdown-toggle" data-toggle="dropdown" type="button">
-                                    <img src="/assets/img/avatars/avatar10.jpg" alt="Avatar">
+                                    <img src="/avatar" class="img-avatar" title="{{ Auth::user()->name }}">
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-right">

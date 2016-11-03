@@ -44,6 +44,10 @@ Route::group(['middleware' => ['role:administrator']], function()
 
 */
 Route::get('/profil', 'JTKController@Profil');
+Route::get('/avatar', 'JTKController@Avatar');
+Route::get('/avatar/{id}', 'JTKController@Avatar');
+Route::post('/avatar/delete', 'JTKController@DeleteAvatar');
+Route::post('/avatar/upload', 'JTKController@UploadAvatar');
 Route::put('/profil', 'JTKController@SaveProfil');
 
 /**
