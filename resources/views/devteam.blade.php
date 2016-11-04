@@ -2,10 +2,6 @@
 @section('title', 'Senarai Kumpulan Development Team')
 @section('site.description', 'Senarai Kumpulan Development Team')
 
-@section('jquery')
-
-@endsection
-
 @section('content')
 <!-- Page Header -->
 <div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
@@ -67,7 +63,7 @@
                                                 <tr>
                                                     <th class="text-center" style="width: 120px;"><i class="fa fa-user"></i></th>
                                                     <th>Nama Juruteknik</th>
-                                                    <th>Alamat E-mel</th>
+                                                    <th><i class="fa fa-envelope push-10-r"></i>Alamat E-mel</th>
                                                     <th>Sekolah</th>
                                                 </tr>
                                             </thead>
@@ -85,7 +81,7 @@
                                                                 {{ $_user->name }}
                                                             @endif
                                                         </td>
-                                                        <td>{{ $_user->email }}</td>
+                                                        <td><a href="mailto:{{ $_user->email }}">{{ $_user->email }}</a></td>
                                                         <td>{{ $_user->jabatan->nama_sekolah_detail }}</td>
                                                     </tr>
                                                 @endforeach
@@ -111,7 +107,22 @@
                                     <div class="block-content block-content-full text-center">
                                         <div><i class="fa fa-users fa-3x"></i></div>
                                         <div class="h4 font-w300 push-15-t push-5">{{ ucwords($devteam->nama_kumpulan) }}</div>
-                                        <div class="text-muted"><b>Ketua :</b> {{ $devteam->ketua->name }}</div>
+                                        <div class="text-muted push-5"><b>Ketua :</b> {{ $devteam->ketua->name }}</div>
+                                        <div class="text-muted push-10">
+                                            @foreach (explode(',',$devteam->senarai_jtk) as $ahli)
+                                                <img src="/avatar/{{ $ahli }}" class="img-avatar img-avatar32" data-toggle="tooltip" title="{{ App\User::find($ahli)->name }}"> 
+                                            @endforeach
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-xs-6 border-r">
+                                                <h2 class="font-w300">{{ count($devteam->projek) }}</h2>
+                                                <span class="text-primary"><i class="fa fa-th-list push-5-r"></i> Projek</span>
+                                            </div>
+                                            <div class="col-xs-6">
+                                                <h2 class="font-w300">{{ $devteam->jumlah_ahli }}</h2>
+                                                <span class="text-primary"><i class="fa fa-users push-5-r"></i> Ahli</span>
+                                            </div>
+                                        </div>
                                     </div>
                                 </a>
                             </div>
@@ -160,7 +171,7 @@
                         <div class="form-group items-push border-b">
                             <label class="col-sm-4 control-label">Ketua Kumpulan :</label>
                             <div class="col-sm-8">
-                                <select id="_ketua" name="_ketua" data-placeholder="Ketua Kumpulan" class="form-control js-select2" style="width:100%;" required>
+                                <select id="_ketua" name="_ketua" data-placeholder="Ketua Kumpulan" class="form-control js-select2-avatar" style="width:100%;" required>
                                     <option></option>
                                     @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)
                                     ->whereIn('role',['user','leader'])->get() as $user)
@@ -172,7 +183,7 @@
                         <div class="form-group">
                             <label class="col-sm-4 control-label">Senarai Ahli Kumpulan :</label>
                             <div class="col-sm-8">
-                                <select multiple id="_jtk" name="_jtk[]" data-placeholder="Ahli-Ahli" class="form-control js-select2" style="width:100%;" required>
+                                <select multiple id="_jtk" name="_jtk[]" data-placeholder="Ahli-Ahli" class="form-control js-select2-avatar" style="width:100%;" required>
                                     @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)
                                     ->whereIn('role',['user','leader'])->get() as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>

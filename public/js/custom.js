@@ -6,6 +6,15 @@ function jump(targ,selObj,restore){
   if (restore) selObj.selectedIndex=0;
 }
 
+/* Avatar */
+function AvatarTemplate(avatar) {
+    if (!avatar.id) { return avatar.text; }
+    var $avatar = $(
+        '<span><img src="/avatar/' + avatar.element.value.toLowerCase() + '" class="img-avatar img-avatar32 push-5-r" /> ' + avatar.text + '</span>'
+    );
+    return $avatar;
+}
+
 /* Pengguna */
 function ClearAddUser() {
 	$('#_name').val('');

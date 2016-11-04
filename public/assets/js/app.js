@@ -1026,6 +1026,10 @@ var App = function() {
     var uiHelperSelect2 = function(){
         // Init Select2 (with .js-select2 class)
         jQuery('.js-select2').select2();
+
+        jQuery('.js-select2-avatar').select2({
+            templateResult: AvatarTemplate
+        });
     };
 
     /*

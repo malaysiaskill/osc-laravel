@@ -12,4 +12,14 @@ class DevTeam extends Model
     {
     	return $this->belongsTo('App\User', 'ketua_kumpulan', 'id');
     }
+
+    public function projek()
+    {
+    	return $this->hasMany('App\Projek', 'devteam_id', 'id');
+    }
+
+	public function getJumlahAhliAttribute()
+    {
+    	return count(explode(',', $this->senarai_jtk));
+    }
 }
