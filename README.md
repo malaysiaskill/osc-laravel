@@ -4,21 +4,7 @@
 
 Template Sistem (Web-Based) & Platform utama sistem bersepadu bagi Kumpulan DEV-TEAM JTKPK. :+1:
 
-[![Antaramuka Log Masuk Sistem](https://s12.postimg.org/6v3x9myfh/Screen_Shot_2016_11_01_at_4_05_29_PM.png)](https://postimg.org/image/6icj3gg5l/)
-
-**Antaramuka Log Masuk Sistem**
-
 [![Antaramuka Dashboard](https://s13.postimg.org/9gbnu98rr/Screen_Shot_2016_11_01_at_4_06_55_PM.png)](https://postimg.org/image/caet7paxv/)
-
-**Antaramuka Dashboard**
-
-Ini adalah antaramuka utama apabila log masuk ke sistem. Semua pakej/modul yang telah didevelop oleh kumpulan DevTeam akan disenaraikan di muka hadapan Dashboard ini.
-
-[![Senarai Pakej/Module dalam Sistem](https://s18.postimg.org/k1qkd9t61/Screen_Shot_2016_11_01_at_4_09_14_PM.png)](https://postimg.org/image/tz1l6c0rp/)
-
-**Antaramuka Pakej (Bahagian Pentadbir)**
-
-Ini merupakan antaramuka yang menyenaraikan semua pakej/modul telah dipasang (embed) ke dalam sistem. Bahagian ini hanya dapat diakses oleh sistem pentadbir sahaja.
 
 ### **Nota Ringkas:**
 
@@ -30,23 +16,29 @@ Ini merupakan antaramuka yang menyenaraikan semua pakej/modul telah dipasang (em
 * Maklumat JPN, PPD, dan Sekolah di dalam Negeri PERAK sahaja (buat masa ini).
 * Dimurnikan lagi dengan template Themes (Kredit [@putera](https://github.com/putera)) yang sangat cantik dan fluid untuk mobile.
 * Dibangunkan khusus untuk **SMART DEVELOPMENT TEAM** bagi JTKPK.
+* Modul Development Team iaitu pengurusan projek dan kumpulan Development Team bagi JTKPK.
 
 **Plug-ins yang telah dimasukkan antaranya ialah :**
 
-* facebook/php-graph-sdk (Facebook Graph API)
-* abraham/twitteroauth (Twitter API)
-* dompdf/dompdf (Untuk generate fail PDF)
-* google/recaptcha (reCAPTCHA untuk mengelakkan SPAM dan ABUSE)
+* Facebook Graph API
+* Twitter API
+* DOMPDF (Untuk generate fail PDF)
+* Google reCAPTCHA (Untuk mengelakkan SPAM dan ABUSE sistem)
 * dan akan ditambah dari masa ke semasa mengikut kepada keperluan.
 
-> Untuk mendapatkan template sistem ini, anda perlulah memasang Git (https://git-scm.com) & Composer (https://getcomposer.org) dan ikuti arahan berikut:
+> Sila install perisian Git (https://git-scm.com) & Composer (https://getcomposer.org) untuk mendapatkan template ini dan ikuti langkah dibawah:
 
-**Langkah 1 :** Clone Repositori ini
+**Langkah 1 :** Muat turun soskod ini
 ```
 git clone https://github.com/putera/jtkpk.git
 ```
 
-**Langkah 2 :** Setting fail .ENV (Sambungan ke Pangkalan Data)
+**Langkah 2 :** Kemaskini Composer
+```
+composer update
+```
+
+**Langkah 3 :** Setting fail .ENV (Sambungan ke Pangkalan Data anda)
 ```
 DB_CONNECTION=mysql
 DB_HOST=localhost
@@ -56,17 +48,22 @@ DB_USERNAME=<DATABASE_USER>
 DB_PASSWORD=<DATABASE_PASSWORD>
 ```
 
-**Langkah 3 :** Migrate Pangkalan Data
+**Langkah 4 :** Migrate Pangkalan Data
 ```
 php artisan migrate
 ```
 
-**Langkah 4 :** Seed Pangkalan Data
+**Langkah 5 :** Seed Pangkalan Data
 ```
 php artisan db:seed
 ```
 
-**Langkah 5 :** Run Sistem
+**Untuk pengguna Mac OS
+```
+sudo chmod -R 777 storage/
+```
+
+**Langkah 6 :** Run Sistem
 ```
 php artisan serve
 ```
