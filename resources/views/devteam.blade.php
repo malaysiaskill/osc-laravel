@@ -2,6 +2,8 @@
 @section('title', 'Senarai Kumpulan Development Team')
 @section('site.description', 'Senarai Kumpulan Development Team')
 
+@section('app.helper', ",'summernote', 'ckeditor'")
+
 @section('content')
 <!-- Page Header -->
 <div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
@@ -24,6 +26,11 @@
                     <button type="button" class="btn btn-primary" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
                         <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
                     </button>
+                        @if (Request::is('dev-team/*'))
+                            <button type="button" class="btn btn-primary" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
+                                <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
+                            </button>
+                        @endif
                     @endif
                     <div class="pull-right">
                         <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
@@ -45,6 +52,12 @@
                                 <div class="block-header bg-gray-lighter">
                                     <a name="{{ $devteam->id }}" id="{{ $devteam->id }}"></a>
                                     <div class="block-options-simple">
+                                        @if (count($devteam->projek) > 0)
+                                            <a href="/dev-team/projek/{{ $devteam->id }}" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Lihat Projek">
+                                                <i class="fa fa-th push-5-r"></i> Lihat Projek
+                                            </a>
+                                        @endif
+
                                         @if (Auth::user()->role == 'leader')
                                         <a href="#" onclick="javascript:EditDevTeam('{{ $devteam->id }}');" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit Kumpulan">
                                             <i class="fa fa-pencil"></i>
@@ -206,5 +219,66 @@
         </div>
     </div>
 </div>
+
+    @if (Request::is('dev-team/*'))
+    <!-- Projek Dialog //-->
+    <div id="ProjekDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-popout">
+            <div class="modal-content">
+                <form method="post" class="form-horizontal" action="{{ url('/dev-team/projek') }}">
+                    {{ csrf_field() }}
+                    <div class="block block-themed block-transparent remove-margin-b">
+                        <div class="block-header bg-primary-dark">
+                            <h3 class="block-title">
+                                <i class="fa fa-user push-10-r"></i>Projek : Kumpulan Development Team
+                            </h3>
+                        </div>
+                        <div class="block-content">
+                            <div class="form-group items-push border-b">
+                                <label class="col-sm-4 control-label">Kumpulan Dev Team :</label>
+                                <div class="col-sm-8">
+                                    <select id="_devteam" name="_devteam" data-placeholder="Kumpulan Dev Team" class="form-control js-select2" style="width:100%;" required>
+                                        <option></option>
+                                        @foreach (App\DevTeam::where('kod_ppd',Auth::user()->kod_ppd)->get() as $devteam)
+                                            <option value="{{ $devteam->id }}">{{ $devteam->nama_kumpulan }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group items-push border-b">
+                                <label class="col-sm-4 control-label">Nama Projek :</label>
+                                <div class="col-sm-8">
+                                    <input type="text" id="_nama_projek" name="_nama_projek" class="form-control" maxlength="255" placeholder="Nama Projek" required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-sm-12 h4 font-w300 push-10">Objektif Projek :</label>
+                                <div class="col-sm-12">
+                                    <textarea id="_objektif" name="_objektif" class="form-control js-emojis" placeholder="Objektif projek" rows="4"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-group remove-margin-b">
+                                <label class="col-sm-12 h4 font-w300 push-10">Keterangan Projek :</label>
+                                <div class="col-sm-12">
+                                    <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="10"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="btn_u_save" class="btn btn-primary" type="submit">
+                            <i class="fa fa-save push-5-r"></i>Simpan Rekod
+                        </button>
+                        <button id="btn_u_cancel" data-dismiss="modal" class="btn btn-danger" type="button" onClick="javascript:ClearAddProjek();">
+                            <i class="fa fa-times push-5-r"></i>Batal
+                        </button>                
+                        <input id="_projekid" name="_projekid" type="hidden" value="0" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    @endif
+
 @endif
 @endsection

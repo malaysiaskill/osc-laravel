@@ -72,7 +72,7 @@
         <script src="/assets/js/core/jquery.countTo.min.js"></script>
         <script src="/assets/js/core/jquery.placeholder.min.js"></script>
         <script src="/assets/js/core/js.cookie.min.js"></script>
-        <script src="/assets/js/app.js"></script>
+        <script src="/assets/js/app.js.php"></script>
 
         <!-- Page JS Plugins -->
         <script src="/assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>

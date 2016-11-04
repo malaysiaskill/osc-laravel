@@ -48,6 +48,8 @@
         <link rel="stylesheet" href="/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/datatables/jquery.dataTables.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/sweetalert/sweetalert.min.css">
+        <link rel="stylesheet" href="/assets/js/plugins/summernote/summernote.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/emojione/2.2.6/assets/css/emojione.min.css"/>
         @yield('css')
 
         <!-- Bootstrap and OneUI CSS framework -->
@@ -256,7 +258,7 @@
         <script src="/assets/js/core/jquery.countTo.min.js"></script>
         <script src="/assets/js/core/jquery.placeholder.min.js"></script>
         <script src="/assets/js/core/js.cookie.min.js"></script>
-        <script src="/assets/js/app.js"></script>
+        <script src="/assets/js/app.js.php"></script>
         <script src="/js/ajax.js"></script>
         <script src="/js/custom.js"></script>
 
@@ -279,6 +281,10 @@
         <script src="/assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
         <script src="/assets/js/pages/base_tables_datatables.js"></script>
         <script src="/assets/js/plugins/sweetalert/sweetalert.min.js"></script>
+        <script src="/assets/js/plugins/summernote/summernote.min.js"></script>
+        <script src="/assets/js/plugins/ckeditor/ckeditor.js"></script>
+        <script src="/assets/js/plugins/jquery-textcomplete/jquery.textcomplete.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/emojione/2.2.6/lib/js/emojione.min.js"></script>
         @yield('js')
 
         <script>

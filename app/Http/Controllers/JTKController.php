@@ -11,6 +11,7 @@ use App\JPN;
 use App\PPD;
 use App\Sekolah;
 use App\DevTeam;
+use App\Projek;
 
 class JTKController extends Controller
 {
@@ -215,5 +216,41 @@ class JTKController extends Controller
         $kod_ppd = $devteam->kod_ppd;
         $devteam = DevTeam::destroy($id);
         echo "window.location.href='/dev-team/$kod_ppd';";
+    }
+
+    /**
+
+        Projek
+
+    */
+    public function SaveProjek(Request $r)
+    {
+        $devteam = $r->input('_devteam');
+        $nama_projek = $r->input('_nama_projek');
+        $objektif = $r->input('_objektif');
+        $keterangan = $r->input('_detail');
+
+        if ($r->_projekid != 0 || $r->_projekid != '0')
+        {
+            # Update
+            $projek = Projek::find($r->_projekid);
+            $projek->devteam_id = $devteam;
+            $projek->nama_projek = $nama_projek;
+            $projek->objektif = $objektif;
+            $projek->detail = $keterangan;
+            $projek->save();
+        }
+        else
+        {
+            # Insert
+            $projek = new Projek;
+            $projek->devteam_id = $devteam;
+            $projek->nama_projek = $nama_projek;
+            $projek->objektif = $objektif;
+            $projek->detail = $keterangan;
+            $projek->save();
+        }
+
+        return redirect('/dev-team');
     }
 }

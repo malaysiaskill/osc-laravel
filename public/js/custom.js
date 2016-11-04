@@ -75,3 +75,15 @@ function DeleteDevTeam(id) {
 	    Ajx(ajax);
     });
 }
+
+/* Projek Kumpulan Dev Team */
+function ClearAddProjek() {
+    $('#_devteam').val('').trigger('change');
+    $('#_nama_projek').val('');
+    $('#_objektif').val('');
+    $('#_detail').val('');
+    $('#_projekid').val('0');
+}
+function AddProjekDialog() {
+    $('#ProjekDialog').modal();
+}

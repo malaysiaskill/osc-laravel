@@ -10,7 +10,8 @@
         "facebook/graph-sdk": "^5.4",
         "abraham/twitteroauth": "^0.7.0",
         "dompdf/dompdf": "^0.7.0",
-        "google/recaptcha": "^1.1"
+        "google/recaptcha": "^1.1",
+        "emojione/emojione": "^2.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

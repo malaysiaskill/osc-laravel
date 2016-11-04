@@ -1,3 +1,30 @@
+<?php
+function read_file($file) {
+    if ( ! file_exists($file)) {
+        return FALSE;
+    }
+    
+    if (function_exists('file_get_contents')) {
+        return file_get_contents($file);        
+    }
+
+    if ( ! $fp = @fopen($file, 'rb')) {
+        return FALSE;
+    }
+        
+    flock($fp, LOCK_SH);
+    
+    $data = '';
+    if (filesize($file) > 0) {
+        $data =& fread($fp, filesize($file));
+    }
+
+    flock($fp, LOCK_UN);
+    fclose($fp);
+
+    return $data;
+}
+?>
 var App = function() {
     // Helper variables - set in uiInit()
     var $lHtml, $lBody, $lPage, $lSidebar, $lSidebarScroll, $lSideOverlay, $lSideOverlayScroll, $lHeader, $lMain, $lFooter;
@@ -48,6 +75,49 @@ var App = function() {
 
         // Init form placeholder (for IE9)
         jQuery('.form-control').placeholder();
+
+        // Emojis
+        var emojiStrategy = <?php echo read_file('../../emojione/emoji_strategy.json');?>;
+        jQuery('.js-emojis').each(function(){
+            jQuery(this).textcomplete([{
+                match: /\B:([\-+\w]*)$/,
+                search: function (term, callback) {
+                    var results = [];
+                    var results2 = [];
+                    var results3 = [];
+                    $.each(emojiStrategy,function(shortname,data) {
+                        if (shortname.indexOf(term) > -1) { results.push(shortname); }
+                        else {
+                            if ((data.aliases !== null) && (data.aliases.indexOf(term) > -1)) {
+                                results2.push(shortname);
+                            }
+                            else if ((data.keywords !== null) && (data.keywords.indexOf(term) > -1)) {
+                                results3.push(shortname);
+                            }
+                        }
+                    });
+         
+                    if (term.length >= 3) {
+                        results.sort(function(a,b) { return (a.length > b.length); });
+                        results2.sort(function(a,b) { return (a.length > b.length); });
+                        results3.sort();
+                    }
+                    var newResults = results.concat(results2).concat(results3);
+
+                    callback(newResults);
+                },
+                template: function(shortname) {
+                    return '<img class="emojione" src="//cdn.jsdelivr.net/emojione/assets/png/'+emojiStrategy[shortname].unicode+'.png"> :'+shortname+':';
+                },
+                replace: function(shortname) {
+                    return ':'+shortname+': ';
+                },
+                index: 1,
+                maxCount: 10
+            }],{
+                footer: '<a href="http://www.emoji.codes" target="_blank">Lihat Semua<span class="arrow">»</span></a>'
+            });
+        });
     };
 
     // Layout functionality
