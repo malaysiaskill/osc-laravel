@@ -253,4 +253,22 @@ class JTKController extends Controller
 
         return redirect('/dev-team');
     }
+    public function SenaraiProjek($groupid)
+    {
+        $devteam = DevTeam::find($groupid)->first();
+        $ppd = PPD::where('kod_ppd',$devteam->kod_ppd)->first();
+
+        return view('devteam.projek',[
+            'projek' => Projek::where('devteam_id',$groupid)->get(),
+            'kodppd' => $devteam->kod_ppd,
+            'namappd' => $ppd->ppd,
+            'nama_kumpulan' => $devteam->nama_kumpulan,
+        ]);
+    }
+    public function DetailProjek($groupid, $projekid)
+    {
+        /*return view('devteam.projek-detail',[
+            'projek' => Projek::where('devteam_id',$groupid)->where('id',$projekid)->get()
+        ]);*/
+    }
 }

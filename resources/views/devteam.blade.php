@@ -22,6 +22,11 @@
             <div id="_users" class="block block-themed block-rounded push-5">
                 
                 <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
+                    @if (isset($id) && strlen($id)!=0)
+                    <a href="/dev-team" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                        <i class="fa fa-arrow-circle-left"></i>
+                    </a>
+                    @endif
                     @if (Auth::user()->role == 'leader')
                     <button type="button" class="btn btn-primary" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
                         <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
@@ -36,6 +41,7 @@
                         <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
                             <option></option>
                             @foreach (App\PPD::all() as $ppd)
+                                <option value="/dev-team">LIHAT SEMUA</option>
                                 <option value="/dev-team/{{ $ppd->kod_ppd }}" {{ ($id == $ppd->kod_ppd) ? 'selected':'' }}>{{ $ppd->ppd }}</option>
                             @endforeach
                         </select>
@@ -54,7 +60,7 @@
                                     <div class="block-options-simple">
                                         @if (count($devteam->projek) > 0)
                                             <a href="/dev-team/projek/{{ $devteam->id }}" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Lihat Projek">
-                                                <i class="fa fa-th push-5-r"></i> Lihat Projek
+                                                <i class="fa fa-th push-5-r"></i> Lihat Projek ({{ count($devteam->projek) }})
                                             </a>
                                         @endif
 
@@ -116,7 +122,7 @@
                         <div class="row">
                             @foreach (App\DevTeam::all() as $devteam)
                             <div class="col-sm-6 col-md-4 col-lg-3">
-                                <a class="block block-bordered block-link-hover3" href="{{ url('/dev-team/'.$devteam->kod_ppd.'#'.$devteam->id.'') }}">
+                                <a class="block block-bordered block-link-hover3" href="{{ url('/dev-team/'.$devteam->kod_ppd.'') }}">
                                     <div class="block-content block-content-full text-center">
                                         <div><i class="fa fa-users fa-3x"></i></div>
                                         <div class="h4 font-w300 push-15-t push-5">{{ ucwords($devteam->nama_kumpulan) }}</div>
@@ -194,7 +200,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-4 control-label">Senarai Ahli Kumpulan :</label>
+                            <label class="col-sm-4 control-label">Senarai Ahli Kumpulan (Termasuk Ketua) :</label>
                             <div class="col-sm-8">
                                 <select multiple id="_jtk" name="_jtk[]" data-placeholder="Ahli-Ahli" class="form-control js-select2-avatar" style="width:100%;" required>
                                     @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)
@@ -257,7 +263,7 @@
                                     <textarea id="_objektif" name="_objektif" class="form-control js-emojis" placeholder="Objektif projek" rows="4"></textarea>
                                 </div>
                             </div>
-                            <div class="form-group remove-margin-b">
+                            <div class="form-group">
                                 <label class="col-sm-12 h4 font-w300 push-10">Keterangan Projek :</label>
                                 <div class="col-sm-12">
                                     <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="10"></textarea>

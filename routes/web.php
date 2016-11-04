@@ -61,3 +61,7 @@ Route::get('/dev-team/{id}', 'JTKController@DevTeam');
 Route::post('/dev-team/edit/{id}', 'JTKController@getDevTeam');
 Route::post('/dev-team/delete/{id}', 'JTKController@DeleteDevTeam');
 Route::post('/dev-team/projek', 'JTKController@SaveProjek');
+Route::get('/dev-team/projek/{groupid}', 'JTKController@SenaraiProjek');
+Route::get('/dev-team/projek/{groupid}/{projekid}', 'JTKController@DetailProjek');
+
+
