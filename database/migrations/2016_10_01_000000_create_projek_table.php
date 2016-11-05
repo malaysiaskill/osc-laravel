@@ -22,6 +22,7 @@ class CreateProjekTable extends Migration
             $table->text('objektif')->nullable();
             $table->text('detail')->nullable();
             $table->string('kertas_kerja')->nullable();
+            $table->string('repositori')->nullable();
             $table->timestamps();
             $table->foreign('devteam_id')->references('id')->on('devteam')->onDelete('cascade');
         });

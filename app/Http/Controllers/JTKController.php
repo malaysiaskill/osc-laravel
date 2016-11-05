@@ -215,7 +215,7 @@ class JTKController extends Controller
         $devteam = DevTeam::find($id);
         $kod_ppd = $devteam->kod_ppd;
         $devteam = DevTeam::destroy($id);
-        echo "window.location.href='/dev-team/$kod_ppd';";
+        echo "SweetAlert('success','Berjaya Dipadam !','Rekod kumpulan ini telah berjaya dipadam !',\"window.location.href='/dev-team/$kod_ppd';\")";
     }
 
     /**
@@ -229,6 +229,8 @@ class JTKController extends Controller
         $nama_projek = $r->input('_nama_projek');
         $objektif = $r->input('_objektif');
         $keterangan = $r->input('_detail');
+        $repositori = $r->input('_repo');
+        $kertas_kerja = $r->input('kk');
 
         if ($r->_projekid != 0 || $r->_projekid != '0')
         {
@@ -238,7 +240,13 @@ class JTKController extends Controller
             $projek->nama_projek = $nama_projek;
             $projek->objektif = $objektif;
             $projek->detail = $keterangan;
+            $projek->repositori = $repositori;
+            if (strlen($kertas_kerja) != 0) {
+                $projek->kertas_kerja = $kertas_kerja;
+            }
             $projek->save();
+
+            return redirect('/dev-team/projek/' . $devteam);
         }
         else
         {
@@ -248,10 +256,14 @@ class JTKController extends Controller
             $projek->nama_projek = $nama_projek;
             $projek->objektif = $objektif;
             $projek->detail = $keterangan;
+            $projek->repositori = $repositori;
+            $projek->kertas_kerja = $kertas_kerja;
             $projek->save();
-        }
+            
+            $dev_team = DevTeam::find($devteam);
 
-        return redirect('/dev-team');
+            return redirect('/dev-team/' . $dev_team->kod_ppd);
+        }
     }
     public function SenaraiProjek($groupid)
     {
@@ -270,5 +282,61 @@ class JTKController extends Controller
         /*return view('devteam.projek-detail',[
             'projek' => Projek::where('devteam_id',$groupid)->where('id',$projekid)->get()
         ]);*/
+    }
+    public function EditProjek(Request $r, $id)
+    {
+        $projek = Projek::find($id);
+        $devteam_id = $projek->devteam_id;
+        $nama_projek = $projek->nama_projek;
+        $objektif = $projek->objektif;
+        $detail = $projek->detail;
+        $kertas_kerja = $projek->kertas_kerja;
+        $repositori = $projek->repositori;
+
+        echo "$('#_projekid').val('$id');";
+        echo "$('#ProjekDialog').modal('show');";
+
+        echo "$('#_devteam').val(\"$devteam_id\").trigger(\"change\");";
+        echo "$('#_nama_projek').val(\"$nama_projek\");";
+        echo "$('#_objektif').val(\"$objektif\");";
+        echo "$('#_detail').val(\"$detail\");";
+        echo "$('#_repo').val(\"$repositori\");";
+    }
+    public function DeleteProjek($id)
+    {
+        $projek = Projek::find($id);
+        $devteam_id = $projek->devteam_id;
+        Projek::destroy($id);
+        echo "SweetAlert('success','Berjaya Dipadam !','Maklumat projek ini telah berjaya dipadam !',\"window.location.href='/dev-team/projek/$devteam_id';\")";
+    }
+    public function UploadKertasKerja(Request $r)
+    {
+        $FileType = strtolower($_FILES['file']['type']);
+        $FileName = strtolower($_FILES['file']['name']);
+        $ext = end((explode(".", $FileName)));
+        $tmpName = $_FILES['file']['tmp_name']; 
+        $isUploadedFile = is_uploaded_file($_FILES['file']['tmp_name']);
+        if ($isUploadedFile == true)
+        {
+            $newFilename = strtoupper(str_random(32)).'.'.$ext;
+            $newPathfile = public_path().'/devteam/kertas-kerja/'.$newFilename;
+            $isMove = move_uploaded_file($tmpName, $newPathfile);
+            if ($isMove) {
+                echo "OK|$newFilename";
+            } else {
+                echo "Ralat semasa muat naik dokumen kertas kerja anda. Sila cuba lagi !";
+            }
+        }
+        else
+        {
+            echo "KO";
+        }
+    }
+    public function PadamKertasKerja(Request $r, $filename)
+    {
+        if (file_exists(public_path().'/devteam/kertas-kerja/'.$filename))
+        {
+            unlink(public_path().'/devteam/kertas-kerja/'.$filename);
+        }
     }
 }

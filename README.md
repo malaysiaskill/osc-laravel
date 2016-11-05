@@ -1,6 +1,6 @@
 ## Template Sistem (Web-Based) - Juruteknik Komputer Negeri Perak (JTKPK)
 
-![Versi Template](http://img.shields.io/badge/Versi-v1.0.0-green.svg)
+![Versi Template](http://img.shields.io/badge/Versi-v1.0-green.svg)
 
 Template Sistem (Web-Based) & Platform utama sistem bersepadu bagi Kumpulan DEV-TEAM JTKPK. :+1:
 

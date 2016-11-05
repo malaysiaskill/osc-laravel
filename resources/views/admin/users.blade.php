@@ -48,14 +48,17 @@ $('#Users').DataTable({ responsive: true });
                                 <td class="text-center">{{ $i }}.</td>
                                 <td>
                                     <a href="#" onclick="javascript:EditUser('{{ $user->id }}');return false;">
-                                        <span class="font-w300 h5 text-primary">{{ $user->name }}</span>
+                                        <div class="font-w300 h5 text-primary">{{ $user->name }}</div>
                                     </a>
                                 </td>
                                 <td class="text-left">
-                                    <a href="mailto:{{ $user->email }}"><i class="fa fa-envelope push-5-r"></i>{{ $user->email }}</a>
+                                    <i class="fa fa-envelope push-5-r"></i>{{ $user->email }}
                                 </td>
                                 <td class="text-center">{{ $user->roles->role_name }}</td>
                                 <td class="text-center" width="150">
+                                    <button class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit Pengguna" onclick="javascript:EditUser('{{ $user->id }}');return false;">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
                                     <a href="{{ url('/admin/users/'.$user->id.'/delete') }}" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Padam Pengguna">
                                         <i class="fa fa-trash-o"></i>
                                     </a>

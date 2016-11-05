@@ -6,6 +6,38 @@ function jump(targ,selObj,restore){
   if (restore) selObj.selectedIndex=0;
 }
 
+/* Remove File */
+function RemoveFile(filename) {
+    var ajax = new sack();
+    ajax.requestFile = "/dev-team/projek/padam-kertas-kerja/" + filename;
+    Ajx(ajax);    
+}
+
+/* Sweet Alert*/
+function SweetAlert(mode,title,txt,func) {
+    if (typeof(func)==='undefined')
+    {
+        if (mode == "success") {
+            swal({title: title, text: txt, type: 'success', html: true});
+        } else if (mode == "error" || mode == "danger") {
+            swal({title: title, text: txt, type: 'error', html: true});
+        } else {
+            swal(txt);
+        }
+    }
+    else
+    {
+        swal({
+            title: title,
+            text: txt,
+            type: mode,
+            showCancelButton: false,
+            closeOnConfirm: true,
+            html: true
+        },function(){ eval(func); });
+    }
+}
+
 /* Avatar */
 function AvatarTemplate(avatar) {
     if (!avatar.id) { return avatar.text; }
@@ -65,8 +97,8 @@ function DeleteDevTeam(id) {
         confirmButtonColor: "#DD6B55",
         confirmButtonText: "Ya",
         cancelButtonText: "Batal",
-        closeOnConfirm: true,
-        showLoaderOnConfirm: false
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
     },
     function()
     {
@@ -86,4 +118,29 @@ function ClearAddProjek() {
 }
 function AddProjekDialog() {
     $('#ProjekDialog').modal();
+}
+function EditProjek(id) {
+    var ajax = new sack();
+    ajax.requestFile = "/dev-team/projek/edit/" + id;
+    Ajx(ajax);
+}
+function DeleteProjek(id) {
+    swal({
+        title: "Padam Projek ?",
+        text: "Anda pasti untuk memadam projek ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/dev-team/projek/delete/" + id;
+        Ajx(ajax);
+    });
 }

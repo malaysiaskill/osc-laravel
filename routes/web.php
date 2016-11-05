@@ -63,5 +63,8 @@ Route::post('/dev-team/delete/{id}', 'JTKController@DeleteDevTeam');
 Route::post('/dev-team/projek', 'JTKController@SaveProjek');
 Route::get('/dev-team/projek/{groupid}', 'JTKController@SenaraiProjek');
 Route::get('/dev-team/projek/{groupid}/{projekid}', 'JTKController@DetailProjek');
-
+Route::post('/dev-team/projek/edit/{projekid}', 'JTKController@EditProjek');
+Route::post('/dev-team/projek/delete/{projekid}', 'JTKController@DeleteProjek');
+Route::post('/dev-team/projek/kertas-kerja', 'JTKController@UploadKertasKerja');
+Route::post('/dev-team/projek/padam-kertas-kerja/{filename}', 'JTKController@PadamKertasKerja');
 

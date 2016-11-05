@@ -4,6 +4,67 @@
 
 @section('app.helper', ",'summernote', 'ckeditor'")
 
+@section('jquery')
+@if (Auth::user()->role == 'leader')
+    @if (Request::is('dev-team/*'))
+        var previewNode = $('.template');
+        var previewTemplate = previewNode.parent().html();
+        previewNode.remove();
+
+        var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
+            url: '/dev-team/projek/kertas-kerja',
+            params: {
+                _token: "{{ csrf_token() }}"
+            },
+            acceptedFiles: '.pdf,.doc,.docx',
+            maxFilesize: 5,
+            maxFiles: 1,
+            createImageThumbnails: false,
+            previewTemplate : previewTemplate,
+            previewsContainer : '#_previews',
+            init: function()
+            {
+                this.on("addedfile", function(file){
+                    $('.template').parent().append('<input class="kk" type="hidden" name="kk" data-name="'+file.name+'" value="">');
+                });
+                this.on("uploadprogress", function(file, progress, bytesSent) {
+                    $('.progress-bar').html(progress + ' %');
+                });
+                this.on("processing", function(file) {
+                    $("#btn-kertas-kerja").attr("disabled","disabled");
+                });
+                this.on("success", function(file) {
+                    var ret = file.xhr.response;
+                    var txt = ret.split('|');
+                    if (txt[0] == "OK") {
+                        $(".cancel").addClass("hide");
+                        $(".delete").removeClass("hide");
+                        $("#btn-kertas-kerja").addClass("hide");
+                        $(".progress").addClass("hide");
+                        $('[data-name="'+file.name+'"]').val(txt[1]);
+                    } else {
+                        SweetAlert('error','Ops !',txt[1]);
+                    }
+                });
+                this.on("removedfile", function(file) {
+                    $(".progress").removeClass("hide");
+                    $("#btn-kertas-kerja").removeClass("hide");
+                    RemoveFile($('[data-name="'+file.name+'"]').val());
+                    $('[data-name="'+file.name+'"]').remove();
+                });
+                this.on("complete", function() {
+                    $("#btn-kertas-kerja").removeAttr("disabled");
+                });
+                this.on("error", function(file, errorMessage) {
+                    console.log(errorMessage);
+                    setTimeout(function(){ SweetAlert('error','Ops !',errorMessage); },500);
+                });
+            }
+        });
+    @endif
+@endif
+@endsection
+
 @section('content')
 <!-- Page Header -->
 <div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
@@ -65,10 +126,10 @@
                                         @endif
 
                                         @if (Auth::user()->role == 'leader')
-                                        <a href="#" onclick="javascript:EditDevTeam('{{ $devteam->id }}');" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit Kumpulan">
+                                        <a href="#" onclick="javascript:EditDevTeam('{{ $devteam->id }}');return false;" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit Kumpulan">
                                             <i class="fa fa-pencil"></i>
                                         </a>
-                                        <a href="#" onclick="javascript:DeleteDevTeam('{{ $devteam->id }}');" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Padam Kumpulan">
+                                        <a href="#" onclick="javascript:DeleteDevTeam('{{ $devteam->id }}');return false;" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Padam Kumpulan">
                                             <i class="fa fa-trash-o"></i>
                                         </a>
                                         @endif
@@ -240,33 +301,84 @@
                             </h3>
                         </div>
                         <div class="block-content">
-                            <div class="form-group items-push border-b">
-                                <label class="col-sm-4 control-label">Kumpulan Dev Team :</label>
-                                <div class="col-sm-8">
-                                    <select id="_devteam" name="_devteam" data-placeholder="Kumpulan Dev Team" class="form-control js-select2" style="width:100%;" required>
-                                        <option></option>
-                                        @foreach (App\DevTeam::where('kod_ppd',Auth::user()->kod_ppd)->get() as $devteam)
-                                            <option value="{{ $devteam->id }}">{{ $devteam->nama_kumpulan }}</option>
-                                        @endforeach
-                                    </select>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 h5 font-w300 push-5">Kumpulan Dev Team :</label>
+                                        <div class="col-sm-12">
+                                            <select id="_devteam" name="_devteam" data-placeholder="Kumpulan Dev Team" class="form-control js-select2" style="width:100%;" required>
+                                                <option></option>
+                                                @foreach (App\DevTeam::where('kod_ppd',Auth::user()->kod_ppd)->get() as $devteam)
+                                                    <option value="{{ $devteam->id }}">{{ $devteam->nama_kumpulan }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group items-push border-b">
-                                <label class="col-sm-4 control-label">Nama Projek :</label>
-                                <div class="col-sm-8">
-                                    <input type="text" id="_nama_projek" name="_nama_projek" class="form-control" maxlength="255" placeholder="Nama Projek" required>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 h5 font-w300 push-5">Nama Projek :</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="_nama_projek" name="_nama_projek" class="form-control" maxlength="255" placeholder="Nama Projek" required>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-12 h4 font-w300 push-10">Objektif Projek :</label>
+                                <label class="col-sm-12 h5 font-w300 push-5">Objektif Projek :</label>
                                 <div class="col-sm-12">
                                     <textarea id="_objektif" name="_objektif" class="form-control js-emojis" placeholder="Objektif projek" rows="4"></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-sm-12 h4 font-w300 push-10">Keterangan Projek :</label>
+                                <label class="col-sm-12 h5 font-w300 push-5">Keterangan Projek :</label>
                                 <div class="col-sm-12">
-                                    <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="10"></textarea>
+                                    <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="5"></textarea>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 h5 font-w300 push-5">Kertas Kerja :</label>
+                                        <div class="col-sm-12">
+                                            <button id="btn-kertas-kerja" type="button" class="btn btn-primary">
+                                                <i class="fa fa-paperclip push-5-r"></i> Upload Kertas Kerja
+                                            </button>
+                                            <div id="_previews">
+                                                <div class="template panel panel-primary remove-margin-b push-5-t">
+                                                    <div class="panel-body">
+                                                        <div class="push-5">
+                                                            <h5>
+                                                                <span class="h6">
+                                                                    <i class="fa fa-file"></i>&nbsp; <span data-dz-name></span>
+                                                                </span>
+                                                                <span class="pull-right font-w300" data-dz-size></span>
+                                                            </h5>
+                                                        </div>
+                                                        <div class="progress active remove-margin-b">
+                                                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" data-dz-uploadprogress></div>
+                                                        </div>
+                                                        <div class="push-5-t">
+                                                            <button data-dz-remove class="btn btn-sm btn-warning cancel">
+                                                                <i class="fa fa-times"></i> Batal
+                                                            </button> 
+                                                            <button data-dz-remove class="btn btn-sm btn-danger delete hide">
+                                                                <i class="fa fa-trash-o"></i> Padam
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="col-sm-12 h5 font-w300 push-5">GitHub Repositori (Jika ada) :</label>
+                                        <div class="col-sm-12">
+                                            <input type="text" id="_repo" name="_repo" class="form-control" maxlength="255" placeholder="GitHub Repositori">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
