@@ -36,9 +36,6 @@
         previewTemplate : '<div style="display:none"></div>',
         init: function()
         {
-            this.on("uploadprogress", function(file, progress, bytesSent) {
-                console.log(progress);
-            });
             this.on("processing", function(file) {
                 $("#btn-avatar").html('<i class="fa fa-cog fa-spin push-5-r"></i>');
             });
