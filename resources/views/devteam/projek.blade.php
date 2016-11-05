@@ -250,9 +250,9 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="col-sm-12 h5 font-w300 push-5">GitHub Repositori (Jika ada) :</label>
+                                    <label class="col-sm-12 h5 font-w300 push-5">Repositori Projek (Jika ada) : <a href="https://www.google.com/search?q=apa+itu+repositori+github" target="_blank">Apakah Repositori ?</a></label>
                                     <div class="col-sm-12">
-                                        <input type="text" id="_repo" name="_repo" class="form-control" maxlength="255" placeholder="GitHub Repositori">
+                                        <input type="text" id="_repo" name="_repo" class="form-control" maxlength="255" placeholder="Contoh: https://github.com/nama/projek-saya.git">
                                     </div>
                                 </div>
                             </div>

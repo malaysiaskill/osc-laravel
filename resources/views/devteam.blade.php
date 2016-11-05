@@ -1,7 +1,6 @@
 @extends('master.app')
-@section('title', 'Senarai Kumpulan Development Team')
+@section('title', 'Kumpulan Development Team')
 @section('site.description', 'Senarai Kumpulan Development Team')
-
 @section('app.helper', ",'summernote', 'ckeditor'")
 
 @section('jquery')
@@ -70,7 +69,7 @@
 <div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
     <div class="push-50-t push-15">
         <h1 class="h2 text-white animated fadeInUp">
-            <i class="fa fa-users push-15-r"></i> Senarai Kumpulan Development Team
+            <i class="fa fa-users push-15-r"></i> Kumpulan Development Team
         </h1>
     </div>
 </div>
@@ -89,11 +88,11 @@
                     </a>
                     @endif
                     @if (Auth::user()->role == 'leader')
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
+                    <button type="button" class="btn btn-success" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
                         <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
                     </button>
                         @if (Request::is('dev-team/*'))
-                            <button type="button" class="btn btn-primary" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
+                            <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
                                 <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
                             </button>
                         @endif
@@ -101,9 +100,9 @@
                     <div class="pull-right">
                         <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
                             <option></option>
-                            @foreach (App\PPD::all() as $ppd)
-                                <option value="/dev-team">LIHAT SEMUA</option>
-                                <option value="/dev-team/{{ $ppd->kod_ppd }}" {{ ($id == $ppd->kod_ppd) ? 'selected':'' }}>{{ $ppd->ppd }}</option>
+                            <option value="/dev-team">LIHAT SEMUA</option>
+                            @foreach (App\PPD::all() as $_ppd)
+                                <option value="/dev-team/{{ $_ppd->kod_ppd }}" {{ ($id == $_ppd->kod_ppd) ? 'selected':'' }}>{{ $_ppd->ppd }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -111,9 +110,14 @@
                 
                 <div class="block-content">
                     @if (isset($id) && strlen($id)!=0)
-                        <center><h3 class="font-w300">{{ $nama_ppd }}</h2></center>
-                        <div class="content content-narrow content-full">
-                            
+                        <center><h3 class="font-w300"><b>({{ $ppd->kod_ppd }})</b> {{ $ppd->ppd }}</h2></center>
+                        <div class="content content-narrow content-full text-left">
+                            @if (count(App\DevTeam::where('kod_ppd',$id)->get()) == 0)
+                                <center>
+                                    <h1><i class="fa fa-question fa-3x"></i></h1>
+                                    <p>- Tiada Rekod -</p>
+                                </center>
+                            @else
                             @foreach (App\DevTeam::where('kod_ppd',$id)->get() as $devteam)
                             <div class="block block-rounded block-bordered">
                                 <div class="block-header bg-gray-lighter">
@@ -134,7 +138,7 @@
                                         </a>
                                         @endif
                                     </div>
-                                    <h3 class="h3 font-w300">{{ $devteam->nama_kumpulan }}</h3>
+                                    <h3 class="h3 font-w300 text-left">{{ $devteam->nama_kumpulan }}</h3>
                                 </div>
                                 <div class="block-content">
                                     <div class="table-responsive">
@@ -171,7 +175,7 @@
                                 </div>
                             </div>
                             @endforeach
-
+                            @endif
                         </div>
                     @else
                         <?php
@@ -374,9 +378,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="col-sm-12 h5 font-w300 push-5">GitHub Repositori (Jika ada) :</label>
+                                        <label class="col-sm-12 h5 font-w300 push-5">Repositori Projek (Jika ada) : <a href="https://www.google.com/search?q=apa+itu+repositori+github" target="_blank">Apakah Repositori ?</a></label>
                                         <div class="col-sm-12">
-                                            <input type="text" id="_repo" name="_repo" class="form-control" maxlength="255" placeholder="GitHub Repositori">
+                                            <input type="text" id="_repo" name="_repo" class="form-control" maxlength="255" placeholder="Contoh: https://github.com/nama/projek-saya.git">
                                         </div>
                                     </div>
                                 </div>

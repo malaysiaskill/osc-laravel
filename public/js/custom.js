@@ -10,7 +10,7 @@ function jump(targ,selObj,restore){
 function RemoveFile(filename) {
     var ajax = new sack();
     ajax.requestFile = "/dev-team/projek/padam-kertas-kerja/" + filename;
-    Ajx(ajax);    
+    Ajx(ajax);
 }
 
 /* Sweet Alert*/
@@ -141,6 +141,28 @@ function DeleteProjek(id) {
     {
         var ajax = new sack();
         ajax.requestFile = "/dev-team/projek/delete/" + id;
+        Ajx(ajax);
+    });
+}
+function PadamKertasKerja(pid,filename) {
+    swal({
+        title: "Padam Kertas Kerja Projek ?",
+        text: "Anda pasti untuk memadam kertas kerja projek ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/dev-team/projek/padam-kertas-kerja/" + filename;
+        ajax.setVar('projek_id',pid);
+        ajax.setVar('return_alert','1');
         Ajx(ajax);
     });
 }

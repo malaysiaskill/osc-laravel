@@ -18,13 +18,13 @@ Route::get('/access-denied', 'HomeController@AccessDenied');
 
 /**
 	
-	Pentadbir Sistem
+	PENTADBIR SISTEM
 
 */
 Route::group(['middleware' => ['role:administrator']], function()
 {
 	/**
-		Super Administrator Only
+		Akses bagi Pentadbir Tertinggi Sahaja
 	*/
 	Route::get('/admin/packages', 'AdminController@Packages');
 	Route::get('/admin/packages/{id}/activate', 'AdminController@ActivatePackages');
@@ -40,7 +40,7 @@ Route::group(['middleware' => ['role:administrator']], function()
 
 /**
 
-	Juruteknik Profil
+	PROFIL JURUTEKNIK
 
 */
 Route::get('/profil', 'JTKController@Profil');
@@ -52,7 +52,7 @@ Route::put('/profil', 'JTKController@SaveProfil');
 
 /**
 
-	Development Team
+	DEVELOPMENT TEAM
 
 */
 Route::get('/dev-team', 'JTKController@DevTeam');

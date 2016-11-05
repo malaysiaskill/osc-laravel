@@ -17,25 +17,35 @@ class JTKController extends Controller
 {
     public function __construct()
     {
+        # Memastikan semua pengguna log masuk sebelum mengakses
+        # method di dalam Controller JTKPK
+
         $this->middleware('auth');
 
+        # Terdapat beberapa method yang memerlukan pengguna
+        # mempunyai peranan untuk diakses
+        
         $this->middleware('role:leader',[
             'only' => ['SaveDevTeam', 'getDevTeam', 'DeleteDevTeam']
         ]);
+
     }
 
+    /**
+
+    PROFIL JURUTEKNIK KOMPUTER
+
+    */
     public function Profil(Request $r)
     {
     	return view('jtk.profil',[
     		'status' => $r->status
     	]);
     }
-
     public function Avatar($id = null)
     {
         if ($id != null)
         {
-            // Show User Avatar
             $user = User::find($id);
             $avatarType = $user->avatarType;
             $avatar = $user->avatar;
@@ -57,7 +67,6 @@ class JTKController extends Controller
         }
         else
         {
-            // Logged User Avatar
             $avatarType = Auth::user()->avatarType;
             $avatar = Auth::user()->avatar;
 
@@ -77,7 +86,6 @@ class JTKController extends Controller
             }
         }
     }
-
     public function DeleteAvatar()
     {
         $user = Auth::user();
@@ -86,7 +94,6 @@ class JTKController extends Controller
         $user->save();
         echo "window.location.href='/profil';";
     }
-
     public function UploadAvatar(Request $r)
     {
         $FileType = strtolower($_FILES['file']['type']);
@@ -94,16 +101,10 @@ class JTKController extends Controller
         $isUploadedFile = is_uploaded_file($_FILES['file']['tmp_name']);
         if ($isUploadedFile == true)
         {
-            /*$fp = fopen($tmpName, 'r');
-            $content = fread($fp, filesize($tmpName));
-            $content = addslashes($content);
-            fclose($fp);*/
-
             $user = Auth::user();
             $user->avatarType = $FileType;
-            $user->avatar = (file_get_contents($tmpName));//$content;
+            $user->avatar = file_get_contents($tmpName);
             $user->save();
-        
             echo "OK";
         }
         else
@@ -111,7 +112,6 @@ class JTKController extends Controller
             echo "KO";
         }
     }
-
     public function SaveProfil(Request $r)
     {
     	$Nama = $r->input('name');
@@ -139,29 +139,31 @@ class JTKController extends Controller
             $user->kod_jpn = $JPN;
             $user->kod_ppd = $PPD;
             $user->kod_jabatan = $SEK;
-        } else {
-            // nothing
         }
         $user->save();
 
     	return redirect('/profil/?status=success');
     }
 
+    /**
+
+    KUMPULAN DEVELOPMENT TEAM
+
+    */
     public function DevTeam($id = null)
     {
         if ($id != null)
         {
             $ppd = PPD::where('kod_ppd',$id)->first();
-            $nama_ppd = $ppd->ppd;
         }
         else
         {
-            $nama_ppd = '';
+            $ppd = '';
         }
 
         return view('devteam',[
             'id' => $id,
-            'nama_ppd' => $nama_ppd
+            'ppd' => $ppd
         ]);
     }
     public function SaveDevTeam(Request $r)
@@ -215,12 +217,12 @@ class JTKController extends Controller
         $devteam = DevTeam::find($id);
         $kod_ppd = $devteam->kod_ppd;
         $devteam = DevTeam::destroy($id);
-        echo "SweetAlert('success','Berjaya Dipadam !','Rekod kumpulan ini telah berjaya dipadam !',\"window.location.href='/dev-team/$kod_ppd';\")";
+        echo "SweetAlert('success','Berjaya Dipadam !','Rekod kumpulan ini telah berjaya dipadam !',\"window.location.href='/dev-team/$kod_ppd';\");";
     }
 
     /**
 
-        Projek
+    SENARAI PROJEK DEVELOPMENT TEAM
 
     */
     public function SaveProjek(Request $r)
@@ -301,13 +303,48 @@ class JTKController extends Controller
         echo "$('#_objektif').val(\"$objektif\");";
         echo "$('#_detail').val(\"$detail\");";
         echo "$('#_repo').val(\"$repositori\");";
+
+        if (strlen($kertas_kerja) != 0)
+        {
+            echo "$('#btn-kertas-kerja').addClass('hide');";
+
+            $output = '<div class="template panel panel-primary remove-margin-b push-5-t">
+                            <div class="panel-body">
+                                <div class="push-5">
+                                    <h5>
+                                        <span class="h6">
+                                            <a href="/devteam/kertas-kerja/'.$kertas_kerja.'">
+                                                <i class="fa fa-file"></i>&nbsp; <span>Fail Kertas Kerja</span>
+                                            </a>
+                                        </span>
+                                    </h5>
+                                </div>
+                                <div class="push-5-t">
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="javascript:PadamKertasKerja(\''.$id.'\',\''.$kertas_kerja.'\');">
+                                        <i class="fa fa-trash-o"></i> Padam
+                                    </button>
+                                </div>
+                            </div>
+                        </div>';
+            $output = trim(preg_replace('/\s\s+/', ' ', $output));
+
+            echo "$('#_previews').html('".addslashes($output)."');";
+        }
     }
     public function DeleteProjek($id)
     {
         $projek = Projek::find($id);
         $devteam_id = $projek->devteam_id;
+        $kertas_kerja = $projek->kertas_kerja;
         Projek::destroy($id);
-        echo "SweetAlert('success','Berjaya Dipadam !','Maklumat projek ini telah berjaya dipadam !',\"window.location.href='/dev-team/projek/$devteam_id';\")";
+
+        # Delete Kertas Kerja
+        if (file_exists(public_path().'/devteam/kertas-kerja/'.$kertas_kerja))
+        {
+            unlink(public_path().'/devteam/kertas-kerja/'.$kertas_kerja);
+        }
+
+        echo "SweetAlert('success','Berjaya Dipadam !','Maklumat projek ini telah berjaya dipadam !',\"window.location.href='/dev-team/projek/$devteam_id';\");";
     }
     public function UploadKertasKerja(Request $r)
     {
@@ -337,6 +374,17 @@ class JTKController extends Controller
         if (file_exists(public_path().'/devteam/kertas-kerja/'.$filename))
         {
             unlink(public_path().'/devteam/kertas-kerja/'.$filename);
+        }
+
+        $projek = Projek::find($r->projek_id);
+        $projek->kertas_kerja = DB::raw('NULL');
+        $projek->save();
+
+        if ($r->return_alert == 1 || $r->return_alert == '1')
+        {
+            echo "SweetAlert('success','Berjaya Dipadam !','Maklumat kertas kerja projek ini telah berjaya dipadam !');";
+            echo "$('.template').remove();";
+            echo "$('#btn-kertas-kerja').removeClass('hide');";
         }
     }
 }
