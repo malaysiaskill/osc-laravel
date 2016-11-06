@@ -124,6 +124,11 @@ function EditProjek(id) {
     ajax.requestFile = "/dev-team/projek/edit/" + id;
     Ajx(ajax);
 }
+function ViewProjek(id) {
+    var ajax = new sack();
+    ajax.requestFile = "/dev-team/projek/view/" + id;
+    Ajx(ajax);
+}
 function DeleteProjek(id) {
     swal({
         title: "Padam Projek ?",

@@ -228,11 +228,15 @@ class JTKController extends Controller
     public function SaveProjek(Request $r)
     {
         $devteam = $r->input('_devteam');
-        $nama_projek = $r->input('_nama_projek');
-        $objektif = $r->input('_objektif');
-        $keterangan = $r->input('_detail');
-        $repositori = $r->input('_repo');
-        $kertas_kerja = $r->input('kk');
+        $nama_projek = htmlentities($r->input('_nama_projek'),ENT_QUOTES);
+        $objektif = htmlentities($r->input('_objektif'),ENT_QUOTES);
+        $keterangan = htmlentities($r->input('_detail'),ENT_QUOTES);
+        $repositori = htmlentities($r->input('_repo'),ENT_QUOTES);
+        if (strlen($r->input('kk')) != 0) {
+            $kk = explode('|', $r->input('kk'));
+            $nama_kertas_kerja = htmlentities($kk[0],ENT_QUOTES);
+            $kertas_kerja = $kk[1];
+        }
 
         if ($r->_projekid != 0 || $r->_projekid != '0')
         {
@@ -243,7 +247,8 @@ class JTKController extends Controller
             $projek->objektif = $objektif;
             $projek->detail = $keterangan;
             $projek->repositori = $repositori;
-            if (strlen($kertas_kerja) != 0) {
+            if (strlen($r->input('kk')) != 0) {
+                $projek->nama_kertas_kerja = $nama_kertas_kerja;
                 $projek->kertas_kerja = $kertas_kerja;
             }
             $projek->save();
@@ -259,7 +264,10 @@ class JTKController extends Controller
             $projek->objektif = $objektif;
             $projek->detail = $keterangan;
             $projek->repositori = $repositori;
-            $projek->kertas_kerja = $kertas_kerja;
+            if (strlen($r->input('kk')) != 0) {
+                $projek->nama_kertas_kerja = $nama_kertas_kerja;
+                $projek->kertas_kerja = $kertas_kerja;
+            }
             $projek->save();
             
             $dev_team = DevTeam::find($devteam);
@@ -285,51 +293,97 @@ class JTKController extends Controller
             'projek' => Projek::where('devteam_id',$groupid)->where('id',$projekid)->get()
         ]);*/
     }
+    public function ViewProjek(Request $r, $id)
+    {
+        $projek = Projek::find($id);
+        $devteam_id = $projek->devteam_id;
+        $nama_projek = $projek->nama_projek;
+        $objektif = nl2br($projek->objektif);
+        $detail = nl2br($projek->detail);
+        $nama_kertas_kerja = $projek->nama_kertas_kerja;
+        $kertas_kerja = $projek->kertas_kerja;
+        $repositori = $projek->repositori;
+
+        $devteam = DevTeam::find($devteam_id);
+
+        $objektif = addslashes(\Emojione\Emojione::toImage($objektif));
+        $detail = addslashes(\Emojione\Emojione::toImage($detail));
+
+        $output = "$('#ViewProjekDialog').modal('show');";
+        $output .= "$('#v_devteam').html(\"".$devteam->nama_kumpulan."\").trigger(\"change\");";
+        $output .= "$('#v_nama_projek').html(\"$nama_projek\");";
+        $output .= "$('#v_objektif').html(\"$objektif\");";
+        $output .= "$('#v_detail').html(\"$detail\");";
+        $output .= "$('#v_repo').html(\"$repositori\");";
+
+        if (strlen($kertas_kerja) != 0)
+        {
+            $output_template = '<div class="template panel panel-primary remove-margin-b push-5-t">
+                            <div class="panel-body">
+                                <div class="push-5 pull-left">
+                                    <span class="h5">Fail Kertas Kerja :</span><br>
+                                    <a href="/devteam/kertas-kerja/'.$kertas_kerja.'" target="_blank">
+                                        <i class="fa fa-file push-5-r"></i>
+                                        <span class="h6">'.$nama_kertas_kerja.'</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>';
+            $output .= "$('#v_previews').html('".addslashes($output_template)."');";
+        }
+
+        $output = trim(preg_replace('/\s\s+/', '', $output));
+        echo $output;
+    }
     public function EditProjek(Request $r, $id)
     {
         $projek = Projek::find($id);
         $devteam_id = $projek->devteam_id;
         $nama_projek = $projek->nama_projek;
-        $objektif = $projek->objektif;
-        $detail = $projek->detail;
+
+        $objektif = addslashes(html_entity_decode($projek->objektif,ENT_QUOTES));
+        $objektif = str_replace('<br />', '\n', nl2br($objektif));
+
+        $detail = addslashes(html_entity_decode($projek->detail,ENT_QUOTES));
+        $detail = str_replace('<br />', '\n', nl2br($detail));
+
+        $nama_kertas_kerja = $projek->nama_kertas_kerja;
         $kertas_kerja = $projek->kertas_kerja;
         $repositori = $projek->repositori;
 
-        echo "$('#_projekid').val('$id');";
-        echo "$('#ProjekDialog').modal('show');";
+        $output = '$(\'#_projekid\').val(\''.$id.'\');';
+        $output .= '$(\'#ProjekDialog\').modal(\'show\');';
 
-        echo "$('#_devteam').val(\"$devteam_id\").trigger(\"change\");";
-        echo "$('#_nama_projek').val(\"$nama_projek\");";
-        echo "$('#_objektif').val(\"$objektif\");";
-        echo "$('#_detail').val(\"$detail\");";
-        echo "$('#_repo').val(\"$repositori\");";
+        $output .= '$(\'#_devteam\').val("'.$devteam_id.'").trigger("change");';
+        $output .= '$(\'#_nama_projek\').val("'.$nama_projek.'");';
+        $output .= '$(\'#_objektif\').val("'.$objektif.'");';
+        $output .= '$(\'#_detail\').val("'.$detail.'");';
+        $output .= '$(\'#_repo\').val("'.$repositori.'");';
 
         if (strlen($kertas_kerja) != 0)
         {
-            echo "$('#btn-kertas-kerja').addClass('hide');";
-
-            $output = '<div class="template panel panel-primary remove-margin-b push-5-t">
+            $output .= "$('#btn-kertas-kerja').addClass('hide');";
+            $output_template = '<div class="template panel panel-primary remove-margin-b push-5-t">
                             <div class="panel-body">
-                                <div class="push-5">
-                                    <h5>
-                                        <span class="h6">
-                                            <a href="/devteam/kertas-kerja/'.$kertas_kerja.'">
-                                                <i class="fa fa-file"></i>&nbsp; <span>Fail Kertas Kerja</span>
-                                            </a>
-                                        </span>
-                                    </h5>
+                                <div class="push-5 pull-left">
+                                    <span class="h5">Fail Kertas Kerja :</span><br>
+                                    <a href="/devteam/kertas-kerja/'.$kertas_kerja.'" target="_blank">
+                                        <i class="fa fa-file push-5-r"></i>
+                                        <span class="h6">'.$nama_kertas_kerja.'</span>
+                                    </a>
                                 </div>
-                                <div class="push-5-t">
+                                <div class="push pull-right">
                                     <button type="button" class="btn btn-sm btn-danger" onclick="javascript:PadamKertasKerja(\''.$id.'\',\''.$kertas_kerja.'\');">
                                         <i class="fa fa-trash-o"></i> Padam
                                     </button>
                                 </div>
                             </div>
                         </div>';
-            $output = trim(preg_replace('/\s\s+/', ' ', $output));
-
-            echo "$('#_previews').html('".addslashes($output)."');";
+            $output .= "$('#_previews').html('".addslashes($output_template)."');";
         }
+
+        $output = trim(preg_replace('/\s\s+/', '', $output));
+        echo $output;
     }
     public function DeleteProjek($id)
     {
@@ -377,6 +431,7 @@ class JTKController extends Controller
         }
 
         $projek = Projek::find($r->projek_id);
+        $projek->nama_kertas_kerja = DB::raw('NULL');
         $projek->kertas_kerja = DB::raw('NULL');
         $projek->save();
 

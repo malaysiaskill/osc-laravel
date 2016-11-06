@@ -25,7 +25,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
     init: function()
     {
         this.on("addedfile", function(file){
-            $('.template').parent().append('<input class="kk" type="hidden" name="kk" data-name="'+file.name+'" value="">');
+            $('.template').parent().append('<input class="kk" type="hidden" name="kk" data-name="'+file.name+'" data-file="" value="">');
         });
         this.on("uploadprogress", function(file, progress, bytesSent) {
             $('.progress-bar').html(progress + ' %');
@@ -41,7 +41,8 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                 $(".delete").removeClass("hide");
                 $("#btn-kertas-kerja").addClass("hide");
                 $(".progress").addClass("hide");
-                $('[data-name="'+file.name+'"]').val(txt[1]);
+                $('[data-name="'+file.name+'"]').val(file.name+'|'+txt[1]);
+                $('[data-name="'+file.name+'"]').attr('data-file', txt[1]);
             } else {
                 SweetAlert('error','Ops !',txt[1]);
             }
@@ -49,7 +50,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
         this.on("removedfile", function(file) {
             $(".progress").removeClass("hide");
             $("#btn-kertas-kerja").removeClass("hide");
-            RemoveFile($('[data-name="'+file.name+'"]').val());
+            RemoveFile($('[data-name="'+file.name+'"]').attr('data-file'));
             $('[data-name="'+file.name+'"]').remove();
         });
         this.on("complete", function() {
@@ -130,11 +131,13 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                                 <td class="text-center">{{ $i }}.</td>
                                 <td>
                                     @if (Auth::user()->role == 'leader')
-                                    <a href="#" onclick="javascript:EditProjek('{{ $prj->id }}');return false;">
-                                        <span class="font-w300 h5 text-primary">{{ $prj->nama_projek }}</span>
-                                    </a>
+                                        <a href="#" onclick="javascript:EditProjek('{{ $prj->id }}');return false;">
+                                            <span class="font-w300 h5 text-primary">{{ $prj->nama_projek }}</span>
+                                        </a>
                                     @else
-                                        <span class="font-w300 h5 text-primary">{{ $prj->nama_projek }}</span>
+                                        <a href="#" onclick="javascript:ViewProjek('{{ $prj->id }}');return false;">
+                                            <span class="font-w300 h5 text-primary">{{ $prj->nama_projek }}</span>
+                                        </a>
                                     @endif
                                 </td>
                                 <td class="text-center h3 font-w300">0 %</td>
@@ -142,12 +145,16 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                                 <td class="text-center h3 font-w300">0</td>
                                 <td class="text-center" width="150">
                                     @if (Auth::user()->role == 'leader')
-                                    <button type="button" class="btn btn-primary" onclick="javascript:EditProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Edit Maklumat Projek">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-danger" onclick="javascript:DeleteProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Padam Projek">
-                                        <i class="fa fa-trash-o"></i>
-                                    </button>
+                                        <button type="button" class="btn btn-primary" onclick="javascript:EditProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Edit Maklumat Projek">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-danger" onclick="javascript:DeleteProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Padam Projek">
+                                            <i class="fa fa-trash-o"></i>
+                                        </button>
+                                    @else
+                                        <button type="button" class="btn btn-primary" onclick="javascript:ViewProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Lihat Maklumat Projek">
+                                            <i class="fa fa-briefcase"></i>
+                                        </button>
                                     @endif
                                     <a href="#" class="btn btn-primary" data-toggle="tooltip" title="Lihat Semua Task">
                                         <i class="fa fa-th-list"></i>
@@ -267,6 +274,77 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                         <i class="fa fa-times push-5-r"></i>Batal
                     </button>                
                     <input id="_projekid" name="_projekid" type="hidden" value="0" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@else
+<!-- View Projek Dialog //-->
+<div id="ViewProjekDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-popout">
+        <div class="modal-content">
+            <form method="post" class="form-horizontal">
+                <div class="block block-themed block-transparent remove-margin-b">
+                    <div class="block-header bg-primary-dark">
+                        <h3 class="block-title">
+                            <i class="fa fa-user push-10-r"></i>Projek : Kumpulan Development Team
+                        </h3>
+                    </div>
+                    <div class="block-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-12 h5 font-w600 push-5">Kumpulan Dev Team :</label>
+                                    <div id="v_devteam" class="col-sm-12">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-12 h5 font-w600 push-5">Nama Projek :</label>
+                                    <div id="v_nama_projek" class="col-sm-12">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 h5 font-w600 push-5">Objektif Projek :</label>
+                            <div class="col-sm-12">
+                                <div id="v_objektif" class="panel panel-primary padding-10-all remove-margin-b">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 h5 font-w600 push-5">Keterangan Projek :</label>
+                            <div class="col-sm-12">
+                                <div id="v_detail" class="panel panel-primary padding-10-all remove-margin-b">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-12 h5 font-w600 push-5">Kertas Kerja :</label>
+                                    <div class="col-sm-12">
+                                        <div id="v_previews"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-12 h5 font-w600 push-5">Repositori Projek (Jika ada) : <a href="https://www.google.com/search?q=apa+itu+repositori+github" target="_blank">Apakah Repositori ?</a></label>
+                                    <div id="v_repo" class="col-sm-12">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_u_cancel" data-dismiss="modal" class="btn btn-default" type="button">
+                        <i class="fa fa-check push-5-r"></i>OK
+                    </button>
                 </div>
             </form>
         </div>

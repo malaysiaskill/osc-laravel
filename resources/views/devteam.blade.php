@@ -24,7 +24,7 @@
             init: function()
             {
                 this.on("addedfile", function(file){
-                    $('.template').parent().append('<input class="kk" type="hidden" name="kk" data-name="'+file.name+'" value="">');
+                    $('.template').parent().append('<input class="kk" type="hidden" name="kk" data-name="'+file.name+'" data-file="" value="">');
                 });
                 this.on("uploadprogress", function(file, progress, bytesSent) {
                     $('.progress-bar').html(progress + ' %');
@@ -40,7 +40,8 @@
                         $(".delete").removeClass("hide");
                         $("#btn-kertas-kerja").addClass("hide");
                         $(".progress").addClass("hide");
-                        $('[data-name="'+file.name+'"]').val(txt[1]);
+                        $('[data-name="'+file.name+'"]').val(file.name+'|'+txt[1]);
+                        $('[data-name="'+file.name+'"]').attr('data-file', txt[1]);
                     } else {
                         SweetAlert('error','Ops !',txt[1]);
                     }
@@ -48,7 +49,7 @@
                 this.on("removedfile", function(file) {
                     $(".progress").removeClass("hide");
                     $("#btn-kertas-kerja").removeClass("hide");
-                    RemoveFile($('[data-name="'+file.name+'"]').val());
+                    RemoveFile($('[data-name="'+file.name+'"]').attr('data-file'));
                     $('[data-name="'+file.name+'"]').remove();
                 });
                 this.on("complete", function() {

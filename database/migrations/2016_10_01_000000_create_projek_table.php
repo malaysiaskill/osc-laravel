@@ -21,6 +21,7 @@ class CreateProjekTable extends Migration
             $table->string('nama_projek')->unique();
             $table->text('objektif')->nullable();
             $table->text('detail')->nullable();
+            $table->string('nama_kertas_kerja')->nullable();
             $table->string('kertas_kerja')->nullable();
             $table->string('repositori')->nullable();
             $table->timestamps();

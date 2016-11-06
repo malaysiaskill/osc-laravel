@@ -61,6 +61,7 @@ php artisan db:seed
 **Untuk pengguna Mac OS
 ```
 sudo chmod -R 777 storage/
+sudo chmod -R 777 public/devteam/kertas-kerja/
 ```
 
 **Langkah 6 :** Run Sistem
