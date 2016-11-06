@@ -12,6 +12,7 @@ use App\PPD;
 use App\Sekolah;
 use App\DevTeam;
 use App\Projek;
+use App\ProjekTask;
 
 class JTKController extends Controller
 {
@@ -171,7 +172,7 @@ class JTKController extends Controller
         $kod_ppd = $r->input('_kodppd');
         $nama_kumpulan = $r->input('_name');
         $ketua = $r->input('_ketua');
-        $ahli = implode(',', $r->input('_jtk'));
+        $ahli = ','.implode(',', $r->input('_jtk')).',';
 
         if ($r->_gid != 0 || $r->_gid != '0')
         {
@@ -252,8 +253,6 @@ class JTKController extends Controller
                 $projek->kertas_kerja = $kertas_kerja;
             }
             $projek->save();
-
-            return redirect('/dev-team/projek/' . $devteam);
         }
         else
         {
@@ -269,11 +268,9 @@ class JTKController extends Controller
                 $projek->kertas_kerja = $kertas_kerja;
             }
             $projek->save();
-            
-            $dev_team = DevTeam::find($devteam);
-
-            return redirect('/dev-team/' . $dev_team->kod_ppd);
         }
+
+        return redirect('/dev-team/projek/' . $devteam);
     }
     public function SenaraiProjek($groupid)
     {
@@ -452,9 +449,69 @@ class JTKController extends Controller
 
         return view('devteam.tasks',[
             'projek_id' => $projekid,
+            'devteam_id' => $projek->devteam->id,
             'nama_projek' => $projek->nama_projek,
             'nama_kumpulan' => $projek->devteam->nama_kumpulan,
             'tasks' => $tasks
         ]);
     }
+    public function SaveTask(Request $r)
+    {
+        $tajuk_task = htmlentities($r->input('_tajuk_task'),ENT_QUOTES);
+        $assigned = $r->input('_assigned');
+        $peratus_siap = $r->input('_peratus_siap');
+        $detail = htmlentities($r->input('_detail'),ENT_QUOTES);
+        $projek_id = $r->input('_projekid');
+
+        if ($r->_taskid != 0 || $r->_taskid != '0')
+        {
+            # Update
+            $task = ProjekTask::find($r->_taskid);
+            $task->projek_id = $projek_id;
+            $task->tajuk_task = $tajuk_task;
+            $task->detail_task = $detail;
+            $task->assigned = $assigned;
+            $task->peratus_siap = $peratus_siap;
+            $task->save();
+        }
+        else
+        {
+            # Insert
+            $task = new ProjekTask;
+            $task->projek_id = $projek_id;
+            $task->tajuk_task = $tajuk_task;
+            $task->detail_task = $detail;
+            $task->assigned = $assigned;
+            $task->peratus_siap = $peratus_siap;
+            $task->save();
+        }
+
+        return redirect('/dev-team/projek/' . $projek_id . '/tasks');
+    }
+    public function DeleteTask(Request $r, $taskid)
+    {
+        $task = ProjekTask::find($taskid);
+        $projek_id = $task->projek_id;
+        ProjekTask::destroy($taskid);
+
+        echo "SweetAlert('success','Berjaya Dipadam !','Maklumat task tugasan ini telah berjaya dipadam !',\"window.location.href='/dev-team/projek/$projek_id/tasks';\");";
+    }
+    public function EditTask(Request $r, $taskid)
+    {
+        $task = ProjekTask::find($taskid);
+        $tajuk_task = $task->tajuk_task;
+        $detail_task = $task->detail_task;
+        $assigned = $task->assigned;
+        $peratus_siap = $task->peratus_siap;
+
+        //var PeratusSiap = $("#_peratus_siap").data("ionRangeSlider");
+        //PeratusSiap.update({ from: 0, to: 0});
+
+        echo "$('#_taskid').val('$taskid');";
+        echo "$('#TaskDialog').modal('show');";
+
+        echo "$('#_tajuk_task').val('$tajuk_task');";
+        echo "$('#_assigned').val(\"$assigned\").trigger(\"change\");";
+        echo "$('#_detail').val('$detail_task');";
+    }    
 }

@@ -86,11 +86,16 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                     <a href="/dev-team/{{ $kodppd }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
+                    @if (Auth::user()->role == 'leader')
+                        <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
+                            <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
+                        </button>
+                    @endif
                     <div class="pull-right">
                         <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
                             <option></option>
+                            <option value="/dev-team">LIHAT SEMUA</option>
                             @foreach (App\PPD::all() as $ppd)
-                                <option value="/dev-team">LIHAT SEMUA</option>
                                 <option value="/dev-team/{{ $ppd->kod_ppd }}" {{ ($kodppd == $ppd->kod_ppd) ? 'selected':'' }}>{{ $ppd->ppd }}</option>
                             @endforeach
                         </select>
@@ -131,7 +136,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                                 <td class="text-center">{{ $i }}.</td>
                                 <td>
                                     @if (Auth::user()->role == 'leader')
-                                        <a href="#" onclick="javascript:EditProjek('{{ $prj->id }}');return false;">
+                                        <a href="/dev-team/projek/{{ $prj->id }}/tasks">
                                             <span class="font-w300 h5 text-primary">{{ $prj->nama_projek }}</span>
                                         </a>
                                     @else
@@ -141,7 +146,12 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                                     @endif
                                 </td>
                                 <td class="text-center h3 font-w300">
-                                 {{ number_format((($prj->tasks->sum('peratus_siap') / ($prj->tasks->count()*100) ) * 100),2) }} %</td>
+                                    @if ($prj->tasks->count() != 0)
+                                        {{ number_format((($prj->tasks->sum('peratus_siap') / ($prj->tasks->count()*100) ) * 100),2) }} %
+                                    @else
+                                        0 %
+                                    @endif
+                                </td>
                                 <td class="text-center h3 font-w300">{{ $prj->tasks->count() }}</td>
                                 <td class="text-center h3 font-w300">{{ $prj->tasks->where('peratus_siap','<>','100')->count() }}</td>
                                 <td class="text-center" width="150">

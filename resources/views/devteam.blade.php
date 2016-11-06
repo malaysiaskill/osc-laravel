@@ -81,17 +81,16 @@
     <div class="row">
         <div class="col-xs-12">
             <div id="_users" class="block block-themed block-rounded push-5">
-                
                 <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
-                    @if (isset($id) && strlen($id)!=0)
-                    <a href="/dev-team" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
-                        <i class="fa fa-arrow-circle-left"></i>
-                    </a>
+                    @if ($id != null)
+                        <a href="/dev-team" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                            <i class="fa fa-arrow-circle-left"></i>
+                        </a>
                     @endif
                     @if (Auth::user()->role == 'leader')
-                    <button type="button" class="btn btn-success" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
-                        <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
-                    </button>
+                        <button type="button" class="btn btn-success" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
+                            <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
+                        </button>
                         @if (Request::is('dev-team/*'))
                             <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
                                 <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
@@ -110,7 +109,7 @@
                 </div>
                 
                 <div class="block-content">
-                    @if (isset($id) && strlen($id)!=0)
+                    @if ($id != null)
                         <center><h3 class="font-w300"><b>({{ $ppd->kod_ppd }})</b> {{ $ppd->ppd }}</h2></center>
                         <div class="content content-narrow content-full text-left">
                             @if (count(App\DevTeam::where('kod_ppd',$id)->get()) == 0)
@@ -126,17 +125,17 @@
                                     <div class="block-options-simple">
                                         @if (count($devteam->projek) > 0)
                                             <a href="/dev-team/projek/{{ $devteam->id }}" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Lihat Projek">
-                                                <i class="fa fa-th push-5-r"></i> Lihat Projek ({{ count($devteam->projek) }})
+                                                <i class="fa fa-th push-5-r"></i> Lihat Projek ( {{ count($devteam->projek) }} )
                                             </a>
                                         @endif
 
                                         @if (Auth::user()->role == 'leader')
-                                        <a href="#" onclick="javascript:EditDevTeam('{{ $devteam->id }}');return false;" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit Kumpulan">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <a href="#" onclick="javascript:DeleteDevTeam('{{ $devteam->id }}');return false;" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Padam Kumpulan">
-                                            <i class="fa fa-trash-o"></i>
-                                        </a>
+                                            <a href="#" onclick="javascript:EditDevTeam('{{ $devteam->id }}');return false;" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit Kumpulan">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <a href="#" onclick="javascript:DeleteDevTeam('{{ $devteam->id }}');return false;" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Padam Kumpulan">
+                                                <i class="fa fa-trash-o"></i>
+                                            </a>
                                         @endif
                                     </div>
                                     <h3 class="h3 font-w300 text-left">{{ $devteam->nama_kumpulan }}</h3>
@@ -154,7 +153,12 @@
                                             </thead>
                                             <tbody>
                                                 @foreach (explode(',',$devteam->senarai_jtk) as $userid)
-                                                    <?php $_user = App\User::find($userid); ?>
+                                                    <?php
+                                                        if (strlen($userid) == 0) {
+                                                            continue;
+                                                        }
+                                                        $_user = App\User::find($userid);
+                                                    ?>
                                                     <tr>
                                                         <td class="text-center">
                                                             <img class="img-avatar img-avatar48" src="/avatar/{{ $_user->id }}" title="{{ $_user->name }}">
@@ -182,37 +186,38 @@
                         <?php
                             $dev_team = App\DevTeam::all();
                         ?>
-                        @if (count($dev_team) == 0)
+                        @if ($dev_team->count() == 0)
                             <center><h2 class="h5 font-w300 push-20">- Tiada Rekod -</h2></center>
                         @else
-                        <div class="row">
-                            @foreach (App\DevTeam::all() as $devteam)
-                            <div class="col-sm-6 col-md-4 col-lg-3">
-                                <a class="block block-bordered block-link-hover3" href="{{ url('/dev-team/'.$devteam->kod_ppd.'') }}">
-                                    <div class="block-content block-content-full text-center">
-                                        <div><i class="fa fa-users fa-3x"></i></div>
-                                        <div class="h4 font-w300 push-15-t push-5">{{ ucwords($devteam->nama_kumpulan) }}</div>
-                                        <div class="text-muted push-5"><b>Ketua :</b> {{ $devteam->ketua->name }}</div>
-                                        <div class="text-muted push-10">
-                                            @foreach (explode(',',$devteam->senarai_jtk) as $ahli)
-                                                <img src="/avatar/{{ $ahli }}" class="img-avatar img-avatar32" data-toggle="tooltip" title="{{ App\User::find($ahli)->name }}"> 
-                                            @endforeach
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-xs-6 border-r">
-                                                <h2 class="font-w300">{{ count($devteam->projek) }}</h2>
-                                                <span class="text-primary"><i class="fa fa-th-list push-5-r"></i> Projek</span>
+                            <div class="row">
+                                @foreach (\App\DevTeam::all() as $devteam)
+                                <div class="col-sm-6 col-md-4 col-lg-3">
+                                    <a class="block block-bordered block-link-hover3" href="{{ url('/dev-team/'.$devteam->kod_ppd.'') }}">
+                                        <div class="block-content block-content-full text-center">
+                                            <div><i class="fa fa-users fa-3x"></i></div>
+                                            <div class="h4 font-w300 push-15-t push-5">{{ ucwords($devteam->nama_kumpulan) }}</div>
+                                            <div class="text-muted push-5"><b>Ketua :</b> {{ $devteam->ketua->name }}</div>
+                                            <div class="text-muted push-10">
+                                                @foreach (explode(',',$devteam->senarai_jtk) as $ahli)
+                                                    <?php if (strlen($ahli) == 0) { continue; }?>
+                                                    <img src="/avatar/{{ $ahli }}" class="img-avatar img-avatar32" data-toggle="tooltip" title="{{ App\User::find($ahli)->name }}"> 
+                                                @endforeach
                                             </div>
-                                            <div class="col-xs-6">
-                                                <h2 class="font-w300">{{ $devteam->jumlah_ahli }}</h2>
-                                                <span class="text-primary"><i class="fa fa-users push-5-r"></i> Ahli</span>
+                                            <div class="row">
+                                                <div class="col-xs-6 border-r">
+                                                    <h2 class="font-w300">{{ count($devteam->projek) }}</h2>
+                                                    <span class="text-primary"><i class="fa fa-th-list push-5-r"></i> Projek</span>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <h2 class="font-w300">{{ $devteam->jumlah_ahli }}</h2>
+                                                    <span class="text-primary"><i class="fa fa-users push-5-r"></i> Ahli</span>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                </div>
+                                @endforeach
                             </div>
-                            @endforeach
-                        </div>
                         @endif
                     @endif
                 </div>

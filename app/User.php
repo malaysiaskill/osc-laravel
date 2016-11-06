@@ -41,4 +41,15 @@ class User extends Authenticatable
     {
         return $this->hasOne('App\Sekolah', 'kod_sekolah', 'kod_jabatan');
     }
+
+    public function getDevteamAttribute()
+    {
+        $devteam = \App\DevTeam::where('kod_ppd',$this->kod_ppd)->where('senarai_jtk','LIKE','%,'.$this->id.',%')->first();
+        
+        if (count($devteam) != 0) {
+            return $devteam->id;
+        } else {
+            return '0';
+        }
+    }
 }

@@ -114,6 +114,7 @@ function ClearAddProjek() {
     $('#_nama_projek').val('');
     $('#_objektif').val('');
     $('#_detail').val('');
+    $('#_repo').val('');
     $('#_projekid').val('0');
 }
 function AddProjekDialog() {
@@ -168,6 +169,48 @@ function PadamKertasKerja(pid,filename) {
         ajax.requestFile = "/dev-team/projek/padam-kertas-kerja/" + filename;
         ajax.setVar('projek_id',pid);
         ajax.setVar('return_alert','1');
+        Ajx(ajax);
+    });
+}
+
+/* Task */
+function ClearAddTask() {
+    $('#_tajuk_task').val('');
+    $('#_assigned').val('').trigger('change');
+    $('#_detail').val('');
+    $('#_taskid').val('0');
+    
+    var PeratusSiap = $("#_peratus_siap").data("ionRangeSlider");
+    PeratusSiap.update({ from: 0, to: 0});
+}
+function AddTaskDialog() {
+    $('#TaskDialog').modal();
+    setTimeout(function(){
+        $('#_tajuk_task').focus();
+    },500);
+}
+function EditTask(taskid) {
+    var ajax = new sack();
+    ajax.requestFile = "/dev-team/projek/task/edit/" + taskid;
+    Ajx(ajax);
+}
+function PadamTask(taskid) {
+    swal({
+        title: "Padam Task ?",
+        text: "Anda pasti untuk memadam task tugasan ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/dev-team/projek/task/delete/" + taskid;
         Ajx(ajax);
     });
 }

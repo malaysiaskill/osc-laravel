@@ -241,6 +241,9 @@
 
             <!-- Footer -->
             <footer id="page-footer" class="content-mini content-mini-full font-s12 bg-gray-lighter clearfix">
+                <div class="pull-left font-w300">
+                    Dibangunkan dengan <i class="fa fa-heart text-city"></i> oleh <a class="font-w600" href="https://github.com/putera" target="_blank">JTKPK</a>
+                </div>
                 <div class="pull-right font-w300">
                     &copy; {{ date('Y') }} oleh <span class="font-w400">Juruteknik Komputer Negeri Perak (JTKPK)</span>. Semua Hakcipta Terpelihara.
                 </div>
