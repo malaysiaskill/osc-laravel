@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRolesTable extends Migration
+class CreateProjektaskTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,18 @@ class CreateRolesTable extends Migration
      */
     public function up()
     {
-        Schema::create('roles', function (Blueprint $table)
+        Schema::create('projek_task', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';            
             $table->increments('id');
-            $table->string('role')->unique();
-            $table->string('role_name');
+            $table->integer('projek_id')->unsigned();
+            $table->string('tajuk_task')->unique();
+            $table->text('detail_task')->nullable();
+            $table->integer('assigned')->nullable()->default(0);
+            $table->integer('peratus_siap')->nullable()->default(0);
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
+            $table->foreign('projek_id')->references('id')->on('projek')->onDelete('cascade');
         });
     }
 
@@ -31,6 +35,6 @@ class CreateRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('roles');
+        Schema::drop('projek_task');
     }
 }

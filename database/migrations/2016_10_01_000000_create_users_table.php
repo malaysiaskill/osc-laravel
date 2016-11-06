@@ -28,7 +28,8 @@ class CreateUsersTable extends Migration
             $table->string('kod_jabatan')->nullable();
             $table->string('avatarType')->nullable();
             $table->binary('avatar')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
         });
     }
 

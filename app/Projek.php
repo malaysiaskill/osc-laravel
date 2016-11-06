@@ -12,4 +12,9 @@ class Projek extends Model
     {
     	return $this->belongsTo('App\DevTeam', 'devteam_id', 'id');
     }
+
+    public function tasks()
+    {
+    	return $this->hasMany('App\ProjekTask', 'projek_id', 'id');
+    }
 }

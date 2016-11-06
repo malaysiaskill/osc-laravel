@@ -27,7 +27,8 @@ class CreateSekolahTable extends Migration
             $table->string('no_fax')->nullable();
             $table->string('email')->nullable();
             $table->string('website')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             $table->foreign('kod_ppd')->references('kod_ppd')->on('ppd')->onDelete('cascade');
         });
     }

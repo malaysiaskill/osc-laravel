@@ -117,7 +117,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                             <tr>
                                 <th class="text-center">Bil</th>
                                 <th class="text-center">Nama Projek</th>
-                                <th class="text-center">% Siap</th>
+                                <th class="text-center">Peratus Siap</th>
                                 <th class="text-center">Jumlah Task</th>
                                 <th class="text-center">Jumlah Task (Belum Selesai)</th>
                                 <th></th>
@@ -140,9 +140,10 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                                         </a>
                                     @endif
                                 </td>
-                                <td class="text-center h3 font-w300">0 %</td>
-                                <td class="text-center h3 font-w300">0</td>
-                                <td class="text-center h3 font-w300">0</td>
+                                <td class="text-center h3 font-w300">
+                                 {{ number_format((($prj->tasks->sum('peratus_siap') / ($prj->tasks->count()*100) ) * 100),2) }} %</td>
+                                <td class="text-center h3 font-w300">{{ $prj->tasks->count() }}</td>
+                                <td class="text-center h3 font-w300">{{ $prj->tasks->where('peratus_siap','<>','100')->count() }}</td>
                                 <td class="text-center" width="150">
                                     @if (Auth::user()->role == 'leader')
                                         <button type="button" class="btn btn-primary" onclick="javascript:EditProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Edit Maklumat Projek">
@@ -156,7 +157,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                                             <i class="fa fa-briefcase"></i>
                                         </button>
                                     @endif
-                                    <a href="#" class="btn btn-primary" data-toggle="tooltip" title="Lihat Semua Task">
+                                    <a href="/dev-team/projek/{{ $prj->id }}/tasks" class="btn btn-primary" data-toggle="tooltip" title="Lihat Semua Task">
                                         <i class="fa fa-th-list"></i>
                                     </a>
                                 </td>
@@ -210,13 +211,13 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                         <div class="form-group">
                             <label class="col-sm-12 h5 font-w300 push-5">Objektif Projek :</label>
                             <div class="col-sm-12">
-                                <textarea id="_objektif" name="_objektif" class="form-control js-emojis" placeholder="Objektif projek" rows="4"></textarea>
+                                <textarea id="_objektif" name="_objektif" class="form-control js-emojis" placeholder="Objektif projek" rows="4" required></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-sm-12 h5 font-w300 push-5">Keterangan Projek :</label>
                             <div class="col-sm-12">
-                                <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="5"></textarea>
+                                <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="5" required></textarea>
                             </div>
                         </div>
                         <div class="row">

@@ -332,13 +332,13 @@
                             <div class="form-group">
                                 <label class="col-sm-12 h5 font-w300 push-5">Objektif Projek :</label>
                                 <div class="col-sm-12">
-                                    <textarea id="_objektif" name="_objektif" class="form-control js-emojis" placeholder="Objektif projek" rows="4"></textarea>
+                                    <textarea id="_objektif" name="_objektif" class="form-control js-emojis" placeholder="Objektif projek" rows="4" required></textarea>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="col-sm-12 h5 font-w300 push-5">Keterangan Projek :</label>
                                 <div class="col-sm-12">
-                                    <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="5"></textarea>
+                                    <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="5" required></textarea>
                                 </div>
                             </div>
                             <div class="row">

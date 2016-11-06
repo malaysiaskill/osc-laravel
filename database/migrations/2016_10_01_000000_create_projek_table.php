@@ -24,7 +24,8 @@ class CreateProjekTable extends Migration
             $table->string('nama_kertas_kerja')->nullable();
             $table->string('kertas_kerja')->nullable();
             $table->string('repositori')->nullable();
-            $table->timestamps();
+            $table->timestamp('created_at')->nullable();
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             $table->foreign('devteam_id')->references('id')->on('devteam')->onDelete('cascade');
         });
     }

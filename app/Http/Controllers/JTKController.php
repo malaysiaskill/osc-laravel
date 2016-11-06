@@ -287,12 +287,6 @@ class JTKController extends Controller
             'nama_kumpulan' => $devteam->nama_kumpulan,
         ]);
     }
-    public function DetailProjek($groupid, $projekid)
-    {
-        /*return view('devteam.projek-detail',[
-            'projek' => Projek::where('devteam_id',$groupid)->where('id',$projekid)->get()
-        ]);*/
-    }
     public function ViewProjek(Request $r, $id)
     {
         $projek = Projek::find($id);
@@ -314,7 +308,9 @@ class JTKController extends Controller
         $output .= "$('#v_nama_projek').html(\"$nama_projek\");";
         $output .= "$('#v_objektif').html(\"$objektif\");";
         $output .= "$('#v_detail').html(\"$detail\");";
-        $output .= "$('#v_repo').html(\"$repositori\");";
+        
+        $_repositori = (strlen($repositori) > 0) ? '<a href=\"'.$repositori.'\" target=\"_blank\">'.$repositori.'</a>':'-';
+        $output .= "$('#v_repo').html(\"$_repositori\");";
 
         if (strlen($kertas_kerja) != 0)
         {
@@ -330,6 +326,10 @@ class JTKController extends Controller
                             </div>
                         </div>';
             $output .= "$('#v_previews').html('".addslashes($output_template)."');";
+        }
+        else
+        {
+            $output .= "$('#v_previews').html('Tiada Kertas Kerja');";
         }
 
         $output = trim(preg_replace('/\s\s+/', '', $output));
@@ -385,17 +385,20 @@ class JTKController extends Controller
         $output = trim(preg_replace('/\s\s+/', '', $output));
         echo $output;
     }
-    public function DeleteProjek($id)
+    public function DeleteProjek(Request $r, $projekid)
     {
-        $projek = Projek::find($id);
+        $projek = Projek::find($projekid);
         $devteam_id = $projek->devteam_id;
         $kertas_kerja = $projek->kertas_kerja;
-        Projek::destroy($id);
+        Projek::destroy($projekid);
 
         # Delete Kertas Kerja
-        if (file_exists(public_path().'/devteam/kertas-kerja/'.$kertas_kerja))
+        if (strlen($kertas_kerja) > 0)
         {
-            unlink(public_path().'/devteam/kertas-kerja/'.$kertas_kerja);
+            if (file_exists(public_path().'/devteam/kertas-kerja/'.$kertas_kerja))
+            {
+                unlink(public_path().'/devteam/kertas-kerja/'.$kertas_kerja);
+            }
         }
 
         echo "SweetAlert('success','Berjaya Dipadam !','Maklumat projek ini telah berjaya dipadam !',\"window.location.href='/dev-team/projek/$devteam_id';\");";
@@ -441,5 +444,17 @@ class JTKController extends Controller
             echo "$('.template').remove();";
             echo "$('#btn-kertas-kerja').removeClass('hide');";
         }
+    }
+    public function SenaraiTask($projekid)
+    {
+        $projek = Projek::find($projekid);
+        $tasks = $projek->tasks;
+
+        return view('devteam.tasks',[
+            'projek_id' => $projekid,
+            'nama_projek' => $projek->nama_projek,
+            'nama_kumpulan' => $projek->devteam->nama_kumpulan,
+            'tasks' => $tasks
+        ]);
     }
 }

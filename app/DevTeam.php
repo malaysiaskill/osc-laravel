@@ -8,6 +8,11 @@ class DevTeam extends Model
 {
     protected $table = 'devteam';
 
+    public function ppd()
+    {
+        return $this->belongsTo('App\PPD', 'kod_ppd', 'kod_ppd');
+    }
+
     public function ketua()
     {
     	return $this->belongsTo('App\User', 'ketua_kumpulan', 'id');
