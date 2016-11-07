@@ -14,6 +14,8 @@ use App\DevTeam;
 use App\Projek;
 use App\ProjekTask;
 use App\ProjekTaskDetail;
+use App\SmartTeam;
+use App\AktivitiSmartTeam;
 
 class JTKController extends Controller
 {
@@ -181,7 +183,7 @@ class JTKController extends Controller
             $ppd = '';
         }
 
-        return view('devteam',[
+        return view('dev-team',[
             'id' => $id,
             'ppd' => $ppd
         ]);
@@ -587,5 +589,139 @@ class JTKController extends Controller
 
         echo "SweetAlert('success','Berjaya Dipadam !','Rekod ini telah berjaya dipadam !',\"window.location.href='/dev-team/projek/task/$task_id';\");";
     }
-    
+
+    /**
+
+    KUMPULAN SMART TEAM
+
+    */
+
+    public function SmartTeam($ppd = null)
+    {
+        if ($ppd != null)
+        {
+            $_ppd = PPD::where('kod_ppd',$ppd)->first();
+        }
+        else
+        {
+            $_ppd = '';
+        }
+
+        return view('smart-team',[
+            'kod_ppd' => $ppd,
+            'data_ppd' => $_ppd
+        ]);
+    }
+    public function DetailSmartTeam($team_id)
+    {
+        $smart_team = SmartTeam::find($team_id);
+        return view('smartteam.detail',[
+            'st' => $smart_team
+        ]);
+    }
+    public function SaveSmartTeam(Request $r)
+    {
+        $kod_ppd = $r->input('_kodppd');
+        $nama_kumpulan = $r->input('_name');
+        $ketua = $r->input('_ketua');
+        $ahli = ','.implode(',', $r->input('_jtk')).',';
+
+        if ($r->_gid != 0 || $r->_gid != '0')
+        {
+            # Update
+            $devteam = SmartTeam::find($r->_gid);
+            $devteam->kod_ppd = $kod_ppd;
+            $devteam->nama_kumpulan = $nama_kumpulan;
+            $devteam->ketua_kumpulan = $ketua;
+            $devteam->senarai_jtk = $ahli;
+            $devteam->save();
+        }
+        else
+        {
+            # Insert
+            $devteam = new SmartTeam;
+            $devteam->kod_ppd = $kod_ppd;
+            $devteam->nama_kumpulan = $nama_kumpulan;
+            $devteam->ketua_kumpulan = $ketua;
+            $devteam->senarai_jtk = $ahli;
+            $devteam->save();
+        }
+
+        return redirect('/smart-team/'.$kod_ppd);
+    }
+    public function EditSmartTeam(Request $r, $id)
+    {
+        $smart_team = SmartTeam::find($id);
+        $kod_ppd = $smart_team->kod_ppd;
+        $nama_kumpulan = $smart_team->nama_kumpulan;
+        $ketua_kumpulan = $smart_team->ketua_kumpulan;
+        $senarai_jtk = $smart_team->senarai_jtk;
+
+        echo "$('#_gid').val('$id');";
+        echo "$('#STDialog').modal('show');";
+
+        echo "$('#_kodppd').val(\"$kod_ppd\").trigger(\"change\");";
+        echo "$('#_name').val('$nama_kumpulan');";
+        echo "$('#_ketua').val(\"$ketua_kumpulan\").trigger(\"change\");";
+        echo "$('#_jtk').val([$senarai_jtk]).trigger(\"change\");";
+    }
+    public function DeleteSmartTeam($id)
+    {
+        $smart_team = SmartTeam::find($id);
+        $kod_ppd = $smart_team->kod_ppd;
+        $smart_team = SmartTeam::destroy($id);
+        echo "SweetAlert('success','Berjaya Dipadam !','Rekod kumpulan ini telah berjaya dipadam !',\"window.location.href='/smart-team/$kod_ppd';\");";
+    }
+    public function SaveAktivitiSmartTeam(Request $r)
+    {
+        $smart_team_id = $r->input('_smart_team_id');
+        $tajuk_xtvt = htmlentities($r->input('_tajuk_xtvt'),ENT_QUOTES);
+        $sekolah_terlibat = ','.implode(',', $r->input('_sekolah_terlibat')).',';
+        $tarikh_xtvt_dari = $r->input('_tarikh_xtvt_dari');
+        $tarikh_xtvt_hingga = $r->input('_tarikh_xtvt_hingga');
+        if ($r->jtk_terlibat_type == 1 || $r->jtk_terlibat_type == '1') {
+            $jtk_terlibat = ','.implode(',', $r->input('_jtk_terlibat')).',';
+        } else {
+            $jtk_terlibat = '';
+        }
+        $objektif = htmlentities($r->input('_objektif'),ENT_QUOTES);
+        $detail = htmlentities($r->input('_detail'),ENT_QUOTES);
+
+        if ($r->_xtvtid != 0 || $r->_xtvtid != '0')
+        {
+            # Update
+            $xtvt = AktivitiSmartTeam::find($r->_xtvtid);
+            $xtvt->nama_aktiviti = $tajuk_xtvt;
+            $xtvt->sekolah_terlibat = $sekolah_terlibat;
+            $xtvt->tarikh_dari = $tarikh_xtvt_dari;
+            $xtvt->tarikh_hingga = $tarikh_xtvt_hingga;
+            $xtvt->jtk_terlibat = $jtk_terlibat;
+            $xtvt->objektif = $objektif;
+            $xtvt->detail = $detail;
+            $xtvt->save();
+        }
+        else
+        {
+            # Insert
+            if (AktivitiSmartTeam::where('nama_aktiviti',$tajuk_xtvt)->count() == 1)
+            {
+                return redirect('/smart-team/detail/'.$smart_team_id.'/?error=title_exists');
+            }
+            else
+            {
+                $xtvt = new AktivitiSmartTeam;
+                $xtvt->smart_team_id = $smart_team_id;
+                $xtvt->nama_aktiviti = $tajuk_xtvt;
+                $xtvt->sekolah_terlibat = $sekolah_terlibat;
+                $xtvt->tarikh_dari = $tarikh_xtvt_dari;
+                $xtvt->tarikh_hingga = $tarikh_xtvt_hingga;
+                $xtvt->jtk_terlibat = $jtk_terlibat;
+                $xtvt->objektif = $objektif;
+                $xtvt->detail = $detail;
+                $xtvt->save();
+            }
+        }
+
+        return redirect('/smart-team/detail/'.$smart_team_id);
+    }
 }

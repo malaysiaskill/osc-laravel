@@ -82,3 +82,17 @@ Route::post('/dev-team/projek/task/edit/{taskid}', 'JTKController@EditTask'); //
 Route::post('/dev-team/projek/task/delete/{taskid}', 'JTKController@DeleteTask'); // Delete Task
 Route::post('/dev-team/projek/task-detail/delete', 'JTKController@DeleteTaskDetail'); // Delete Task Detail
 
+/**
+
+	SMART TEAM
+
+*/
+
+# Team
+Route::get('/smart-team', 'JTKController@SmartTeam'); // Senarai SmartTeam
+Route::get('/smart-team/{ppd}', 'JTKController@SmartTeam'); // SmartTeam mengikut PPD
+Route::get('/smart-team/detail/{team_id}', 'JTKController@DetailSmartTeam'); // Detail SmartTeam
+Route::post('/smart-team', 'JTKController@SaveSmartTeam'); // Insert, Update SmartTeam
+Route::post('/smart-team/edit/{id}', 'JTKController@EditSmartTeam'); // Edit SmartTeam
+Route::post('/smart-team/delete/{id}', 'JTKController@DeleteSmartTeam'); // Delete SmartTeam
+Route::post('/smart-team/aktiviti', 'JTKController@SaveAktivitiSmartTeam'); // Insert, Update Aktiviti SmartTeam

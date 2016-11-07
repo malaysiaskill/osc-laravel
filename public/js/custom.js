@@ -315,3 +315,60 @@ function PadamTaskDetail(taskid) {
         Ajx(ajax);
     });
 }
+
+/* Kumpulan SMART Team */
+function ClearSTGroup() {
+    $('#_kodppd').val('').trigger('change');
+    $('#_name').val('');
+    $('#_ketua').val('').trigger('change');
+    $('#_jtk').val('').trigger('change');
+    $('#_gid').val('0');
+}
+function AddSTDialog() {
+    ClearSTGroup();
+    $('#STDialog').modal();
+}
+function EditSTTeam(id) {
+    var ajax = new sack();
+    ajax.requestFile = "/smart-team/edit/" + id;
+    Ajx(ajax);
+}
+function DeleteSTTeam(id) {
+    swal({
+        title: "Padam Rekod ?",
+        text: "Anda pasti untuk memadam rekod ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/smart-team/delete/" + id;
+        Ajx(ajax);
+    });
+}
+
+/* Aktiviti Smart Team */
+function ClearAktivitiDialog() {
+    $('#_tajuk_xtvt').val('');
+    $('#_sekolah_terlibat').val('').trigger('change');
+    $('#_tarikh_xtvt_dari').val('');
+    $('#_tarikh_xtvt_hingga').val('');
+    $('#_jtk_terlibat').val('').trigger('change');
+    $('#_jtk_semua').prop('checked','checked');
+    $('#_jtk_adhoc').removeAttr('checked');
+    $('#_jtk_terlibat').attr('disabled','disabled');
+    $('#_objektif').val('');
+    $('#_detail').val('');
+    $('#_xtvtid').val('0');
+}
+function AddAktivitiDialog() {
+    ClearAktivitiDialog();
+    $('#AktivitiDialog').modal();
+}

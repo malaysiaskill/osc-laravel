@@ -84,7 +84,19 @@
                                     <div>
                                         <i class="fa fa-users fa-3x"></i>
                                     </div>
-                                    <div class="text-uppercase h5 font-w500 push-15-t push-5">Kumpulan Development Team</div>
+                                    <div class="text-uppercase h5 font-w500 push-15-t push-5">Development Team</div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- SMART Team -->
+                        <div class="col-sm-6 col-md-3">
+                            <a class="block block-bordered block-rounded block-link-hover3" href="{{ url('/smart-team') }}">
+                                <div class="block-content block-content-full text-center">
+                                    <div>
+                                        <i class="fa fa-ambulance fa-3x"></i>
+                                    </div>
+                                    <div class="text-uppercase h5 font-w500 push-15-t push-5">SMART Team</div>
                                 </div>
                             </a>
                         </div>

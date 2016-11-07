@@ -131,9 +131,18 @@
                                         <i class="fa fa-user"></i><span class="sidebar-mini-hide">Profil</span>
                                     </a>
                                 </li>
+
+                                <!--
+                                    MODULE TERSEDIA
+                                -->
                                 <li>
                                     <a class="{{ (Request::path()=='dev-team') ? 'active':'' }}" href="{{ url('/dev-team') }}">
                                         <i class="fa fa-users"></i><span class="sidebar-mini-hide">Development Team</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="{{ (Request::path()=='smart-team') ? 'active':'' }}" href="{{ url('/smart-team') }}">
+                                        <i class="fa fa-ambulance"></i><span class="sidebar-mini-hide">SMART Team</span>
                                     </a>
                                 </li>
                                 @if (Auth::user()->role == 'super-admin' || Auth::user()->role == 'admin')
