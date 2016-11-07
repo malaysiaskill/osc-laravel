@@ -25,6 +25,6 @@ class DevTeam extends Model
 
 	public function getJumlahAhliAttribute()
     {
-    	return count(explode(',', $this->senarai_jtk));
+        return count(explode(',', trim($this->senarai_jtk,',')));
     }
 }

@@ -27,6 +27,14 @@ class RoleMiddleware
                     return redirect('/access-denied');
                 }
             }
+            else if (strtolower($role) == 'jpn-ppd')
+            {
+                if (Auth::check() && (Auth::user()->role == 'jpn' || Auth::user()->role == 'ppd')) {
+                    return $next($request);
+                } else {
+                    return redirect('/access-denied');
+                }
+            }
             else
             {
                 if (Auth::check() && Auth::user()->role == $role) {

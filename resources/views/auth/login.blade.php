@@ -1,6 +1,6 @@
 @extends('master.single')
 @section('title', 'Log Masuk')
-@section('site.description', 'Log Masuk ke Sistem Bersepadu JTKPK')
+@section('site.description', 'Log Masuk ke Portal Bersepadu JTKPK')
 
 @section('content')
 <!-- Login Content -->
@@ -12,7 +12,7 @@
                     <!-- Login Title -->
                     <div class="text-center">
                         <img src="{{ asset('/img/logo.png') }}" width="100">
-                        <p class="text-muted push-10-t font-w300">Sistem Bersepadu Juruteknik Komputer Negeri Perak (JTKPK)</p>
+                        <p class="text-muted push-10-t font-w300">Portal Juruteknik Komputer Negeri Perak (JTKPK)</p>
                     </div>
                     <!-- END Login Title -->
 

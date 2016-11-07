@@ -55,20 +55,30 @@ Route::put('/profil', 'JTKController@SaveProfil');
 	DEVELOPMENT TEAM
 
 */
-Route::get('/dev-team', 'JTKController@DevTeam');
-Route::post('/dev-team', 'JTKController@SaveDevTeam');
-Route::get('/dev-team/{id}', 'JTKController@DevTeam');
-Route::post('/dev-team/edit/{id}', 'JTKController@getDevTeam');
-Route::post('/dev-team/delete/{id}', 'JTKController@DeleteDevTeam');
-Route::post('/dev-team/projek', 'JTKController@SaveProjek');
-Route::get('/dev-team/projek/{groupid}', 'JTKController@SenaraiProjek');
-Route::post('/dev-team/projek/view/{projekid}', 'JTKController@ViewProjek');
-Route::post('/dev-team/projek/edit/{projekid}', 'JTKController@EditProjek');
-Route::post('/dev-team/projek/delete/{projekid}', 'JTKController@DeleteProjek');
-Route::post('/dev-team/projek/kertas-kerja', 'JTKController@UploadKertasKerja');
-Route::post('/dev-team/projek/padam-kertas-kerja/{filename}', 'JTKController@PadamKertasKerja');
-Route::get('/dev-team/projek/{projekid}/tasks', 'JTKController@SenaraiTask');
-Route::post('/dev-team/projek/task', 'JTKController@SaveTask');
-Route::post('/dev-team/projek/task/edit/{taskid}', 'JTKController@EditTask');
-Route::post('/dev-team/projek/task/delete/{taskid}', 'JTKController@DeleteTask');
+
+# Team
+Route::get('/dev-team', 'JTKController@DevTeam'); // Senarai DevTeam
+Route::get('/dev-team/{id}', 'JTKController@DevTeam'); // DevTeam mengikut PPD
+Route::post('/dev-team', 'JTKController@SaveDevTeam'); // Insert, Update DevTeam
+Route::post('/dev-team/edit/{id}', 'JTKController@EditDevTeam'); // Edit DevTeam
+Route::post('/dev-team/delete/{id}', 'JTKController@DeleteDevTeam'); // Delete DevTeam
+
+# Projek
+Route::get('/dev-team/senarai-projek/{ppd}', 'JTKController@SenaraiProjekAll'); // Untuk JPN & PPD
+Route::post('/dev-team/projek', 'JTKController@SaveProjek'); // Insert, Update Projek
+Route::get('/dev-team/projek/{groupid}', 'JTKController@SenaraiProjek'); // Senarai Projek mengikut Kumpulan DevTeam
+Route::post('/dev-team/projek/view/{projekid}', 'JTKController@ViewProjek'); // Projek Detail
+Route::post('/dev-team/projek/edit/{projekid}', 'JTKController@EditProjek'); // Edit Projek
+Route::post('/dev-team/projek/delete/{projekid}', 'JTKController@DeleteProjek'); // Delete Projek
+Route::post('/dev-team/projek/kertas-kerja', 'JTKController@UploadKertasKerja'); // Insert, Update Kertas Kerja
+Route::post('/dev-team/projek/padam-kertas-kerja/{filename}', 'JTKController@PadamKertasKerja'); // Padam Kertas Kerja
+
+# Tasks
+Route::get('/dev-team/projek/{projekid}/tasks', 'JTKController@SenaraiTask'); // Senarai Tasks
+Route::get('/dev-team/projek/task/{taskid}', 'JTKController@DetailTask'); // Detail Task
+Route::post('/dev-team/projek/task', 'JTKController@SaveTask'); // Insert, Update Task
+Route::post('/dev-team/projek/task-timeline', 'JTKController@SaveTaskTimeline'); // Insert, Update Task Timeline
+Route::post('/dev-team/projek/task/edit/{taskid}', 'JTKController@EditTask'); // Edit Task
+Route::post('/dev-team/projek/task/delete/{taskid}', 'JTKController@DeleteTask'); // Delete Task
+Route::post('/dev-team/projek/task-detail/delete', 'JTKController@DeleteTaskDetail'); // Delete Task Detail
 

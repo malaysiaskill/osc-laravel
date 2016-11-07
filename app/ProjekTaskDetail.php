@@ -4,19 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ProjekTask extends Model
+class ProjekTaskDetail extends Model
 {
-    protected $table = 'projek_task';
-
-    public function jtk()
-    {
-    	return $this->belongsTo('App\User', 'assigned', 'id');
-    }
-
-    public function timeline()
-    {
-    	return $this->hasMany('App\ProjekTaskDetail', 'task_id', 'id');
-    }
+    protected $table = 'projek_task_detail';
 
     public function getCreatedAtFormattedAttribute()
 	{
@@ -28,6 +18,12 @@ class ProjekTask extends Model
 	{
 	    $date = $this->updated_at;
 	    return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d/m/Y h:i A');
+	}
+
+	public function getDateAttribute()
+	{
+	    $date = $this->created_at;
+	    return \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $date)->format('d/m/Y');
 	}
 
 	public function getNicetimeUAttribute()

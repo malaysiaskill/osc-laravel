@@ -13,7 +13,61 @@ function RemoveFile(filename) {
     Ajx(ajax);
 }
 
-/* Sweet Alert*/
+/* Sweet Alert & Notifications */
+function Notify(type,msg,pos,time_delay) {
+    var tpos, pos_from, pos_align, adelay, aicn;
+
+    if (typeof(time_delay)==='undefined' || time_delay === null || time_delay == '') {
+        adelay = 2000;
+    } else {
+        adelay = time_delay;
+    }
+
+    if (typeof(pos) !== 'undefined') {
+        tpos = pos.split('-');
+        pos_from = tpos[0];
+        pos_align = tpos[1];
+    } else {
+        pos_from = 'top';
+        post_align= 'right';
+    }
+
+    if (type == 'danger' || type == 'error') {
+        aicn = 'fa fa-times-circle';
+    } else if (type == 'warning') {
+        aicn = 'fa fa-exclamation-triangle';
+    } else if (type == 'success') {
+        aicn = 'fa fa-check-circle';
+    } else {
+        aicn = '';
+    }
+
+    jQuery.notify({
+        icon: aicn,
+        message: '<span class="push-5-r"></span><span class="h6">'+msg+'</span>',
+        url: ''
+    },
+    {
+        element: 'body',
+        type: type,
+        allow_dismiss: true,
+        newest_on_top: true,
+        showProgressbar: false,
+        placement: {
+            from: pos_from,
+            align: pos_align
+        },
+        offset: 20,
+        spacing: 10,
+        z_index: 1031,
+        delay: adelay,
+        timer: 1000,
+        animate: {
+            enter: 'animated bounceIn',
+            exit: 'animated bounceOut'
+        }
+    });
+}
 function SweetAlert(mode,title,txt,func) {
     if (typeof(func)==='undefined')
     {
@@ -211,6 +265,53 @@ function PadamTask(taskid) {
     {
         var ajax = new sack();
         ajax.requestFile = "/dev-team/projek/task/delete/" + taskid;
+        Ajx(ajax);
+    });
+}
+function SaveTimeline()
+{
+    var progress_type = 'bg-primary';
+
+    if ($('#_timeline').val().length == 0)
+    {
+        Notify('danger','Sila masukkan teks anda !');
+        $('#_timeline').focus();
+        return false;
+    }
+
+    $('input[name="_progress_type"]').filter(':checked').each(function(){
+        progress_type = this.value;
+    });
+
+    var ajax = new sack();
+    ajax.requestFile = "/dev-team/projek/task-timeline";
+    ajax.setVar('task_id', $('#_task_id').val());
+    ajax.setVar('peratus_siap', $('#_peratus_siap').val());
+    ajax.setVar('progress_type', progress_type);
+    ajax.setVar('timeline_by', $('#_timeline_by').val());
+    ajax.setVar('detail', $('#_timeline').val());
+    Ajx(ajax);
+
+    $('#btn-save-timeline').attr("disabled","disabled");
+}
+function PadamTaskDetail(taskid) {
+    swal({
+        title: "Padam Rekod ?",
+        text: "Anda pasti untuk memadam rekod ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/dev-team/projek/task-detail/delete";
+        ajax.setVar('task_id',taskid);
         Ajx(ajax);
     });
 }

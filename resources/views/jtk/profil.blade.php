@@ -189,7 +189,7 @@
 
                         @if (Auth::user()->role == 'leader' || Auth::user()->role == 'user')
                         <div class="form-group clearfix">
-                            <label class="col-sm-3 control-label" for="jabatan">Jabatan</label>
+                            <label class="col-sm-3 control-label" for="jabatan">Sekolah</label>
                             <div class="col-sm-9">
                                 <select id="jabatan" name="jabatan" data-placeholder="Sila pilih jabatan" class="form-control js-select2" style="width: 100%" required>
                                     <option></option>

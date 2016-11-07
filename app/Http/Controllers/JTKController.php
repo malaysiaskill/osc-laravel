@@ -13,6 +13,7 @@ use App\Sekolah;
 use App\DevTeam;
 use App\Projek;
 use App\ProjekTask;
+use App\ProjekTaskDetail;
 
 class JTKController extends Controller
 {
@@ -30,6 +31,10 @@ class JTKController extends Controller
             'only' => ['SaveDevTeam', 'getDevTeam', 'DeleteDevTeam']
         ]);
 
+        # Ruangan JPN & PPD
+        $this->middleware('role:jpn-ppd',[
+            'only' => ['SenaraiProjekAll']
+        ]);
     }
 
     /**
@@ -151,6 +156,20 @@ class JTKController extends Controller
     KUMPULAN DEVELOPMENT TEAM
 
     */
+
+    #
+    # JPN & PPD
+    #
+    public function SenaraiProjekAll($ppd = null)
+    {
+        # Semua PPD
+        $projek = Projek::all();
+        
+        return view('devteam.senarai-projek',[
+            'projek' => $projek
+        ]);
+    }
+
     public function DevTeam($id = null)
     {
         if ($id != null)
@@ -197,7 +216,7 @@ class JTKController extends Controller
 
         return redirect('/dev-team/'.$kod_ppd);
     }
-    public function getDevTeam(Request $r, $id)
+    public function EditDevTeam(Request $r, $id)
     {
         $devteam = DevTeam::find($id);
         $kod_ppd = $devteam->kod_ppd;
@@ -336,7 +355,9 @@ class JTKController extends Controller
     {
         $projek = Projek::find($id);
         $devteam_id = $projek->devteam_id;
-        $nama_projek = $projek->nama_projek;
+        
+        $nama_projek = addslashes(html_entity_decode($projek->nama_projek,ENT_QUOTES));
+        $nama_projek = str_replace('<br />', '\n', nl2br($nama_projek));
 
         $objektif = addslashes(html_entity_decode($projek->objektif,ENT_QUOTES));
         $objektif = str_replace('<br />', '\n', nl2br($objektif));
@@ -458,7 +479,7 @@ class JTKController extends Controller
     public function SaveTask(Request $r)
     {
         $tajuk_task = htmlentities($r->input('_tajuk_task'),ENT_QUOTES);
-        $assigned = $r->input('_assigned');
+        $assigned = ','.implode(',', $r->input('_assigned')).',';
         $peratus_siap = $r->input('_peratus_siap');
         $detail = htmlentities($r->input('_detail'),ENT_QUOTES);
         $projek_id = $r->input('_projekid');
@@ -499,19 +520,72 @@ class JTKController extends Controller
     public function EditTask(Request $r, $taskid)
     {
         $task = ProjekTask::find($taskid);
-        $tajuk_task = $task->tajuk_task;
-        $detail_task = $task->detail_task;
+        
+        $tajuk_task = addslashes(html_entity_decode($task->tajuk_task,ENT_QUOTES));
+        $tajuk_task = str_replace('<br />', '\n', nl2br($tajuk_task));
+
+        $detail_task = addslashes(html_entity_decode($task->detail_task,ENT_QUOTES));
+        $detail_task = str_replace('<br />', '\n', nl2br($detail_task));
+        $detail_task = trim(preg_replace('/\s\s+/', '', $detail_task));
+
         $assigned = $task->assigned;
         $peratus_siap = $task->peratus_siap;
-
-        //var PeratusSiap = $("#_peratus_siap").data("ionRangeSlider");
-        //PeratusSiap.update({ from: 0, to: 0});
 
         echo "$('#_taskid').val('$taskid');";
         echo "$('#TaskDialog').modal('show');";
 
-        echo "$('#_tajuk_task').val('$tajuk_task');";
-        echo "$('#_assigned').val(\"$assigned\").trigger(\"change\");";
-        echo "$('#_detail').val('$detail_task');";
-    }    
+        echo "$('#_tajuk_task').val(\"".$tajuk_task."\");";
+        echo "$('#_assigned').val([$assigned]).trigger('change');";
+        echo "$('#_detail').val(\"".$detail_task."\");";
+
+        echo "$('#_peratus_siap').data('ionRangeSlider').update({ from: $peratus_siap});";
+    }
+    public function DetailTask($taskid)
+    {
+        $task = ProjekTask::find($taskid);
+        $projek = Projek::find($task->projek_id);
+
+        return view('devteam.task-details',[
+            'task' => $task,
+            'devteam_id' => $projek->devteam->id,
+        ]);
+    }
+    public function SaveTaskTimeline(Request $r)
+    {
+        $task_id = $r->task_id;
+        $peratus_siap = $r->peratus_siap;
+        $progress_type = $r->progress_type;
+        $timeline_by = $r->timeline_by;
+        $detail = htmlentities($r->detail,ENT_QUOTES);
+
+        # Tambah Timeline
+        $task_timeline = new ProjekTaskDetail;
+        $task_timeline->task_id = $task_id;
+        $task_timeline->timeline_by = $timeline_by;
+        $task_timeline->detail = $detail;
+        $task_timeline->progress_type = $progress_type;
+        $task_timeline->save();
+
+        # Kemaskini Task
+        $task = ProjekTask::find($task_id);
+        $task->peratus_siap = $peratus_siap;
+        $task->save();
+        $task->touch();
+
+        echo "$('#_timeline').val('');";
+        echo "$('#btn-save-timeline').removeAttr('disabled');";
+        echo "SweetAlert('success','Berjaya Dikemaskini !','Maklumat tugasan telah berjaya dikemaskini !',\"window.location.href='/dev-team/projek/task/$task_id';\");";
+    }
+    public function DeleteTaskDetail(Request $r)
+    {
+        $task_detail = ProjekTaskDetail::find($r->task_id);
+        $task_id = $task_detail->task_id;
+        ProjekTaskDetail::destroy($r->task_id);
+
+        $task = ProjekTask::find($task_id);
+        $task->touch();
+
+        echo "SweetAlert('success','Berjaya Dipadam !','Rekod ini telah berjaya dipadam !',\"window.location.href='/dev-team/projek/task/$task_id';\");";
+    }
+    
 }

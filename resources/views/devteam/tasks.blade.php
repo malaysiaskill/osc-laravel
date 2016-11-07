@@ -66,6 +66,7 @@ setTimeout(function(){
                     <table id="Tasks" class="table table-striped table-bordered responsive h6">
                         <thead>
                             <tr>
+                                <th class="text-center"><i class="fa fa-percent"></i></th>
                                 <th class="text-center">Tajuk Task</th>
                                 <th class="text-center">Ditugaskan Kepada</th>
                                 <th class="text-center">Kemaskini Terakhir</th>
@@ -86,6 +87,7 @@ setTimeout(function(){
                                 }
                             ?>
                             <tr>
+                                <td class="text-center h3 font-w300" width="80">{{ $task->peratus_siap }} %</td>
                                 <td>
                                     <a href="/dev-team/projek/task/{{ $task->id }}">
                                         <span class="h5 text-primary">{{ $task->tajuk_task }}</span>
@@ -98,13 +100,18 @@ setTimeout(function(){
                                     </div>
                                 </td>
                                 <td class="text-left h6 font-w300">
-                                    @if ($task->assigned != 0)
-                                        <img class="img-avatar img-avatar32 push-5-r" src="/avatar/{{ $task->assigned }}" title="{{ $task->jtk->name }}"> {{ $task->jtk->name }}
+                                    @if (strlen($task->assigned) != 0)
+                                        @foreach (explode(',',$task->assigned) as $userid)
+                                            <?php if (strlen($userid) == 0) { continue; } $_user = App\User::find($userid); ?>
+                                            <div class="push-5">
+                                                <img class="img-avatar img-avatar32 push-5-r" src="/avatar/{{ $userid }}" title="{{ $_user->name }}"> {{ $_user->name }}
+                                            </div>
+                                        @endforeach
                                     @else
                                         -
                                     @endif
                                 </td>
-                                <td class="text-left h6 font-w300">{{ $task->updated_at_formatted }} (<i>{{ $task->nicetime_u }}</i>)</td>
+                                <td class="text-left h6 font-w300" width="135">{{ $task->updated_at_formatted }}<br>(<i>{{ $task->nicetime_u }}</i>)</td>
                                 <td class="text-center" width="150">
                                     <a href="/dev-team/projek/task/{{ $task->id }}" class="btn btn-primary" data-toggle="tooltip" title="Lihat Detail">
                                         <i class="fa fa-tags"></i>
@@ -150,11 +157,10 @@ setTimeout(function(){
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group push-5">
                                     <label class="col-sm-12 h5 font-w300 push-5">Ditugaskan Kepada :</label>
                                     <div class="col-sm-12">
-                                        <select id="_assigned" name="_assigned" data-placeholder="Sila pilih juruteknik" class="form-control js-select2-avatar" style="width:100%;" required>
-                                            <option></option>
+                                        <select multiple id="_assigned" name="_assigned[]" data-placeholder="Siapa ?" class="form-control js-select2-avatar" style="width:100%;" required>
                                             @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)
                                             ->whereIn('role',['user','leader'])->get() as $user)
                                                 <option value="{{ $user->id }}">{{ $user->name }}</option>
@@ -164,7 +170,7 @@ setTimeout(function(){
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                <div class="form-group">
+                                <div class="form-group push-5">
                                     <label class="col-sm-12 h5 font-w300 push-5">Peratus Siap (%) :</label>
                                     <div class="col-sm-12">
                                         <input id="_peratus_siap" name="_peratus_siap" class="js-rangeslider" type="text" value="0" data-postfix=" %" data-grid="true" data-min="0" data-max="100" data-step="5">

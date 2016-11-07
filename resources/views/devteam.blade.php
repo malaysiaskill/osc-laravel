@@ -97,6 +97,11 @@
                             </button>
                         @endif
                     @endif
+                    @if (Auth::user()->role == 'jpn' || Auth::user()->role == 'ppd')
+                        <a href="/dev-team/senarai-projek/semua" class="btn btn-primary" data-toggle="tooltip" title="Senarai Semua Projek">
+                            <i class="fa fa-list-ul push-5-r"></i> Senarai Projek
+                        </a>
+                    @endif
                     <div class="pull-right">
                         <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
                             <option></option>
@@ -187,7 +192,10 @@
                             $dev_team = App\DevTeam::all();
                         ?>
                         @if ($dev_team->count() == 0)
-                            <center><h2 class="h5 font-w300 push-20">- Tiada Rekod -</h2></center>
+                            <center>
+                                <h1><i class="fa fa-question fa-3x"></i></h1>
+                                <p>- Tiada Rekod -</p>
+                            </center>
                         @else
                             <div class="row">
                                 @foreach (\App\DevTeam::all() as $devteam)

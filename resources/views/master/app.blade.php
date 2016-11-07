@@ -228,6 +228,9 @@
                             <i class="fa fa-ellipsis-v"></i>
                         </button>
                     </li>
+                    <li class="h6 hidden-xs hidden-sm">
+                        <img src="/avatar" class="img-avatar img-avatar32 push-5-r" title="{{ Auth::user()->name }}"> {{ Auth::user()->name }}
+                    </li>
                 </ul>
                 <!-- END Header Navigation Left -->
             </header>
@@ -272,6 +275,7 @@
         <script src="/assets/js/plugins/bootstrap-datetimepicker/bootstrap-datetimepicker.min.js"></script>
         <script src="/assets/js/plugins/bootstrap-colorpicker/bootstrap-colorpicker.min.js"></script>
         <script src="/assets/js/plugins/bootstrap-maxlength/bootstrap-maxlength.min.js"></script>
+        <script src="/assets/js/plugins/bootstrap-notify/bootstrap-notify.min.js"></script>
         <script src="/assets/js/plugins/select2/select2.full.min.js"></script>
         <script type="text/javascript">
             $.fn.modal.Constructor.prototype.enforceFocus = function () {};

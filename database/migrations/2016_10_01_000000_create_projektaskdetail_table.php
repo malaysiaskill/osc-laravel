@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateProjektaskTable extends Migration
+class CreateProjektaskdetailTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,16 @@ class CreateProjektaskTable extends Migration
      */
     public function up()
     {
-        Schema::create('projek_task', function (Blueprint $table)
+        Schema::create('projek_task_detail', function (Blueprint $table)
         {
-            $table->engine = 'InnoDB';            
+            $table->engine = 'InnoDB';          
             $table->increments('id');
-            $table->integer('projek_id')->unsigned();
-            $table->string('tajuk_task')->unique();
-            $table->text('detail_task')->nullable();
-            $table->string('assigned')->nullable();
-            $table->integer('peratus_siap')->nullable()->default(0);
+            $table->integer('task_id')->unsigned();
+            $table->integer('timeline_by')->nullable()->default(0);
+            $table->text('detail')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-            $table->foreign('projek_id')->references('id')->on('projek')->onDelete('cascade');
+            $table->foreign('task_id')->references('id')->on('projek_task')->onDelete('cascade');
         });
     }
 
@@ -35,6 +33,6 @@ class CreateProjektaskTable extends Migration
      */
     public function down()
     {
-        Schema::drop('projek_task');
+        Schema::drop('projek_task_detail');
     }
 }

@@ -149,7 +149,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                                     @if ($prj->tasks->count() != 0)
                                         {{ number_format((($prj->tasks->sum('peratus_siap') / ($prj->tasks->count()*100) ) * 100),2) }} %
                                     @else
-                                        0 %
+                                        0.00 %
                                     @endif
                                 </td>
                                 <td class="text-center h3 font-w300">{{ $prj->tasks->count() }}</td>
@@ -163,7 +163,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                                             <i class="fa fa-trash-o"></i>
                                         </button>
                                     @else
-                                        <button type="button" class="btn btn-primary" onclick="javascript:ViewProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Lihat Maklumat Projek">
+                                        <button type="button" class="btn btn-primary" onclick="javascript:ViewProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Lihat Detail Projek">
                                             <i class="fa fa-briefcase"></i>
                                         </button>
                                     @endif

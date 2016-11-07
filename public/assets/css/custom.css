@@ -483,3 +483,9 @@ blockquote span{display:block;font-size:70%;line-height:1.42857143;color:#777}
 .emoji-dropdown-menu li:hover a {
   color: inherit;
 }
+
+.img-avatar.img-avatar20 {
+  width: 20px;
+  height: 20px;
+  vertical-align: text-middle;
+}
