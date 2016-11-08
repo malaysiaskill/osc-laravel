@@ -73,8 +73,7 @@
                                                         <div class="h5 push-15-t push-5">{{ ucwords($st->nama_kumpulan) }}</div>
                                                         <div class="text-muted push-5"><b>Ketua :</b> {{ $st->ketua->name }}</div>
                                                         <div class="text-muted push-10">
-                                                            @foreach (explode(',',$st->senarai_jtk) as $ahli)
-                                                                <?php if (strlen($ahli) == 0) { continue; }?>
+                                                            @foreach (explode(',',trim($st->senarai_jtk,',')) as $ahli)
                                                                 <img src="/avatar/{{ $ahli }}" class="img-avatar img-avatar32" data-toggle="tooltip" title="{{ App\User::find($ahli)->name }}"> 
                                                             @endforeach
                                                         </div>
@@ -93,10 +92,10 @@
                                                 @if (Auth::user()->role == 'leader')
                                                 <div class="push-5-t push-10 text-right">
                                                     <button type="button" class="btn btn-xs btn-primary" onclick="javascript:EditSTTeam('{{ $st->id }}');">
-                                                        <i class="fa fa-pencil"></i>
+                                                        <i class="fa fa-pencil"></i> Edit
                                                     </button>
                                                     <button type="button" class="btn btn-xs btn-danger" onclick="javascript:DeleteSTTeam('{{ $st->id }}');">
-                                                        <i class="fa fa-trash-o"></i>
+                                                        <i class="fa fa-trash-o"></i> Padam
                                                     </button>
                                                 </div>
                                                 @endif

@@ -16,6 +16,7 @@ use App\ProjekTask;
 use App\ProjekTaskDetail;
 use App\SmartTeam;
 use App\AktivitiSmartTeam;
+use App\GambarAktivitiSmartTeam;
 
 class JTKController extends Controller
 {
@@ -723,5 +724,127 @@ class JTKController extends Controller
         }
 
         return redirect('/smart-team/detail/'.$smart_team_id);
+    }
+    public function EditAktivitiSmartTeam(Request $r, $xtvtid)
+    {
+        $xtvt = AktivitiSmartTeam::find($xtvtid);
+
+        $nama_aktiviti = addslashes(html_entity_decode($xtvt->nama_aktiviti,ENT_QUOTES));
+        $nama_aktiviti = str_replace('<br />', '\n', nl2br($nama_aktiviti));
+
+        $sekolah_terlibat = '"' . str_replace(',', '","', trim($xtvt->sekolah_terlibat,',')) . '"';
+
+        $tarikh_dari = \Carbon\Carbon::createFromFormat('Y-m-d', $xtvt->tarikh_dari)->format('d/m/Y');
+        $tarikh_hingga = \Carbon\Carbon::createFromFormat('Y-m-d', $xtvt->tarikh_hingga)->format('d/m/Y');
+        $jtk_terlibat = $xtvt->jtk_terlibat;
+
+        $objektif = addslashes(html_entity_decode($xtvt->objektif,ENT_QUOTES));
+        $objektif = str_replace('<br />', '\n', nl2br($objektif));
+        $objektif = trim(preg_replace('/\s\s+/', '', $objektif));
+
+        $detail = addslashes(html_entity_decode($xtvt->detail,ENT_QUOTES));
+        $detail = str_replace('<br />', '\n', nl2br($detail));
+        $detail = trim(preg_replace('/\s\s+/', '', $detail));
+
+        echo "$('#_xtvtid').val('$xtvtid');";
+        echo "$('#AktivitiDialog').modal('show');";
+
+        echo "$('#_tajuk_xtvt').val('$nama_aktiviti');";
+        echo "$('#_sekolah_terlibat').val([$sekolah_terlibat]).trigger(\"change\");";
+        echo "$('#_tarikh_xtvt_dari').val('$tarikh_dari');";
+        echo "$('#_tarikh_xtvt_hingga').val('$tarikh_hingga');";
+        if (strlen($jtk_terlibat) != 0) {
+            echo "$('#_jtk_terlibat').removeAttr('disabled');";
+            echo "$('#_jtk_adhoc').prop('checked','checked');";
+            echo "$('#_jtk_terlibat').val([$jtk_terlibat]).trigger('change');";
+        }
+        else
+        {
+            echo "$('#_jtk_terlibat').attr('disabled','disabled');";
+            echo "$('#_jtk_semua').prop('checked','checked');";   
+        }
+        
+        echo "$('#_objektif').val(\"$objektif\");";
+        echo "$('#_detail').val(\"$detail\");";
+    }
+    public function PadamAktivitiSmartTeam(Request $r, $xtvtid)
+    {
+        $xtvt = AktivitiSmartTeam::find($xtvtid);
+        $smart_team_id = $xtvt->smart_team_id;
+        $xtvt = AktivitiSmartTeam::destroy($xtvtid);
+        echo "SweetAlert('success','Berjaya Dipadam !','Rekod aktiviti ini telah berjaya dipadam !',\"window.location.href='/smart-team/detail/$smart_team_id';\");";
+    }
+    public function DetailAktivitiSmartTeam($xtvtid)
+    {
+        $xtvt = AktivitiSmartTeam::find($xtvtid);
+        
+        return view('smartteam.aktiviti-detail',[
+            'xtvt' => $xtvt
+        ]);
+    }
+    public function UploadGambarAktivitiSmartTeam(Request $r, $xtvtid)
+    {
+        \Cloudinary::config(array( 
+          "cloud_name" => config('jtkpk.cloudinary.cloud_name'),
+          "api_key" => config('jtkpk.cloudinary.api_key'),
+          "api_secret" => config('jtkpk.cloudinary.api_secret')
+        ));
+
+        // Get Data
+        $FileSize = round($_FILES['file']['size']/1024); // in KB
+        $FileName = $_FILES['file']['name'];
+        $FileType = strtolower($_FILES['file']['type']);
+        $FileExt = substr($FileType, 6);
+        $tmpName = $_FILES['file']['tmp_name']; 
+        $isUploadedFile = is_uploaded_file($_FILES['file']['tmp_name']);
+
+        if ($isUploadedFile == true)
+        {
+            $cloud_file = \Cloudinary\Uploader::upload($tmpName);
+            if ($cloud_file)
+            {
+                $cloud_filename = $cloud_file["url"];
+                $cloud_publicid = $cloud_file["public_id"];
+
+                # Insert into database
+                $gambar = new GambarAktivitiSmartTeam;
+                $gambar->xtvt_id = $xtvtid;
+                $gambar->url_img = $cloud_filename;
+                $gambar->public_id = $cloud_publicid;
+                $gambar->save();
+            }
+            else
+            {
+                $cloud_filename = "";
+                $cloud_publicid = "";
+            }
+
+            echo "OK|".$cloud_publicid;
+        }
+        else
+        {
+            echo "Muat naik gambar gagal. Sila cuba sekali lagi !";
+        }
+    }
+    public function PadamGambarAktivitiSmartTeam(Request $r, $public_id)
+    {
+        if (strlen($public_id) != 0)
+        {
+            GambarAktivitiSmartTeam::where('public_id',$public_id)->delete();
+            
+            \Cloudinary::config(array( 
+              "cloud_name" => config('jtkpk.cloudinary.cloud_name'),
+              "api_key" => config('jtkpk.cloudinary.api_key'),
+              "api_secret" => config('jtkpk.cloudinary.api_secret')
+            ));
+
+            \Cloudinary\Uploader::destroy($public_id);
+
+            if ($r->flag == 1 || $r->flag == '1')
+            {
+                echo "SweetAlert('success','Berjaya Dipadam !','Gambar aktiviti ini telah berjaya dipadam !');";
+                echo "$('.gambar_$public_id').fadeOut();";
+            }
+        }
     }
 }

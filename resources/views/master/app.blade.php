@@ -48,6 +48,7 @@
         <link rel="stylesheet" href="/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/datatables/jquery.dataTables.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/sweetalert/sweetalert.min.css">
+        <link rel="stylesheet" href="/assets/js/plugins/magnific-popup/magnific-popup.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/summernote/summernote.min.css">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/emojione/2.2.6/assets/css/emojione.min.css"/>
         @yield('css')
@@ -300,12 +301,13 @@
         <script src="/assets/js/plugins/summernote/summernote.min.js"></script>
         <script src="/assets/js/plugins/ckeditor/ckeditor.js"></script>
         <script src="/assets/js/plugins/jquery-textcomplete/jquery.textcomplete.min.js"></script>
+        <script src="/assets/js/plugins/magnific-popup/magnific-popup.min.js"></script>
         <script src="https://cdn.jsdelivr.net/emojione/2.2.6/lib/js/emojione.min.js"></script>
         @yield('js')
 
         <script>
             jQuery(function () {
-                App.initHelpers(['datepicker', 'datetimepicker', 'colorpicker', 'maxlength', 'select2', 'masked-inputs', 'rangeslider', 'tags-inputs' @yield('app.helper')]);
+                App.initHelpers(['datepicker', 'datetimepicker', 'colorpicker', 'maxlength', 'select2', 'masked-inputs', 'rangeslider', 'magnific-popup', 'tags-inputs' @yield('app.helper')]);
                 @yield('jquery')
             });
         </script>

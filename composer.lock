@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "2d39f727a800eb7287e83fb39fe5c3ae",
-    "content-hash": "77522c7ddf867df0bcf2f04b6affc055",
+    "hash": "e6688d38a553ed2a9059490fb6dfc6c4",
+    "content-hash": "b4709c0dcf7e0732e648201b59b69f2b",
     "packages": [
         {
             "name": "abraham/twitteroauth",
@@ -114,6 +114,58 @@
                 "preload"
             ],
             "time": "2015-11-09 22:51:51"
+        },
+        {
+            "name": "cloudinary/cloudinary_php",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/cloudinary/cloudinary_php.git",
+                "reference": "327f2db5767ceb8a19d51785e1b60e86674a6a2e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/cloudinary/cloudinary_php/zipball/327f2db5767ceb8a19d51785e1b60e86674a6a2e",
+                "reference": "327f2db5767ceb8a19d51785e1b60e86674a6a2e",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.7.*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src"
+                ],
+                "files": [
+                    "src/Helpers.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Cloudinary",
+                    "homepage": "https://github.com/cloudinary/cloudinary_php/graphs/contributors"
+                }
+            ],
+            "description": "Cloudinary PHP SDK",
+            "homepage": "https://github.com/cloudinary/cloudinary_php",
+            "keywords": [
+                "cdn",
+                "cloud",
+                "cloudinary",
+                "image management",
+                "sdk"
+            ],
+            "time": "2016-10-27 22:02:47"
         },
         {
             "name": "dnoegel/php-xdg-base-dir",

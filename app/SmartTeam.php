@@ -26,7 +26,7 @@ class SmartTeam extends Model
 
     public function aktiviti()
     {
-        return $this->hasMany('App\AktivitiSmartTeam', 'smart_team_id', 'id');
+        return $this->hasMany('App\AktivitiSmartTeam', 'smart_team_id', 'id')->orderBy('id','DESC');
     }
 
     public function getJumlahAhliAttribute()

@@ -372,3 +372,54 @@ function AddAktivitiDialog() {
     ClearAktivitiDialog();
     $('#AktivitiDialog').modal();
 }
+function EditAktiviti(id) {
+    var ajax = new sack();
+    ajax.requestFile = "/smart-team/aktiviti/edit/" + id;
+    Ajx(ajax);
+}
+function PadamAktiviti(id) {
+    swal({
+        title: "Padam Aktiviti ?",
+        text: "Anda pasti untuk memadam aktiviti ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/smart-team/aktiviti/delete/" + id;
+        Ajx(ajax);
+    });
+}
+function PadamGambar(public_id) {
+    var ajax = new sack();
+    ajax.requestFile = "/smart-team/aktiviti/padam-gambar/" + public_id;
+    Ajx(ajax);
+}
+function PadamGambarAktivitiConfirm(public_id) {
+    swal({
+        title: "Padam Gambar Aktiviti ?",
+        text: "Anda pasti untuk memadam gambar aktiviti ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/smart-team/aktiviti/padam-gambar/" + public_id;
+        ajax.setVar('flag','1');
+        Ajx(ajax);
+    });    
+}

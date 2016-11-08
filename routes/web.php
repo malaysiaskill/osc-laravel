@@ -96,3 +96,8 @@ Route::post('/smart-team', 'JTKController@SaveSmartTeam'); // Insert, Update Sma
 Route::post('/smart-team/edit/{id}', 'JTKController@EditSmartTeam'); // Edit SmartTeam
 Route::post('/smart-team/delete/{id}', 'JTKController@DeleteSmartTeam'); // Delete SmartTeam
 Route::post('/smart-team/aktiviti', 'JTKController@SaveAktivitiSmartTeam'); // Insert, Update Aktiviti SmartTeam
+Route::post('/smart-team/aktiviti/edit/{xtvtid}', 'JTKController@EditAktivitiSmartTeam'); // Edit Aktiviti SmartTeam
+Route::post('/smart-team/aktiviti/delete/{xtvtid}', 'JTKController@PadamAktivitiSmartTeam'); // Padam Aktiviti SmartTeam
+Route::get('/smart-team/aktiviti-detail/{xtvtid}', 'JTKController@DetailAktivitiSmartTeam'); // Detail Aktiviti SmartTeam
+Route::post('/smart-team/aktiviti/upload-gambar/{xtvtid}', 'JTKController@UploadGambarAktivitiSmartTeam'); // Upload Gambar Aktiviti SmartTeam
+Route::post('/smart-team/aktiviti/padam-gambar/{public_id}', 'JTKController@PadamGambarAktivitiSmartTeam'); // Padam Gambar Aktiviti SmartTeam

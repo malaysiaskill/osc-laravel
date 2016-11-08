@@ -4,9 +4,6 @@
 @section('app.helper', ",'summernote', 'ckeditor'")
 
 @section('jquery')
-@if (Auth::user()->role == 'leader')
-
-@endif
 @endsection
 
 @section('content')
@@ -73,11 +70,69 @@
                                 @foreach ($st->aktiviti as $xtvt)
                                 <div class="block block-bordered">
                                     <div class="block-header bg-gray-lighter">
+                                        @if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
+                                        <div class="block-options-simple">
+                                            <button class="btn btn-sm btn-primary" type="button" onclick="EditAktiviti('{{ $xtvt->id }}');">
+                                                <i class="fa fa-pencil"></i> Edit
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktiviti('{{ $xtvt->id }}');">
+                                                <i class="fa fa-trash-o"></i> Delete
+                                            </button>
+                                        </div>
+                                        @endif
                                         <h3 class="block-title">
-                                            <i class="fa fa-bicycle push-10-r"></i>{{ $xtvt->nama_aktiviti }}
+                                            <i class="fa fa-bicycle push-5-r"></i>
+                                            <a class="h5 font-w600 text-primary" href="{{ url('/smart-team/aktiviti-detail/'.$xtvt->id.'') }}">
+                                                {{ $xtvt->nama_aktiviti }}
+                                            </a>
                                         </h3>
                                     </div>
                                     <div class="block-content">
+                                        <div class="row items-push">
+                                            <div class="col-md-6">
+                                                <label class="h5 font-w300 push-5">Tarikh Aktiviti :</label>
+                                                <div>
+                                                    <div class="h6 panel panel-primary padding-10-all remove-margin-b">
+                                                        {{ $xtvt->tarikh_dari_formatted }}
+                                                        @if (strlen($xtvt->tarikh_hingga) != 0 && ($xtvt->tarikh_dari != $xtvt->tarikh_hingga))
+                                                            - {{ $xtvt->tarikh_hingga_formatted }}
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="h5 font-w300 push-5">Juruteknik Terlibat :</label>
+                                                <div>
+                                                    <div class="h6 panel panel-primary padding-10-all remove-margin-b">
+                                                        @if (strlen($xtvt->jtk_terlibat) == 0)
+                                                            <i class="fa fa-users push-5-r"></i> Semua Ahli Kumpulan
+                                                        @else
+                                                            @foreach (explode(',', trim($xtvt->jtk_terlibat,',')) as $jtk)
+                                                                <?php $_user = App\User::find($jtk); ?>
+                                                                <img src="/avatar/{{ $_user->id }}" class="img-avatar img-avatar32" data-toggle="tooltip" title="{{ $_user->name }}">
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-xs-12">
+                                                <label class="h5 font-w300 push-5">Sekolah Terlibat :</label>
+                                                <div>
+                                                    <div class="h6 panel panel-primary padding-10-all remove-margin-b">
+                                                        @if (strlen($xtvt->sekolah_terlibat) == 0)
+                                                        -
+                                                        @else
+                                                            @foreach (explode(',', trim($xtvt->sekolah_terlibat,',')) as $sek)
+                                                                <?php $_sek = App\Sekolah::where('kod_sekolah',$sek)->first(); ?>
+                                                                <span class="badge badge-success">
+                                                                 {{ $_sek->nama_sekolah_detail }}
+                                                                </span>
+                                                            @endforeach
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row items-push">
                                             <label class="col-sm-12 h5 font-w300 push-5">Objektif Aktiviti :</label>
                                             <div class="col-sm-12">
@@ -87,7 +142,7 @@
                                             </div>
                                         </div>
                                         <div class="row items-push">
-                                            <label class="col-sm-12 h5 font-w300 push-5">Keterangan Aktiviti :</label>
+                                            <label class="col-sm-12 h5 font-w300 push-5">Keterangan/Laporan/Tugasan Aktiviti :</label>
                                             <div class="col-sm-12">
                                                 <div id="v_detail" class="h6 panel panel-primary padding-10-all remove-margin-b">
                                                     <?php $detail = \Emojione\Emojione::toImage($xtvt->detail); echo nl2br($detail); ?>
@@ -183,7 +238,7 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-sm-12 h5 font-w300 push-5">Detail Aktiviti :</label>
+                            <label class="col-sm-12 h5 font-w300 push-5">Keterangan/Laporan/Tugasan Aktiviti :</label>
                             <div class="col-sm-12">
                                 <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai aktiviti yang akan dijalankan..." rows="5" required></textarea>
                             </div>
