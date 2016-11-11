@@ -474,6 +474,7 @@ class JTKController extends Controller
         return view('devteam.tasks',[
             'projek_id' => $projekid,
             'devteam_id' => $projek->devteam->id,
+            'senarai_jtk' => $projek->devteam->senarai_jtk,
             'nama_projek' => $projek->nama_projek,
             'nama_kumpulan' => $projek->devteam->nama_kumpulan,
             'tasks' => $tasks

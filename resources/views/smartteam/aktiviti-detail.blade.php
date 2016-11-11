@@ -206,7 +206,7 @@ $('#upload-gambar').dropzone({
         </div>
     </div>
 </div>
-@if (Auth::user()->role == 'leader' || Auth::user()->id == App\SmartTeam::find($xtvt->smart_team_id)->ketua_kumpulan)
+@if (Auth::user()->hasRole('leader') || Auth::user()->id == App\SmartTeam::find($xtvt->smart_team_id)->ketua_kumpulan)
 <!-- Aktiviti Dialog //-->
 <div id="AktivitiDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">

@@ -133,6 +133,24 @@
                                     </a>
                                 </li>
 
+                                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin'))
+                                <li>
+                                    <a class="nav-submenu" data-toggle="nav-submenu" href="#">
+                                        <i class="si si-support"></i><span class="sidebar-mini-hide">Pentadbiran</span>
+                                    </a>
+                                    <ul>
+                                        @if (Auth::user()->hasRole('super-admin'))
+                                            <li>
+                                                <a class="{{ (Request::path()=='admin/packages') ? 'active':'' }}" href="{{ url('/admin/packages') }}">Pakej Sistem</a>
+                                            </li>
+                                        @endif
+                                        <li>
+                                            <a class="{{ (Request::path()=='admin/users') ? 'active':'' }}" href="{{ url('/admin/users') }}">Pengguna</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                @endif
+                                
                                 <!--
                                     MODULE TERSEDIA
                                 -->
@@ -146,23 +164,6 @@
                                         <i class="fa fa-ambulance"></i><span class="sidebar-mini-hide">SMART Team</span>
                                     </a>
                                 </li>
-                                @if (Auth::user()->role == 'super-admin' || Auth::user()->role == 'admin')
-                                <li>
-                                    <a class="nav-submenu" data-toggle="nav-submenu" href="#">
-                                        <i class="si si-support"></i><span class="sidebar-mini-hide">Pentadbiran</span>
-                                    </a>
-                                    <ul>
-                                        @if (Auth::user()->role == 'super-admin')
-                                            <li>
-                                                <a class="{{ (Request::path()=='admin/packages') ? 'active':'' }}" href="{{ url('/admin/packages') }}">Pakej Sistem</a>
-                                            </li>
-                                        @endif
-                                        <li>
-                                            <a class="{{ (Request::path()=='admin/users') ? 'active':'' }}" href="{{ url('/admin/users') }}">Pengguna</a>
-                                        </li>
-                                    </ul>
-                                </li>
-                                @endif
 
                                 <!-- PAKEJ MENU -->
                                 @foreach (App\Packages::all() as $package)

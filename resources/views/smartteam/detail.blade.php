@@ -26,7 +26,7 @@
                     <a href="/smart-team/{{ $st->kod_ppd }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
-                    @if (Auth::user()->role == 'leader' || Auth::user()->id == $st->ketua_kumpulan)
+                    @if (Auth::user()->hasRole('leader') || Auth::user()->id == $st->ketua_kumpulan)
                         <button type="button" class="btn btn-success" onclick="javascript:AddAktivitiDialog();" data-toggle="tooltip" title="Tambah Aktiviti SMART Team">
                             <i class="fa fa-plus push-5-r"></i><i class="fa fa-bicycle"></i>
                         </button>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
                 
-                <div class="block-content">
+                <div class="block-content block-content-full">
                     <div class="row">
                         <div class="col-md-4">
                             <div class="block block-bordered">
@@ -62,24 +62,34 @@
                             </div>
                         </div>
                         <div class="col-md-8">
+                            @if (isset($error))
+                                <div class="alert alert-danger alert-dismissable">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                    <i class="fa fa-exclamation push-5-r text-danger"></i> Tajuk aktiviti telah wujud ! Sila pilih tajuk lain.
+                                </div>
+                            @endif
                             @if ($st->aktiviti->count() == 0)
                                 <div class="panel panel-primary text-center padding-20-all h6 font-w300">
-                                    - Tiada aktiviti buat masa ini -
+                                    <i class="fa fa-bicycle fa-4x push-10"></i>
+                                    <div>- Tiada aktiviti buat masa ini -</div>
                                 </div>
                             @else
                                 @foreach ($st->aktiviti as $xtvt)
                                 <div class="block block-bordered">
                                     <div class="block-header bg-gray-lighter">
-                                        @if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
                                         <div class="block-options-simple">
+                                            <a href="{{ url('/smart-team/aktiviti-detail/'.$xtvt->id.'') }}" class="btn btn-sm btn-primary">
+                                                <i class="fa fa-list-ul"></i> Lihat Detail
+                                            </a>
+                                            @if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
                                             <button class="btn btn-sm btn-primary" type="button" onclick="EditAktiviti('{{ $xtvt->id }}');">
                                                 <i class="fa fa-pencil"></i> Edit
                                             </button>
                                             <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktiviti('{{ $xtvt->id }}');">
                                                 <i class="fa fa-trash-o"></i> Delete
                                             </button>
+                                            @endif
                                         </div>
-                                        @endif
                                         <h3 class="block-title">
                                             <i class="fa fa-bicycle push-5-r"></i>
                                             <a class="h5 font-w600 text-primary" href="{{ url('/smart-team/aktiviti-detail/'.$xtvt->id.'') }}">
@@ -160,7 +170,7 @@
         </div>
     </div>
 </div>
-@if (Auth::user()->role == 'leader' || Auth::user()->id == $st->ketua_kumpulan)
+@if (Auth::user()->hasRole('leader') || Auth::user()->id == $st->ketua_kumpulan)
 <!-- Aktiviti Dialog //-->
 <div id="AktivitiDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">

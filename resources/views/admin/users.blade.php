@@ -48,13 +48,26 @@ $('#Users').DataTable({ responsive: true });
                                 <td class="text-center">{{ $i }}.</td>
                                 <td>
                                     <a href="#" onclick="javascript:EditUser('{{ $user->id }}');return false;">
-                                        <div class="font-w300 h5 text-primary">{{ $user->name }}</div>
+                                        <div class="font-w300 h5 text-primary">
+                                            <img class="img-avatar img-avatar32 push-5-r" src="/avatar/{{ $user->id }}" title="{{ $user->name }}">
+                                            {{ $user->name }}
+                                        </div>
                                     </a>
                                 </td>
                                 <td class="text-left">
                                     <i class="fa fa-envelope push-5-r"></i>{{ $user->email }}
                                 </td>
-                                <td class="text-center">{{ $user->roles->role_name }}</td>
+                                <td class="text-left">
+                                    @if ($user->roles()->count() > 0)
+                                        @foreach ($user->roles()->get() as $role)
+                                            <span class="badge badge-primary">
+                                                <i class="fa fa-user"></i> {{ $role->role_name }}
+                                            </span>
+                                        @endforeach
+                                    @else
+                                    -
+                                    @endif
+                                </td>
                                 <td class="text-center" width="150">
                                     <button class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit Pengguna" onclick="javascript:EditUser('{{ $user->id }}');return false;">
                                         <i class="fa fa-pencil"></i>
@@ -108,8 +121,7 @@ $('#Users').DataTable({ responsive: true });
                         <div class="form-group items-push border-b">
                             <label class="col-sm-4 control-label">Kumpulan Pengguna :</label>
                             <div class="col-sm-8">
-                                <select id="_usergroups" name="_usergroups" data-placeholder="Kumpulan Pengguna" class="form-control js-select2" style="width:100%;">
-                                    <option></option>
+                                <select multiple id="_usergroups" name="_usergroups[]" data-placeholder="Kumpulan Pengguna" class="form-control js-select2" style="width:100%;">
                                     @foreach (App\Roles::all() as $role)
                                         <option value="{{ $role->role }}">{{ $role->role_name }}</option>
                                     @endforeach

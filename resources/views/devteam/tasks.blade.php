@@ -161,9 +161,9 @@ setTimeout(function(){
                                     <label class="col-sm-12 h5 font-w300 push-5">Ditugaskan Kepada :</label>
                                     <div class="col-sm-12">
                                         <select multiple id="_assigned" name="_assigned[]" data-placeholder="Siapa ?" class="form-control js-select2-avatar" style="width:100%;" required>
-                                            @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)
-                                            ->whereIn('role',['user','leader'])->get() as $user)
-                                                <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                            @foreach (explode(',', trim($senarai_jtk,',')) as $jtk)
+                                                <?php $_user = App\User::find($jtk); ?>
+                                                <option value="{{ $_user->id }}">{{ $_user->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

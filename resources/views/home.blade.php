@@ -49,8 +49,8 @@
                             </a>
                         </div>
 
-                        @if (Auth::user()->role == 'super-admin' || Auth::user()->role == 'admin')
-                            @if (Auth::user()->role == 'super-admin')
+                        @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin'))
+                            @if (Auth::user()->hasRole('super-admin'))
                                 <!-- Packages -->
                                 <div class="col-sm-6 col-md-3">
                                     <a class="block block-bordered block-rounded block-link-hover3" href="{{ url('/admin/packages') }}">

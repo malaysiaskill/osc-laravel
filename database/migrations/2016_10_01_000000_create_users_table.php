@@ -21,7 +21,6 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->rememberToken();
-            $table->string('role')->default('user');
             $table->integer('gred')->nullable();
             $table->string('kod_jpn')->nullable();
             $table->string('kod_ppd')->nullable();

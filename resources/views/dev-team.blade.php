@@ -4,7 +4,7 @@
 @section('app.helper', ",'summernote', 'ckeditor'")
 
 @section('jquery')
-@if (Auth::user()->role == 'leader')
+@if (Auth::user()->hasRole('leader'))
     @if (Request::is('dev-team/*'))
         var previewNode = $('.template');
         var previewTemplate = previewNode.parent().html();
@@ -87,7 +87,7 @@
                             <i class="fa fa-arrow-circle-left"></i>
                         </a>
                     @endif
-                    @if (Auth::user()->role == 'leader')
+                    @if (Auth::user()->hasRole('leader'))
                         <button type="button" class="btn btn-success" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
                             <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
                         </button>
@@ -97,7 +97,7 @@
                             </button>
                         @endif
                     @endif
-                    @if (Auth::user()->role == 'jpn' || Auth::user()->role == 'ppd')
+                    @if (Auth::user()->hasRole('jpn') || Auth::user()->hasRole('ppd'))
                         <a href="/dev-team/senarai-projek/semua" class="btn btn-primary" data-toggle="tooltip" title="Senarai Semua Projek">
                             <i class="fa fa-list-ul push-5-r"></i> Senarai Projek
                         </a>
@@ -134,7 +134,7 @@
                                             </a>
                                         @endif
 
-                                        @if (Auth::user()->role == 'leader')
+                                        @if (Auth::user()->hasRole('leader'))
                                             <a href="#" onclick="javascript:EditDevTeam('{{ $devteam->id }}');return false;" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit Kumpulan">
                                                 <i class="fa fa-pencil"></i>
                                             </a>
@@ -188,45 +188,56 @@
                             @endif
                         </div>
                     @else
-                        <?php
-                            $dev_team = App\DevTeam::all();
-                        ?>
-                        @if ($dev_team->count() == 0)
-                            <center>
-                                <h1><i class="fa fa-question fa-3x"></i></h1>
-                                <p>- Tiada Rekod -</p>
-                            </center>
-                        @else
-                            <div class="row">
-                                @foreach (\App\DevTeam::all() as $devteam)
-                                <div class="col-sm-6 col-md-4 col-lg-3">
-                                    <a class="block block-bordered block-link-hover3" href="{{ url('/dev-team/'.$devteam->kod_ppd.'') }}">
-                                        <div class="block-content block-content-full text-center">
-                                            <div><i class="fa fa-users fa-3x"></i></div>
-                                            <div class="h4 font-w300 push-15-t push-5">{{ ucwords($devteam->nama_kumpulan) }}</div>
-                                            <div class="text-muted push-5"><b>Ketua :</b> {{ $devteam->ketua->name }}</div>
-                                            <div class="text-muted push-10">
-                                                @foreach (explode(',',$devteam->senarai_jtk) as $ahli)
-                                                    <?php if (strlen($ahli) == 0) { continue; }?>
-                                                    <img src="/avatar/{{ $ahli }}" class="img-avatar img-avatar32" data-toggle="tooltip" title="{{ App\User::find($ahli)->name }}"> 
-                                                @endforeach
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-6 border-r">
-                                                    <h2 class="font-w300">{{ count($devteam->projek) }}</h2>
-                                                    <span class="text-primary"><i class="fa fa-th-list push-5-r"></i> Projek</span>
-                                                </div>
-                                                <div class="col-xs-6">
-                                                    <h2 class="font-w300">{{ $devteam->jumlah_ahli }}</h2>
-                                                    <span class="text-primary"><i class="fa fa-users push-5-r"></i> Ahli</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </a>
+                        @foreach (App\PPD::all() as $ppd)
+                            <div class="block block-rounded block-bordered">
+                                <div class="block-header bg-gray-lighter">
+                                    <ul class="block-options">
+                                        <li>
+                                            <button type="button" data-toggle="block-option" data-action="content_toggle"></button>
+                                        </li>
+                                    </ul>
+                                    <h3 class="block-title">
+                                        <a href="/dev-team/{{ $ppd->kod_ppd }}">{{ $ppd->ppd }}</a>
+                                    </h3>
                                 </div>
-                                @endforeach
+                                <div class="block-content">
+                                    <?php $dev_team = App\DevTeam::where('kod_ppd',$ppd->kod_ppd)->get(); ?>
+                                    @if ($dev_team->count() == 0)
+                                        <center><p>- Tiada Kumpulan Development Team -</p></center>
+                                    @else
+                                        <div class="row">
+                                            @foreach ($dev_team as $dt)
+                                            <div class="col-sm-6 col-md-4">
+                                                <a class="block block-bordered block-link-hover3" href="{{ url('/dev-team/'.$ppd->kod_ppd.'') }}">
+                                                    <div class="block-content bg-gray-lighter block-content-full text-center">
+                                                        <div><i class="fa fa-ambulance fa-3x"></i></div>
+                                                        <div class="h5 push-15-t push-5">{{ ucwords($dt->nama_kumpulan) }}</div>
+                                                        <div class="text-muted push-5"><b>Ketua :</b> {{ $dt->ketua->name }}</div>
+                                                        <div class="text-muted push-10">
+                                                            @foreach (explode(',',$dt->senarai_jtk) as $ahli)
+                                                                <?php if (strlen($ahli) == 0) { continue; }?>
+                                                                <img src="/avatar/{{ $ahli }}" class="img-avatar img-avatar32" data-toggle="tooltip" title="{{ App\User::find($ahli)->name }}"> 
+                                                            @endforeach
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xs-6 border-r">
+                                                                <h2 class="font-w300">{{ count($dt->projek) }}</h2>
+                                                                <span class="text-primary"><small>Projek</small></span>
+                                                            </div>
+                                                            <div class="col-xs-6">
+                                                                <h2 class="font-w300">{{ $dt->jumlah_ahli }}</h2>
+                                                                <span class="text-primary"><small>Ahli</small></span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                            @endforeach
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
-                        @endif
+                        @endforeach
                     @endif
                 </div>
             </div>
@@ -235,7 +246,7 @@
 </div>
 <!-- END Page Content -->
 
-@if (Auth::user()->role == 'leader')
+@if (Auth::user()->hasRole('leader'))
 <!-- Group Dialog //-->
 <div id="GroupDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -271,8 +282,7 @@
                             <div class="col-sm-8">
                                 <select id="_ketua" name="_ketua" data-placeholder="Ketua Kumpulan" class="form-control js-select2-avatar" style="width:100%;" required>
                                     <option></option>
-                                    @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)
-                                    ->whereIn('role',['user','leader'])->get() as $user)
+                                    @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->get() as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
@@ -282,8 +292,7 @@
                             <label class="col-sm-4 control-label">Senarai Ahli Kumpulan (Termasuk Ketua) :</label>
                             <div class="col-sm-8">
                                 <select multiple id="_jtk" name="_jtk[]" data-placeholder="Ahli-Ahli" class="form-control js-select2-avatar" style="width:100%;" required>
-                                    @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)
-                                    ->whereIn('role',['user','leader'])->get() as $user)
+                                    @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->get() as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>

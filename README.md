@@ -38,7 +38,7 @@ git clone https://github.com/putera/jtkpk.git
 composer update
 ```
 
-**Langkah 3 :** Setting fail .ENV (Sambungan ke Pangkalan Data anda)
+**Langkah 3 :** Setting fail .ENV (Sambungan ke Pangkalan Data anda) dan **config/app.php**
 ```
 DB_CONNECTION=mysql
 DB_HOST=localhost
@@ -46,6 +46,13 @@ DB_PORT=3306
 DB_DATABASE=<NAMA_DATABASE_ANDA>
 DB_USERNAME=<DATABASE_USER>
 DB_PASSWORD=<DATABASE_PASSWORD>
+```
+
+config/app.php
+
+```
+'debug' => env('APP_DEBUG', false),
+'url' => env('APP_URL', 'URL_SEBENAR_WEB_ANDA'),
 ```
 
 **Langkah 4 :** Migrate Pangkalan Data
@@ -77,7 +84,7 @@ Itu sahaja ! Mudah kan ?
 
 **Pengguna & Kata Laluan Administrator default adalah :**
 ```
-ID Pengguna/Email : admin@domain.com
+ID Pengguna/Email : admin@jtkpk.dev
 Kata Laluan : password
 ```
 

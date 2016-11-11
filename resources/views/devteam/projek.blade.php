@@ -6,7 +6,7 @@
 @section('jquery')
 $('#Projek').DataTable({ responsive: true });
 
-@if (Auth::user()->role == 'leader')
+@if (Auth::user()->hasRole('leader'))
 var previewNode = $('.template');
 var previewTemplate = previewNode.parent().html();
 previewNode.remove();
@@ -86,7 +86,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                     <a href="/dev-team/{{ $kodppd }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
-                    @if (Auth::user()->role == 'leader')
+                    @if (Auth::user()->hasRole('leader'))
                         <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
                             <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
                         </button>
@@ -135,15 +135,9 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                             <tr>
                                 <td class="text-center">{{ $i }}.</td>
                                 <td>
-                                    @if (Auth::user()->role == 'leader')
-                                        <a href="/dev-team/projek/{{ $prj->id }}/tasks">
-                                            <span class="font-w300 h5 text-primary">{{ $prj->nama_projek }}</span>
-                                        </a>
-                                    @else
-                                        <a href="#" onclick="javascript:ViewProjek('{{ $prj->id }}');return false;">
-                                            <span class="font-w300 h5 text-primary">{{ $prj->nama_projek }}</span>
-                                        </a>
-                                    @endif
+                                    <a href="/dev-team/projek/{{ $prj->id }}/tasks">
+                                        <span class="font-w300 h5 text-primary">{{ $prj->nama_projek }}</span>
+                                    </a>
                                 </td>
                                 <td class="text-center h3 font-w300">
                                     @if ($prj->tasks->count() != 0)
@@ -154,22 +148,21 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
                                 </td>
                                 <td class="text-center h3 font-w300">{{ $prj->tasks->count() }}</td>
                                 <td class="text-center h3 font-w300">{{ $prj->tasks->where('peratus_siap','<>','100')->count() }}</td>
-                                <td class="text-center" width="150">
-                                    @if (Auth::user()->role == 'leader')
+                                <td class="text-center" width="200">
+                                    <button type="button" class="btn btn-primary" onclick="javascript:ViewProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Lihat Detail Projek">
+                                        <i class="fa fa-briefcase"></i>
+                                    </button>
+                                    <a href="/dev-team/projek/{{ $prj->id }}/tasks" class="btn btn-primary" data-toggle="tooltip" title="Lihat Semua Task">
+                                        <i class="fa fa-th-list"></i>
+                                    </a>
+                                    @if (Auth::user()->hasRole('leader') && Auth::user()->kod_ppd == $kodppd)
                                         <button type="button" class="btn btn-primary" onclick="javascript:EditProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Edit Maklumat Projek">
                                             <i class="fa fa-pencil"></i>
                                         </button>
                                         <button type="button" class="btn btn-danger" onclick="javascript:DeleteProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Padam Projek">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
-                                    @else
-                                        <button type="button" class="btn btn-primary" onclick="javascript:ViewProjek('{{ $prj->id }}');" data-toggle="tooltip" title="Lihat Detail Projek">
-                                            <i class="fa fa-briefcase"></i>
-                                        </button>
                                     @endif
-                                    <a href="/dev-team/projek/{{ $prj->id }}/tasks" class="btn btn-primary" data-toggle="tooltip" title="Lihat Semua Task">
-                                        <i class="fa fa-th-list"></i>
-                                    </a>
                                 </td>
                             </tr>
                             @endforeach
@@ -181,7 +174,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
     </div>
 </div>
 
-@if (Auth::user()->role == 'leader')
+@if (Auth::user()->hasRole('leader'))
 <!-- Projek Dialog //-->
 <div id="ProjekDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -290,7 +283,7 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
         </div>
     </div>
 </div>
-@else
+@endif
 <!-- View Projek Dialog //-->
 <div id="ViewProjekDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -361,6 +354,5 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
         </div>
     </div>
 </div>
-@endif
 <!-- END Page Content -->
 @endsection

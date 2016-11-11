@@ -4,9 +4,6 @@
 @section('app.helper', ",'summernote', 'ckeditor'")
 
 @section('jquery')
-@if (Auth::user()->role == 'leader')
-
-@endif
 @endsection
 
 @section('content')
@@ -31,7 +28,7 @@
                             <i class="fa fa-arrow-circle-left"></i>
                         </a>
                     @endif
-                    @if (Auth::user()->role == 'leader')
+                    @if (Auth::user()->hasRole('leader'))
                         <button type="button" class="btn btn-success" onclick="javascript:AddSTDialog();" data-toggle="tooltip" title="Tambah Kumpulan SMART Team">
                             <i class="fa fa-plus push-5-r"></i><i class="fa fa-ambulance"></i>
                         </button>
@@ -67,7 +64,7 @@
                                         <div class="row">
                                             @foreach ($smart_team as $st)
                                             <div class="col-sm-6 col-md-4">
-                                                <a class="block block-bordered block-link-hover3 remove-margin-b" href="{{ url('/smart-team/detail/'.$st->id.'') }}">
+                                                <a class="block block-bordered block-link-hover3" href="{{ url('/smart-team/detail/'.$st->id.'') }}">
                                                     <div class="block-content bg-gray-lighter block-content-full text-center">
                                                         <div><i class="fa fa-ambulance fa-3x"></i></div>
                                                         <div class="h5 push-15-t push-5">{{ ucwords($st->nama_kumpulan) }}</div>
@@ -89,8 +86,8 @@
                                                         </div>
                                                     </div>
                                                 </a>
-                                                @if (Auth::user()->role == 'leader')
-                                                <div class="push-5-t push-10 text-right">
+                                                @if (Auth::user()->hasRole('leader') && Auth::user()->kod_ppd == $kod_ppd)
+                                                <div class="push-10 text-right">
                                                     <button type="button" class="btn btn-xs btn-primary" onclick="javascript:EditSTTeam('{{ $st->id }}');">
                                                         <i class="fa fa-pencil"></i> Edit
                                                     </button>
@@ -164,7 +161,7 @@
     </div>
 </div>
 
-@if (Auth::user()->role == 'leader')
+@if (Auth::user()->hasRole('leader'))
 <!-- Smart Team Dialog //-->
 <div id="STDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -200,8 +197,7 @@
                             <div class="col-sm-8">
                                 <select id="_ketua" name="_ketua" data-placeholder="Ketua Kumpulan" class="form-control js-select2-avatar" style="width:100%;" required>
                                     <option></option>
-                                    @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)
-                                    ->whereIn('role',['user','leader'])->get() as $user)
+                                    @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->get() as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
@@ -211,8 +207,7 @@
                             <label class="col-sm-4 control-label">Senarai Ahli Kumpulan (Termasuk Ketua) :</label>
                             <div class="col-sm-8">
                                 <select multiple id="_jtk" name="_jtk[]" data-placeholder="Ahli-Ahli" class="form-control js-select2-avatar" style="width:100%;" required>
-                                    @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)
-                                    ->whereIn('role',['user','leader'])->get() as $user)
+                                    @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->get() as $user)
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>

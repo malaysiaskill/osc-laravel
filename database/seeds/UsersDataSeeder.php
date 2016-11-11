@@ -12,13 +12,15 @@ class UsersDataSeeder extends Seeder
     public function run()
     {
         // Admin User
+        // User : admin@jtkpk.dev
+        // Pawd : password
         DB::table('users')->insert(
             [
+                'id' => 1,
                 'name' => 'Pentadbir Sistem',
-                'email' => 'admin@domain.com',
+                'email' => 'admin@jtkpk.dev',
                 'password' => '$2y$10$VzArNThE8p3lScLDKdjfj.C0cemY9IJmmYgXUgP8TTdUseMqR.lry',
                 'remember_token' => DB::raw('NULL'),
-                'role' => 'super-admin',
                 'gred' => DB::raw('NULL'),
                 'kod_jpn' => DB::raw('NULL'),
                 'kod_ppd' => DB::raw('NULL'),

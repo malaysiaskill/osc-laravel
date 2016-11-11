@@ -23,14 +23,6 @@ $('#Packages').DataTable({ responsive: true });
         <div class="col-xs-12">
             <div id="_packages" class="block block-themed block-rounded push-5">
                 
-                <!--
-                <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter">
-                    <button type="button" class="btn btn-primary" onclick="javascript:void();">
-                        <i class="fa fa-plus push-5-r"></i><i class="fa fa-user"></i>
-                    </button>
-                </div>
-                -->
-
                 <div class="block-content">
                     <table id="Packages" class="table table-striped table-bordered responsive h6">
                         <thead>
