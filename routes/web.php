@@ -101,3 +101,7 @@ Route::post('/smart-team/aktiviti/delete/{xtvtid}', 'JTKController@PadamAktiviti
 Route::get('/smart-team/aktiviti-detail/{xtvtid}', 'JTKController@DetailAktivitiSmartTeam'); // Detail Aktiviti SmartTeam
 Route::post('/smart-team/aktiviti/upload-gambar/{xtvtid}', 'JTKController@UploadGambarAktivitiSmartTeam'); // Upload Gambar Aktiviti SmartTeam
 Route::post('/smart-team/aktiviti/padam-gambar/{public_id}', 'JTKController@PadamGambarAktivitiSmartTeam'); // Padam Gambar Aktiviti SmartTeam
+
+# Aktiviti Ad-Hoc
+Route::post('/smart-team/aktiviti-adhoc', 'JTKController@SaveAktivitiAdhoc'); // Insert, Update Aktiviti Adhoc
+Route::get('/smart-team/aktiviti-adhoc-detail/{xtvtid}', 'JTKController@DetailAktivitiAdhoc'); // Detail Aktiviti Adhoc

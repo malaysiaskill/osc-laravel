@@ -1,16 +1,17 @@
 @extends('master.app')
-@section('title', 'Detail Kumpulan SMART Team')
-@section('site.description', 'Detail Kumpulan SMART Team')
+@section('title', 'Detail Aktiviti')
+@section('site.description', 'Detail Aktiviti')
 @section('app.helper', ",'summernote', 'ckeditor'")
 
 @section('jquery')
-@if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
+@if ($xtvt->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || Auth::user()->hasRole('ppd'))
 $('#btn-add-gambar').click(function(){ $('#upload-gambar').toggle(); });
 Dropzone.autoDiscover = false;
 $('#upload-gambar').dropzone({
     url: '/smart-team/aktiviti/upload-gambar/{{ $xtvt->id }}',
     params: {
-        _token: "{{ csrf_token() }}"
+        _token: "{{ csrf_token() }}",
+        _adhoc: 1
     },
     acceptedFiles: '.jpg,.jpeg,.png',
     maxFilesize: 5,
@@ -43,7 +44,7 @@ $('#upload-gambar').dropzone({
             $('[data-name="'+file.name+'"]').remove();
         });
         this.on("complete", function() {
-            window.location.href = '/smart-team/aktiviti-detail/{{ $xtvt->id }}';
+            window.location.href = '/smart-team/aktiviti-adhoc-detail/{{ $xtvt->id }}';
         });
         this.on("error", function(file, errorMessage) {
             console.log(errorMessage);
@@ -71,7 +72,7 @@ $('#upload-gambar').dropzone({
         <div class="col-xs-12">
             <div class="block block-themed block-rounded push-5">
                 <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
-                    <a href="{{ url('/smart-team/detail/'.$xtvt->smart_team_id.'') }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                    <a href="{{ url('/smart-team/'.$xtvt->kod_ppd.'') }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
                         <i class="fa fa-arrow-circle-left"></i>
                     </a>
                     <div class="pull-right">
@@ -83,12 +84,12 @@ $('#upload-gambar').dropzone({
                         <div class="col-xs-12">
                             <div class="block block-bordered">
                                 <div class="block-header bg-gray-lighter">
-                                    @if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
+                                    @if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd)
                                     <div class="block-options-simple">
-                                        <button class="btn btn-sm btn-primary" type="button" onclick="EditAktiviti('{{ $xtvt->id }}');">
+                                        <button class="btn btn-sm btn-primary" type="button" onclick="EditAktivitiAdhoc('{{ $xtvt->id }}');">
                                             <i class="fa fa-pencil"></i> Edit
                                         </button>
-                                        <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktiviti('{{ $xtvt->id }}');">
+                                        <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktivitiAdhoc('{{ $xtvt->id }}');">
                                             <i class="fa fa-trash-o"></i> Delete
                                         </button>
                                     </div>
@@ -161,7 +162,7 @@ $('#upload-gambar').dropzone({
                                     </div>
                                     <div class="row items-push">
                                         <label class="col-md-6 h5 font-w300 push-5">Gambar Aktiviti :</label>
-                                        @if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
+                                        @if (App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
                                         <div class="col-md-6 text-right">
                                             <button id="btn-add-gambar" type="button" class="btn btn-success">
                                                 <i class="fa fa-picture-o push-5-r"></i>Upload Gambar Aktiviti
@@ -170,19 +171,19 @@ $('#upload-gambar').dropzone({
                                         @endif
                                         <div class="col-sm-12">
                                             <div id="v_gambar" class="h6 panel bg-gray-lighter panel-primary padding-10-all remove-margin-b">
-                                                @if (App\GambarAktivitiSmartTeam::where('xtvt_id',$xtvt->id)->where('JenisAktiviti','SMART')->count() == 0)
+                                                @if (App\GambarAktivitiSmartTeam::where('xtvt_id',$xtvt->id)->where('JenisAktiviti','ADHOC')->count() == 0)
                                                     <center>
                                                         <i class="fa fa-picture-o fa-4x"></i>
                                                         <div class="push-10 push-5-t">- Tiada Gambar Aktiviti -</div>
                                                     </center>
                                                 @else
                                                     <div class="row items-push js-gallery">
-                                                        @foreach (App\GambarAktivitiSmartTeam::where('xtvt_id',$xtvt->id)->where('JenisAktiviti','SMART')->get() as $gambar)
+                                                        @foreach (App\GambarAktivitiSmartTeam::where('xtvt_id',$xtvt->id)->where('JenisAktiviti','ADHOC')->get() as $gambar)
                                                         <div class="gambar_{{ $gambar->public_id }} col-sm-6 col-md-4 col-lg-3 animated fadeIn">
                                                             <a class="img-link img-thumb" href="{{ $gambar->url_img }}">
                                                                 <img class="img-responsive" src="{{ $gambar->url_img }}">
                                                             </a>
-                                                            @if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
+                                                            @if (App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || Auth::user()->hasRole('ppd'))
                                                             <span>
                                                                 <button type="button" class="btn btn-sm btn-danger" onclick="javascript:PadamGambarAktivitiConfirm('{{ $gambar->public_id }}');">
                                                                     <i class="fa fa-trash-o"></i> Padam
@@ -206,17 +207,17 @@ $('#upload-gambar').dropzone({
         </div>
     </div>
 </div>
-@if (Auth::user()->hasRole('leader') || Auth::user()->id == App\SmartTeam::find($xtvt->smart_team_id)->ketua_kumpulan)
+@if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd)
 <!-- Aktiviti Dialog //-->
 <div id="AktivitiDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
         <div class="modal-content">
-            <form method="post" class="form-horizontal" action="{{ url('/smart-team/aktiviti') }}">
+            <form method="post" class="form-horizontal" action="{{ url('/smart-team/aktiviti-adhoc') }}">
                 {{ csrf_field() }}
                 <div class="block block-themed block-transparent remove-margin-b">
                     <div class="block-header bg-primary-dark">
                         <h3 class="block-title">
-                            <i class="fa fa-ambulance push-10-r"></i>Aktiviti : Kumpulan SMART Team
+                            <i class="fa fa-ambulance push-10-r"></i>Aktiviti Ad-Hoc
                         </h3>
                     </div>
                     <div class="block-content">
@@ -260,9 +261,8 @@ $('#upload-gambar').dropzone({
                                     <label class="col-sm-12 h5 font-w300 push-5">Juruteknik Terlibat :</label>
                                     <div class="col-sm-12">
                                         <select disabled multiple id="_jtk_terlibat" name="_jtk_terlibat[]" data-placeholder="Juruteknik.." class="form-control js-select2-avatar" style="width:100%;" required>
-                                            @foreach (explode(',', trim(App\SmartTeam::find($xtvt->smart_team_id)->senarai_jtk,',')) as $user)
-                                                <?php $_user = App\User::find($user); ?>
-                                                <option value="{{ $_user->id }}">{{ $_user->name }}</option>
+                                            @foreach (App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->get() as $jtk)
+                                                <option value="{{ $jtk->id }}">{{ $jtk->name }}</option>
                                             @endforeach
                                         </select>
                                         <div class="push-5-t">
@@ -298,7 +298,6 @@ $('#upload-gambar').dropzone({
                     <button id="btn_u_cancel" data-dismiss="modal" class="btn btn-danger" type="button" onClick="javascript:ClearAktivitiDialog();">
                         <i class="fa fa-times push-5-r"></i>Batal
                     </button>                
-                    <input id="_smart_team_id" name="_smart_team_id" type="hidden" value="{{ $xtvt->smart_team_id }}" />
                     <input id="_xtvtid" name="_xtvtid" type="hidden" value="0" />
                 </div>
             </form>

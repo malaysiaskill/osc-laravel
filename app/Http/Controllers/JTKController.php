@@ -17,6 +17,7 @@ use App\ProjekTaskDetail;
 use App\SmartTeam;
 use App\AktivitiSmartTeam;
 use App\GambarAktivitiSmartTeam;
+use App\AktivitiAdhoc;
 
 class JTKController extends Controller
 {
@@ -728,21 +729,25 @@ class JTKController extends Controller
     }
     public function EditAktivitiSmartTeam(Request $r, $xtvtid)
     {
-        $xtvt = AktivitiSmartTeam::find($xtvtid);
-
+        $flag = $r->flag;
+        if ($flag == 1 || $flag == '1')
+        {
+            $xtvt = AktivitiAdhoc::find($xtvtid);
+        }
+        else
+        {
+            $xtvt = AktivitiSmartTeam::find($xtvtid);
+        }
+        
         $nama_aktiviti = addslashes(html_entity_decode($xtvt->nama_aktiviti,ENT_QUOTES));
         $nama_aktiviti = str_replace('<br />', '\n', nl2br($nama_aktiviti));
-
         $sekolah_terlibat = '"' . str_replace(',', '","', trim($xtvt->sekolah_terlibat,',')) . '"';
-
         $tarikh_dari = \Carbon\Carbon::createFromFormat('Y-m-d', $xtvt->tarikh_dari)->format('d/m/Y');
         $tarikh_hingga = \Carbon\Carbon::createFromFormat('Y-m-d', $xtvt->tarikh_hingga)->format('d/m/Y');
         $jtk_terlibat = $xtvt->jtk_terlibat;
-
         $objektif = addslashes(html_entity_decode($xtvt->objektif,ENT_QUOTES));
         $objektif = str_replace('<br />', '\n', nl2br($objektif));
         $objektif = trim(preg_replace('/\s\s+/', '', $objektif));
-
         $detail = addslashes(html_entity_decode($xtvt->detail,ENT_QUOTES));
         $detail = str_replace('<br />', '\n', nl2br($detail));
         $detail = trim(preg_replace('/\s\s+/', '', $detail));
@@ -770,16 +775,35 @@ class JTKController extends Controller
     }
     public function PadamAktivitiSmartTeam(Request $r, $xtvtid)
     {
-        $xtvt = AktivitiSmartTeam::find($xtvtid);
-        $smart_team_id = $xtvt->smart_team_id;
-        $xtvt = AktivitiSmartTeam::destroy($xtvtid);
-        echo "SweetAlert('success','Berjaya Dipadam !','Rekod aktiviti ini telah berjaya dipadam !',\"window.location.href='/smart-team/detail/$smart_team_id';\");";
+        $flag = $r->flag;
+
+        if ($flag == 1 || $flag == '1')
+        {
+            $xtvt = AktivitiAdhoc::destroy($xtvtid);
+            $kod_ppd = Auth::user()->kod_ppd;
+            echo "SweetAlert('success','Berjaya Dipadam !','Rekod aktiviti ini telah berjaya dipadam !',\"window.location.href='/smart-team/$kod_ppd';\");";
+        }
+        else
+        {
+            $xtvt = AktivitiSmartTeam::find($xtvtid);
+            $smart_team_id = $xtvt->smart_team_id;
+            $xtvt = AktivitiSmartTeam::destroy($xtvtid);
+            echo "SweetAlert('success','Berjaya Dipadam !','Rekod aktiviti ini telah berjaya dipadam !',\"window.location.href='/smart-team/detail/$smart_team_id';\");";
+        }
     }
     public function DetailAktivitiSmartTeam($xtvtid)
     {
         $xtvt = AktivitiSmartTeam::find($xtvtid);
         
         return view('smartteam.aktiviti-detail',[
+            'xtvt' => $xtvt
+        ]);
+    }
+    public function DetailAktivitiAdhoc($xtvtid)
+    {
+        $xtvt = AktivitiAdhoc::find($xtvtid);
+        
+        return view('smartteam.aktiviti-adhoc-detail',[
             'xtvt' => $xtvt
         ]);
     }
@@ -799,6 +823,12 @@ class JTKController extends Controller
         $tmpName = $_FILES['file']['tmp_name']; 
         $isUploadedFile = is_uploaded_file($_FILES['file']['tmp_name']);
 
+        if ($r->_adhoc == 1 || $r->_adhoc == '1') {
+            $JenisAktiviti = "ADHOC";
+        } else {
+            $JenisAktiviti = "SMART";
+        }
+
         if ($isUploadedFile == true)
         {
             $cloud_file = \Cloudinary\Uploader::upload($tmpName);
@@ -809,6 +839,7 @@ class JTKController extends Controller
 
                 # Insert into database
                 $gambar = new GambarAktivitiSmartTeam;
+                $gambar->JenisAktiviti = $JenisAktiviti;
                 $gambar->xtvt_id = $xtvtid;
                 $gambar->url_img = $cloud_filename;
                 $gambar->public_id = $cloud_publicid;
@@ -841,11 +872,66 @@ class JTKController extends Controller
 
             \Cloudinary\Uploader::destroy($public_id);
 
-            if ($r->flag == 1 || $r->flag == '1')
+            echo "SweetAlert('success','Berjaya Dipadam !','Gambar aktiviti ini telah berjaya dipadam !');";
+            echo "$('.gambar_$public_id').fadeOut();";
+        }
+    }
+
+    /**
+
+    AKTIVITI AD HOC
+
+    */
+    public function SaveAktivitiAdhoc(Request $r)
+    {
+        $tajuk_xtvt = htmlentities($r->input('_tajuk_xtvt'),ENT_QUOTES);
+        $sekolah_terlibat = ','.implode(',', $r->input('_sekolah_terlibat')).',';
+        $tarikh_xtvt_dari = $r->input('_tarikh_xtvt_dari');
+        $tarikh_xtvt_hingga = $r->input('_tarikh_xtvt_hingga');
+        if ($r->jtk_terlibat_type == 1 || $r->jtk_terlibat_type == '1') {
+            $jtk_terlibat = ','.implode(',', $r->input('_jtk_terlibat')).',';
+        } else {
+            $jtk_terlibat = '';
+        }
+        $objektif = htmlentities($r->input('_objektif'),ENT_QUOTES);
+        $detail = htmlentities($r->input('_detail'),ENT_QUOTES);
+
+        if ($r->_xtvtid != 0 || $r->_xtvtid != '0')
+        {
+            # Update
+            $xtvt = AktivitiAdhoc::find($r->_xtvtid);
+            $xtvt->kod_ppd = Auth::user()->kod_ppd;
+            $xtvt->nama_aktiviti = $tajuk_xtvt;
+            $xtvt->sekolah_terlibat = $sekolah_terlibat;
+            $xtvt->tarikh_dari = $tarikh_xtvt_dari;
+            $xtvt->tarikh_hingga = $tarikh_xtvt_hingga;
+            $xtvt->jtk_terlibat = $jtk_terlibat;
+            $xtvt->objektif = $objektif;
+            $xtvt->detail = $detail;
+            $xtvt->save();
+        }
+        else
+        {
+            # Insert
+            if (AktivitiAdhoc::where('nama_aktiviti',$tajuk_xtvt)->count() == 1)
             {
-                echo "SweetAlert('success','Berjaya Dipadam !','Gambar aktiviti ini telah berjaya dipadam !');";
-                echo "$('.gambar_$public_id').fadeOut();";
+                return redirect('/smart-team/'.Auth::user()->kod_ppd.'/?error=title_exists');
+            }
+            else
+            {
+                $xtvt = new AktivitiAdhoc;
+                $xtvt->kod_ppd = Auth::user()->kod_ppd;
+                $xtvt->nama_aktiviti = $tajuk_xtvt;
+                $xtvt->sekolah_terlibat = $sekolah_terlibat;
+                $xtvt->tarikh_dari = $tarikh_xtvt_dari;
+                $xtvt->tarikh_hingga = $tarikh_xtvt_hingga;
+                $xtvt->jtk_terlibat = $jtk_terlibat;
+                $xtvt->objektif = $objektif;
+                $xtvt->detail = $detail;
+                $xtvt->save();
             }
         }
+
+        return redirect('/smart-team/'.Auth::user()->kod_ppd);
     }
 }

@@ -423,3 +423,48 @@ function PadamGambarAktivitiConfirm(public_id) {
         Ajx(ajax);
     });    
 }
+/* Aktiviti Adhoc */
+function ClearAktivitiAdhocDialog() {
+    $('#_tajuk_xtvt').val('');
+    $('#_sekolah_terlibat').val('').trigger('change');
+    $('#_tarikh_xtvt_dari').val('');
+    $('#_tarikh_xtvt_hingga').val('');
+    $('#_jtk_terlibat').val('').trigger('change');
+    $('#_jtk_semua').prop('checked','checked');
+    $('#_jtk_adhoc').removeAttr('checked');
+    $('#_jtk_terlibat').attr('disabled','disabled');
+    $('#_objektif').val('');
+    $('#_detail').val('');
+    $('#_xtvtid').val('0');
+}
+function AddAktivitiAdhocDialog() {
+    ClearAktivitiAdhocDialog();
+    $('#AktivitiDialog').modal();
+}
+function EditAktivitiAdhoc(id) {
+    var ajax = new sack();
+    ajax.requestFile = "/smart-team/aktiviti/edit/" + id;
+    ajax.setVar('flag','1');
+    Ajx(ajax);
+}
+function PadamAktivitiAdhoc(id) {
+    swal({
+        title: "Padam Aktiviti ?",
+        text: "Anda pasti untuk memadam aktiviti ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/smart-team/aktiviti/delete/" + id;
+        ajax.setVar('flag','1');
+        Ajx(ajax);
+    });
+}

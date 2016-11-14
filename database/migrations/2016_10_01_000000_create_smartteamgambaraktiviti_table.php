@@ -17,12 +17,12 @@ class CreateSmartteamgambaraktivitiTable extends Migration
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->string('JenisAktiviti')->nullable();
             $table->integer('xtvt_id')->unsigned();
             $table->string('url_img')->nullable();
             $table->string('public_id')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-            $table->foreign('xtvt_id')->references('id')->on('aktiviti_smartteam')->onDelete('cascade');
         });
     }
 
