@@ -101,6 +101,18 @@
                             </a>
                         </div>
 
+                        <!-- FORUM -->
+                        <div class="col-sm-6 col-md-3">
+                            <a class="block block-bordered block-rounded block-link-hover3" href="{{ url('/forums') }}">
+                                <div class="block-content block-content-full text-center">
+                                    <div>
+                                        <i class="fa fa-comments fa-3x"></i>
+                                    </div>
+                                    <div class="text-uppercase h5 font-w500 push-15-t push-5">FORUM</div>
+                                </div>
+                            </a>
+                        </div>
+
                         @foreach (App\Packages::all() as $package)
                             @if ($package->package_status == 1)
                                 <!-- Users -->

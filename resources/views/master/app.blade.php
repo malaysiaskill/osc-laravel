@@ -164,6 +164,11 @@
                                         <i class="fa fa-ambulance"></i><span class="sidebar-mini-hide">SMART Team</span>
                                     </a>
                                 </li>
+                                <li>
+                                    <a class="{{ (Request::path()=='forums') ? 'active':'' }}" href="{{ url('/forums') }}">
+                                        <i class="fa fa-comments"></i><span class="sidebar-mini-hide">FORUM</span>
+                                    </a>
+                                </li>
 
                                 <!-- PAKEJ MENU -->
                                 @foreach (App\Packages::all() as $package)

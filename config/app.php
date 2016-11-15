@@ -182,6 +182,8 @@ return [
          * JTKPK Package Service Provider...
          */
 
+	DevDojo\Chatter\ChatterServiceProvider::class,
+
         // (Contoh : PUTERA\LogTugasan\LogTugasanServiceProvider::class,
 
     ],
