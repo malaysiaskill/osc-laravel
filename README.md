@@ -17,6 +17,9 @@ Template Sistem (Web-Based) & Platform utama sistem bersepadu bagi Kumpulan DEV-
 * Dimurnikan lagi dengan template Themes (Kredit [@putera](https://github.com/putera)) yang sangat cantik dan fluid untuk mobile.
 * Dibangunkan khusus untuk **SMART DEVELOPMENT TEAM** bagi JTKPK.
 * Modul Development Team iaitu pengurusan projek dan kumpulan Development Team bagi JTKPK.
+* Modul SMART Team yakni pengurusan SMART Team serta aktiviti.
+* Aktiviti Ad-Hoc (Selain daripada SMART Team)
+* Modul FORUM
 
 **Plug-ins yang telah dimasukkan antaranya ialah :**
 
@@ -69,6 +72,7 @@ php artisan db:seed
 ```
 sudo chmod -R 777 storage/
 sudo chmod -R 777 public/devteam/kertas-kerja/
+sudo chmod -R 777 bootstrap/
 ```
 
 **Langkah 6 :** Run Sistem
@@ -84,7 +88,7 @@ Itu sahaja ! Mudah kan ?
 
 **Pengguna & Kata Laluan Administrator default adalah :**
 ```
-ID Pengguna/Email : admin@jtkpk.dev
+E-mel : admin@jtkpk.dev
 Kata Laluan : password
 ```
 
