@@ -43,7 +43,7 @@ $('#upload-gambar').dropzone({
             PadamGambar($('[data-name="'+file.name+'"]').attr('data-public'));
             $('[data-name="'+file.name+'"]').remove();
         });
-        this.on("complete", function() {
+        this.on("queuecomplete", function() {
             window.location.href = '/smart-team/aktiviti-adhoc-detail/{{ $xtvt->id }}';
         });
         this.on("error", function(file, errorMessage) {

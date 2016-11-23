@@ -69,4 +69,14 @@ class User extends Authenticatable
             return '0';
         }
     }
+
+    public function getIsKetuaKumpulanAttribute()
+    {
+        $isKetua = \App\DevTeam::where('kod_ppd',$this->kod_ppd)->where('ketua_kumpulan','=',$this->id)->get();
+        if (count($isKetua) > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

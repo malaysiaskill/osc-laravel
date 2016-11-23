@@ -92,9 +92,11 @@
                             <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
                         </button>
                         @if (Request::is('dev-team/*'))
-                            <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
-                                <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
-                            </button>
+                            @if (Auth::user()->IsKetuaKumpulan)
+                                <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
+                                    <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
+                                </button>
+                            @endif
                         @endif
                     @endif
                     @if (Auth::user()->hasRole('jpn') || Auth::user()->hasRole('ppd'))
@@ -157,9 +159,22 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach (explode(',',$devteam->senarai_jtk) as $userid)
+                                                <!-- Ketua Kumpulan -->
+                                                <?php $KetuaKumpulan = $devteam->ketua_kumpulan; $_userkk = App\User::find($KetuaKumpulan);?>
+                                                <tr>
+                                                    <td class="text-center">
+                                                        <img class="img-avatar img-avatar48" src="/avatar/{{ $KetuaKumpulan }}" title="{{ $_userkk->name }}">
+                                                    </td>
+                                                    <td>
+                                                        {{ $_userkk->name }} (<i>Ketua Kumpulan</i>)
+                                                    </td>
+                                                    <td><a href="mailto:{{ $_userkk->email }}">{{ $_userkk->email }}</a></td>
+                                                    <td>{{ $_userkk->jabatan->nama_sekolah_detail }}</td>
+                                                </tr>
+
+                                                @foreach (explode(',',trim($devteam->senarai_jtk,',')) as $userid)
                                                     <?php
-                                                        if (strlen($userid) == 0) {
+                                                        if ($userid == $KetuaKumpulan) {
                                                             continue;
                                                         }
                                                         $_user = App\User::find($userid);
@@ -169,11 +184,7 @@
                                                             <img class="img-avatar img-avatar48" src="/avatar/{{ $_user->id }}" title="{{ $_user->name }}">
                                                         </td>
                                                         <td>
-                                                            @if ($devteam->ketua_kumpulan == $userid)
-                                                                {{ $_user->name }} (<i>Ketua Kumpulan</i>)
-                                                            @else
-                                                                {{ $_user->name }}
-                                                            @endif
+                                                            {{ $_user->name }}
                                                         </td>
                                                         <td><a href="mailto:{{ $_user->email }}">{{ $_user->email }}</a></td>
                                                         <td>{{ $_user->jabatan->nama_sekolah_detail }}</td>

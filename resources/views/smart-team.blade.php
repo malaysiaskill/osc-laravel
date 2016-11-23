@@ -104,8 +104,8 @@ $('#XtvtAdhoc').DataTable();
                                 </div>
                             </div>
 
-                            <div class="block block-rounded block-bordered">
-                                <div class="block-header bg-gray-lighter">
+                            <div class="block block-rounded block-bordered block-themed">
+                                <div class="block-header bg-primary">
                                     <ul class="block-options">
                                         <li>
                                             <button type="button" data-toggle="block-option" data-action="content_toggle"></button>
@@ -200,7 +200,8 @@ $('#XtvtAdhoc').DataTable();
                                         <div class="row">
                                             @foreach ($smart_team as $st)
                                             <div class="col-sm-6 col-md-4">
-                                                <a class="block block-bordered block-link-hover3" href="{{ url('/smart-team/detail/'.$st->id.'') }}">
+                                                <!--<a class="block block-bordered block-link-hover3" href="{{ url('/smart-team/detail/'.$st->id.'') }}">-->
+                                                <a class="block block-bordered block-link-hover3" href="{{ url('/smart-team/'.$st->kod_ppd.'') }}">
                                                     <div class="block-content bg-gray-lighter block-content-full text-center">
                                                         <div><i class="fa fa-ambulance fa-3x"></i></div>
                                                         <div class="h5 push-15-t push-5">{{ ucwords($st->nama_kumpulan) }}</div>
