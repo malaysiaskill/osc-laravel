@@ -4,8 +4,8 @@
 @section('app.helper', ",'summernote', 'ckeditor'")
 
 @section('jquery')
-@if (Auth::user()->hasRole('leader'))
-    @if (Request::is('dev-team/*'))
+@if (Request::is('dev-team/*'))
+    @if (Auth::user()->IsKetuaKumpulan)
         var previewNode = $('.template');
         var previewTemplate = previewNode.parent().html();
         previewNode.remove();
