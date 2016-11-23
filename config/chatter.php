@@ -52,7 +52,7 @@ return [
     */
     
     'headline' => 'Selamat Datang ke FORUM Juruteknik',
-    'description' => 'Berbincang dan berdiskusi berkenaan dengan tugas rasmi.',
+    'description' => 'Berbincang dan berdiskusi berkenaan dengan tugas rasmi, aktiviti dan lain-lain.',
 
     /*
     |--------------------------------------------------------------------------

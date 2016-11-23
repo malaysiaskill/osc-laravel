@@ -909,6 +909,8 @@ class JTKController extends Controller
             $xtvt->objektif = $objektif;
             $xtvt->detail = $detail;
             $xtvt->save();
+
+            return redirect('/smart-team/aktiviti-adhoc-detail/'.$r->_xtvtid);
         }
         else
         {
@@ -930,8 +932,8 @@ class JTKController extends Controller
                 $xtvt->detail = $detail;
                 $xtvt->save();
             }
-        }
 
-        return redirect('/smart-team/'.Auth::user()->kod_ppd);
+            return redirect('/smart-team/'.Auth::user()->kod_ppd);
+        }
     }
 }

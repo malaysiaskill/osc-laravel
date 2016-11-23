@@ -91,16 +91,19 @@ class AdminController extends Controller
             $user->name = $r->_name;
             $user->email = $r->_email;
             $user->password = bcrypt($r->_pwd);
-            if (count($r->_usergroups) != 0) {
-                foreach ($r->_usergroups as $role) {
-                    $user->addRole($role);
-                }
-            }
             $user->gred = (strlen($r->_gred) != 0) ? $r->_gred:DB::raw('NULL');
             $user->kod_jpn = (strlen($r->_kodjpn) != 0) ? $r->_kodjpn:DB::raw('NULL');
             $user->kod_ppd = (strlen($r->_kodppd) != 0) ? $r->_kodppd:DB::raw('NULL');
             $user->kod_jabatan = (strlen($r->_kodsek) != 0) ? $r->_kodsek:DB::raw('NULL');
             $user->save();
+
+            $_user = User::find($user->id);
+            if (count($r->_usergroups) != 0) {
+                foreach ($r->_usergroups as $role) {
+                    $_user->addRole($role);
+                }
+            }
+            $_user->save();
         }
 
         return redirect('/admin/users');

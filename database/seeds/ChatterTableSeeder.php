@@ -71,6 +71,17 @@ class ChatterTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
             ),
+            5 => 
+            array (
+                'id' => 6,
+                'parent_id' => NULL,
+                'order' => 6,
+                'name' => 'Lain-Lain',
+                'color' => '#FFCC00',
+                'slug' => 'lain-lain',
+                'created_at' => NULL,
+                'updated_at' => NULL,
+            ),
         ));
 
 

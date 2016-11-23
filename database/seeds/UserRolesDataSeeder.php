@@ -12,7 +12,7 @@ class UserRolesDataSeeder extends Seeder
     public function run()
     {
         DB::table('user_roles')->insert([
-            'role_id' => '1',
+            'role_id' => 1,
             'user_id' => 1,
             'created_at' => DB::raw('NOW()'),
             'updated_at' => DB::raw('NOW()')

@@ -111,7 +111,7 @@ $('#XtvtAdhoc').DataTable();
                                             <button type="button" data-toggle="block-option" data-action="content_toggle"></button>
                                         </li>
                                     </ul>
-                                    <h3 class="block-title">AKTIVITI LAIN (TIDAK MELIBATKAN SMART TEAM)</h3>
+                                    <h3 class="block-title">AKTIVITI LAIN (AD-HOC)</h3>
                                 </div>
                                 @if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $kod_ppd)
                                 <div class="block-content remove-margin-b">

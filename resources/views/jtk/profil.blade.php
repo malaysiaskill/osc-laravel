@@ -7,12 +7,12 @@
         $('#gred').val("{{ Auth::user()->gred }}").trigger("change");
     @endif
 
-    @if (Auth::user()->role == 'jpn')
+    @if (Auth::user()->hasRole('jpn'))
         $('#jabatan_jpn').val("{{ Auth::user()->kod_jpn }}").trigger("change");
-    @elseif (Auth::user()->role == 'ppd')
+    @elseif (Auth::user()->hasRole('ppd'))
         $('#jabatan_jpn').val("{{ Auth::user()->kod_jpn }}").trigger("change");
         $('#jabatan_ppd').val("{{ Auth::user()->kod_ppd }}").trigger("change");
-    @elseif (Auth::user()->role == 'leader' || Auth::user()->role == 'user')
+    @elseif (!Auth::user()->hasRole('ppd') || !Auth::user()->hasRole('jpn'))
         $('#jabatan_jpn').val("{{ Auth::user()->kod_jpn }}").trigger("change");
         $('#jabatan_ppd').val("{{ Auth::user()->kod_ppd }}").trigger("change");
         $('#jabatan').val("{{ Auth::user()->kod_jabatan }}").trigger("change");
@@ -173,7 +173,7 @@
                             </div>
                         </div>
 
-                        @if (Auth::user()->role == 'ppd' || Auth::user()->role == 'leader' || Auth::user()->role == 'user')
+                        @if (!Auth::user()->hasRole('jpn'))
                         <div class="form-group clearfix">
                             <label class="col-sm-3 control-label" for="jabatan_ppd">Jabatan (PPD)</label>
                             <div class="col-sm-9">
@@ -187,7 +187,7 @@
                         </div>
                         @endif
 
-                        @if (Auth::user()->role == 'leader' || Auth::user()->role == 'user')
+                        @if (!Auth::user()->hasRole('jpn') && !Auth::user()->hasRole('ppd'))
                         <div class="form-group clearfix">
                             <label class="col-sm-3 control-label" for="jabatan">Sekolah</label>
                             <div class="col-sm-9">

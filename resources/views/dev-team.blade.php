@@ -210,7 +210,7 @@
                                             <div class="col-sm-6 col-md-4">
                                                 <a class="block block-bordered block-link-hover3" href="{{ url('/dev-team/'.$ppd->kod_ppd.'') }}">
                                                     <div class="block-content bg-gray-lighter block-content-full text-center">
-                                                        <div><i class="fa fa-ambulance fa-3x"></i></div>
+                                                        <div><i class="fa fa-users fa-3x"></i></div>
                                                         <div class="h5 push-15-t push-5">{{ ucwords($dt->nama_kumpulan) }}</div>
                                                         <div class="text-muted push-5"><b>Ketua :</b> {{ $dt->ketua->name }}</div>
                                                         <div class="text-muted push-10">

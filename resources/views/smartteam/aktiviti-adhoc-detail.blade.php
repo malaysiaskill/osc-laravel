@@ -4,7 +4,7 @@
 @section('app.helper', ",'summernote', 'ckeditor'")
 
 @section('jquery')
-@if ($xtvt->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || Auth::user()->hasRole('ppd'))
+@if ($xtvt->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || Auth::user()->hasRole('ppd') || strlen($xtvt->jtk_terlibat) == 0)
 $('#btn-add-gambar').click(function(){ $('#upload-gambar').toggle(); });
 Dropzone.autoDiscover = false;
 $('#upload-gambar').dropzone({
@@ -84,16 +84,19 @@ $('#upload-gambar').dropzone({
                         <div class="col-xs-12">
                             <div class="block block-bordered">
                                 <div class="block-header bg-gray-lighter">
-                                    @if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd)
+                                    
                                     <div class="block-options-simple">
-                                        <button class="btn btn-sm btn-primary" type="button" onclick="EditAktivitiAdhoc('{{ $xtvt->id }}');">
-                                            <i class="fa fa-pencil"></i> Edit
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktivitiAdhoc('{{ $xtvt->id }}');">
-                                            <i class="fa fa-trash-o"></i> Delete
-                                        </button>
+                                        @if ((Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd) || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
+                                            <button class="btn btn-sm btn-primary" type="button" onclick="EditAktivitiAdhoc('{{ $xtvt->id }}');">
+                                                <i class="fa fa-pencil"></i> Edit
+                                            </button>
+                                        @endif
+                                        @if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd)
+                                            <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktivitiAdhoc('{{ $xtvt->id }}');">
+                                                <i class="fa fa-trash-o"></i> Delete
+                                            </button>
+                                        @endif
                                     </div>
-                                    @endif
                                     <h2 class="font-w300">
                                         {{ $xtvt->nama_aktiviti }}
                                     </h2>
@@ -116,7 +119,7 @@ $('#upload-gambar').dropzone({
                                             <div>
                                                 <div class="h6 panel panel-primary padding-10-all remove-margin-b">
                                                     @if (strlen($xtvt->jtk_terlibat) == 0)
-                                                        <i class="fa fa-users push-5-r"></i> Semua Ahli Kumpulan
+                                                        <i class="fa fa-users push-5-r"></i> Semua Juruteknik Terlibat
                                                     @else
                                                         @foreach (explode(',', trim($xtvt->jtk_terlibat,',')) as $jtk)
                                                             <?php $_user = App\User::find($jtk); ?>
@@ -162,7 +165,7 @@ $('#upload-gambar').dropzone({
                                     </div>
                                     <div class="row items-push">
                                         <label class="col-md-6 h5 font-w300 push-5">Gambar Aktiviti :</label>
-                                        @if (App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
+                                        @if (App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
                                         <div class="col-md-6 text-right">
                                             <button id="btn-add-gambar" type="button" class="btn btn-success">
                                                 <i class="fa fa-picture-o push-5-r"></i>Upload Gambar Aktiviti
@@ -183,7 +186,7 @@ $('#upload-gambar').dropzone({
                                                             <a class="img-link img-thumb" href="{{ $gambar->url_img }}">
                                                                 <img class="img-responsive" src="{{ $gambar->url_img }}">
                                                             </a>
-                                                            @if (App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || Auth::user()->hasRole('ppd'))
+                                                            @if (App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || Auth::user()->hasRole('ppd') || strlen($xtvt->jtk_terlibat) == 0)
                                                             <span>
                                                                 <button type="button" class="btn btn-sm btn-danger" onclick="javascript:PadamGambarAktivitiConfirm('{{ $gambar->public_id }}');">
                                                                     <i class="fa fa-trash-o"></i> Padam
@@ -207,7 +210,7 @@ $('#upload-gambar').dropzone({
         </div>
     </div>
 </div>
-@if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd)
+@if ((Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd) || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
 <!-- Aktiviti Dialog //-->
 <div id="AktivitiDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
