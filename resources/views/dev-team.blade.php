@@ -91,14 +91,15 @@
                         <button type="button" class="btn btn-success" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
                             <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
                         </button>
-                        @if (Request::is('dev-team/*'))
-                            @if (Auth::user()->IsKetuaKumpulan)
-                                <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
-                                    <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
-                                </button>
-                            @endif
+                    @endif
+                    @if (Request::is('dev-team/*'))
+                        @if (Auth::user()->IsKetuaKumpulan)
+                            <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
+                                <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
+                            </button>
                         @endif
                     @endif
+                    
                     @if (Auth::user()->hasRole('jpn') || Auth::user()->hasRole('ppd'))
                         <a href="/dev-team/senarai-projek/semua" class="btn btn-primary" data-toggle="tooltip" title="Senarai Semua Projek">
                             <i class="fa fa-list-ul push-5-r"></i> Senarai Projek
@@ -324,117 +325,119 @@
         </div>
     </div>
 </div>
+@endif
 
-    @if (Request::is('dev-team/*'))
-    <!-- Projek Dialog //-->
-    <div id="ProjekDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
-        <div class="modal-dialog modal-lg modal-dialog-popout">
-            <div class="modal-content">
-                <form method="post" class="form-horizontal" action="{{ url('/dev-team/projek') }}">
-                    {{ csrf_field() }}
-                    <div class="block block-themed block-transparent remove-margin-b">
-                        <div class="block-header bg-primary-dark">
-                            <h3 class="block-title">
-                                <i class="fa fa-user push-10-r"></i>Projek : Kumpulan Development Team
-                            </h3>
+@if (Request::is('dev-team/*'))
+@if (Auth::user()->IsKetuaKumpulan)
+<!-- Projek Dialog //-->
+<div id="ProjekDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-popout">
+        <div class="modal-content">
+            <form method="post" class="form-horizontal" action="{{ url('/dev-team/projek') }}">
+                {{ csrf_field() }}
+                <div class="block block-themed block-transparent remove-margin-b">
+                    <div class="block-header bg-primary-dark">
+                        <h3 class="block-title">
+                            <i class="fa fa-user push-10-r"></i>Projek : Kumpulan Development Team
+                        </h3>
+                    </div>
+                    <div class="block-content">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-12 h5 font-w300 push-5">Kumpulan Dev Team :</label>
+                                    <div class="col-sm-12">
+                                        <select id="_devteam" name="_devteam" data-placeholder="Kumpulan Dev Team" class="form-control js-select2" style="width:100%;" required>
+                                            <option></option>
+                                            @foreach (App\DevTeam::where('kod_ppd',Auth::user()->kod_ppd)->get() as $devteam)
+                                                <option value="{{ $devteam->id }}">{{ $devteam->nama_kumpulan }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-12 h5 font-w300 push-5">Nama Projek :</label>
+                                    <div class="col-sm-12">
+                                        <input type="text" id="_nama_projek" name="_nama_projek" class="form-control" maxlength="255" placeholder="Nama Projek" required>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="block-content">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-12 h5 font-w300 push-5">Kumpulan Dev Team :</label>
-                                        <div class="col-sm-12">
-                                            <select id="_devteam" name="_devteam" data-placeholder="Kumpulan Dev Team" class="form-control js-select2" style="width:100%;" required>
-                                                <option></option>
-                                                @foreach (App\DevTeam::where('kod_ppd',Auth::user()->kod_ppd)->get() as $devteam)
-                                                    <option value="{{ $devteam->id }}">{{ $devteam->nama_kumpulan }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-12 h5 font-w300 push-5">Nama Projek :</label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="_nama_projek" name="_nama_projek" class="form-control" maxlength="255" placeholder="Nama Projek" required>
-                                        </div>
-                                    </div>
-                                </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 h5 font-w300 push-5">Objektif Projek :</label>
+                            <div class="col-sm-12">
+                                <textarea id="_objektif" name="_objektif" class="form-control js-emojis" placeholder="Objektif projek" rows="4" required></textarea>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-12 h5 font-w300 push-5">Objektif Projek :</label>
-                                <div class="col-sm-12">
-                                    <textarea id="_objektif" name="_objektif" class="form-control js-emojis" placeholder="Objektif projek" rows="4" required></textarea>
-                                </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-12 h5 font-w300 push-5">Keterangan Projek :</label>
+                            <div class="col-sm-12">
+                                <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="5" required></textarea>
                             </div>
-                            <div class="form-group">
-                                <label class="col-sm-12 h5 font-w300 push-5">Keterangan Projek :</label>
-                                <div class="col-sm-12">
-                                    <textarea id="_detail" name="_detail" class="form-control js-emojis" placeholder="Keterangan detail mengenai projek yang akan dilaksanakan..." rows="5" required></textarea>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-12 h5 font-w300 push-5">Kertas Kerja :</label>
-                                        <div class="col-sm-12">
-                                            <button id="btn-kertas-kerja" type="button" class="btn btn-primary">
-                                                <i class="fa fa-paperclip push-5-r"></i> Upload Kertas Kerja
-                                            </button>
-                                            <div id="_previews">
-                                                <div class="template panel panel-primary remove-margin-b push-5-t">
-                                                    <div class="panel-body">
-                                                        <div class="push-5">
-                                                            <h5>
-                                                                <span class="h6">
-                                                                    <i class="fa fa-file"></i>&nbsp; <span data-dz-name></span>
-                                                                </span>
-                                                                <span class="pull-right font-w300" data-dz-size></span>
-                                                            </h5>
-                                                        </div>
-                                                        <div class="progress active remove-margin-b">
-                                                            <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" data-dz-uploadprogress></div>
-                                                        </div>
-                                                        <div class="push-5-t">
-                                                            <button data-dz-remove class="btn btn-sm btn-warning cancel">
-                                                                <i class="fa fa-times"></i> Batal
-                                                            </button> 
-                                                            <button data-dz-remove class="btn btn-sm btn-danger delete hide">
-                                                                <i class="fa fa-trash-o"></i> Padam
-                                                            </button>
-                                                        </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-12 h5 font-w300 push-5">Kertas Kerja :</label>
+                                    <div class="col-sm-12">
+                                        <button id="btn-kertas-kerja" type="button" class="btn btn-primary">
+                                            <i class="fa fa-paperclip push-5-r"></i> Upload Kertas Kerja
+                                        </button>
+                                        <div id="_previews">
+                                            <div class="template panel panel-primary remove-margin-b push-5-t">
+                                                <div class="panel-body">
+                                                    <div class="push-5">
+                                                        <h5>
+                                                            <span class="h6">
+                                                                <i class="fa fa-file"></i>&nbsp; <span data-dz-name></span>
+                                                            </span>
+                                                            <span class="pull-right font-w300" data-dz-size></span>
+                                                        </h5>
+                                                    </div>
+                                                    <div class="progress active remove-margin-b">
+                                                        <div class="progress-bar progress-bar-success progress-bar-striped" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%" data-dz-uploadprogress></div>
+                                                    </div>
+                                                    <div class="push-5-t">
+                                                        <button data-dz-remove class="btn btn-sm btn-warning cancel">
+                                                            <i class="fa fa-times"></i> Batal
+                                                        </button> 
+                                                        <button data-dz-remove class="btn btn-sm btn-danger delete hide">
+                                                            <i class="fa fa-trash-o"></i> Padam
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="col-sm-12 h5 font-w300 push-5">Repositori Projek (Jika ada) : <a href="https://www.google.com/search?q=apa+itu+repositori+github" target="_blank">Apakah Repositori ?</a></label>
-                                        <div class="col-sm-12">
-                                            <input type="text" id="_repo" name="_repo" class="form-control" maxlength="255" placeholder="Contoh: https://github.com/nama/projek-saya.git">
-                                        </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="col-sm-12 h5 font-w300 push-5">Repositori Projek (Jika ada) : <a href="https://www.google.com/search?q=apa+itu+repositori+github" target="_blank">Apakah Repositori ?</a></label>
+                                    <div class="col-sm-12">
+                                        <input type="text" id="_repo" name="_repo" class="form-control" maxlength="255" placeholder="Contoh: https://github.com/nama/projek-saya.git">
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button id="btn_u_save" class="btn btn-primary" type="submit">
-                            <i class="fa fa-save push-5-r"></i>Simpan Rekod
-                        </button>
-                        <button id="btn_u_cancel" data-dismiss="modal" class="btn btn-danger" type="button" onClick="javascript:ClearAddProjek();">
-                            <i class="fa fa-times push-5-r"></i>Batal
-                        </button>                
-                        <input id="_projekid" name="_projekid" type="hidden" value="0" />
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="btn_u_save" class="btn btn-primary" type="submit">
+                        <i class="fa fa-save push-5-r"></i>Simpan Rekod
+                    </button>
+                    <button id="btn_u_cancel" data-dismiss="modal" class="btn btn-danger" type="button" onClick="javascript:ClearAddProjek();">
+                        <i class="fa fa-times push-5-r"></i>Batal
+                    </button>                
+                    <input id="_projekid" name="_projekid" type="hidden" value="0" />
+                </div>
+            </form>
         </div>
     </div>
-    @endif
-
+</div>
 @endif
+@endif
+
 @endsection
