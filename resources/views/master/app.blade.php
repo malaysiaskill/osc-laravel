@@ -47,6 +47,7 @@
         <link rel="stylesheet" href="/assets/js/plugins/dropzonejs/dropzone.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/datatables/jquery.dataTables.min.css">
+        <link rel="stylesheet" href="/assets/js/plugins/fullcalendar/fullcalendar.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/sweetalert/sweetalert.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/magnific-popup/magnific-popup.min.css">
         <link rel="stylesheet" href="/assets/js/plugins/summernote/summernote.min.css">
@@ -154,6 +155,11 @@
                                 <!--
                                     MODULE TERSEDIA
                                 -->
+                                <li>
+                                    <a class="{{ (Request::path()=='senarai-semak-harian') ? 'active':'' }}" href="{{ url('/senarai-semak-harian') }}">
+                                        <i class="fa fa-book"></i><span class="sidebar-mini-hide">Senarai Semak Harian</span>
+                                    </a>
+                                </li>
                                 <li>
                                     <a class="{{ (Request::path()=='dev-team') ? 'active':'' }}" href="{{ url('/dev-team') }}">
                                         <i class="fa fa-users"></i><span class="sidebar-mini-hide">Development Team</span>
@@ -302,7 +308,10 @@
         <script src="/assets/js/plugins/dropzonejs/dropzone.min.js"></script>
         <script src="/assets/js/plugins/jquery-tags-input/jquery.tagsinput.min.js"></script>
         <script src="/assets/js/plugins/datatables/jquery.dataTables.min.js"></script>
-        <script src="/assets/js/pages/base_tables_datatables.js"></script>
+        <script src="/assets/js/pages/base_tables_datatables.js"></script>        
+        <script src="/assets/js/plugins/fullcalendar/fullcalendar.min.js"></script>
+        <script src="/assets/js/plugins/fullcalendar/gcal.min.js"></script>
+        <!--<script src="/assets/js/pages/calendar.js.php"></script>-->
         <script src="/assets/js/plugins/sweetalert/sweetalert.min.js"></script>
         <script src="/assets/js/plugins/summernote/summernote.min.js"></script>
         <script src="/assets/js/plugins/ckeditor/ckeditor.js"></script>

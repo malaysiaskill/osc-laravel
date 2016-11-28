@@ -67,22 +67,32 @@
 </div>
 <!-- END Page Header -->
 
+<form class="js-validation-profile form-horizontal" method="POST" action="/profil">
+
+<!-- Menu -->
+<div class="content padding-5-t bg-white border-b">
+    <div class="push-15 push-10-t">
+        <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-default" href="{{ url('/') }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </div>
+            <div class="col-md-6 text-right">
+                <button type="submit" class="btn btn-success">
+                    <i class="fa fa-save push-5-r"></i> Simpan Maklumat Profil
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Menu -->
+
 <!-- Page Content -->
 <div class="content content-narrow">
-    <form class="js-validation-profile form-horizontal" method="POST" action="/profil">
         {{ csrf_field() }}
         <input type="hidden" name="_method" value="PUT">
         <div class="row">
-
-            <div class="col-xs-12 remove-margin-b">
-                <div class="block block-themed block-rounded">
-                    <div class="block-content block-content-full block-content-mini border-b text-right">
-                        <button type="submit" class="btn btn-success">
-                            <i class="fa fa-save push-5-r"></i> Simpan Maklumat Profil
-                        </button>
-                    </div>
-                </div>
-            </div>
 
             <!-- Avatar -->
             <div class="col-sm-12 col-md-4 col-md-push-8">
@@ -236,7 +246,8 @@
                 </div>
             </div>
         </div>
-    </form>
 </div>
+
+</form>
 <!-- END Page Content -->
 @endsection

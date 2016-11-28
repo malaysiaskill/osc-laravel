@@ -5,6 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use DB;
+use Dompdf\Dompdf;
+use Dompdf\Options;
+use App\Template;
+
 use App\User;
 use App\Gred;
 use App\JPN;
@@ -18,6 +22,8 @@ use App\SmartTeam;
 use App\AktivitiSmartTeam;
 use App\GambarAktivitiSmartTeam;
 use App\AktivitiAdhoc;
+use App\SenaraiSemakan;
+use App\SenaraiSemakHarian;
 
 class JTKController extends Controller
 {
@@ -140,12 +146,12 @@ class JTKController extends Controller
         }
         $user->gred = $Gred;
 
-        if (Auth::user()->role == 'jpn') {
+        if (Auth::user()->hasRole('jpn')) {
             $user->kod_jpn = $JPN;
-        } else if (Auth::user()->role == 'ppd') {
+        } else if (Auth::user()->hasRole('ppd')) {
             $user->kod_jpn = $JPN;
             $user->kod_ppd = $PPD;
-        } else if (Auth::user()->role == 'leader' || Auth::user()->role == 'user') {
+        } else if (!Auth::user()->hasRole('jpn') || !Auth::user()->hasRole('ppd')) {
             $user->kod_jpn = $JPN;
             $user->kod_ppd = $PPD;
             $user->kod_jabatan = $SEK;
@@ -934,6 +940,341 @@ class JTKController extends Controller
             }
 
             return redirect('/smart-team/'.Auth::user()->kod_ppd);
+        }
+    }
+
+    /**
+
+    SENARAI SEMAK HARIAN
+
+    */
+    public function SenaraiSemakHarian()
+    {
+        $ss_semua = SenaraiSemakan::where('user_id','0')->get();
+        $ss_user = SenaraiSemakan::where('user_id',Auth::user()->id)->get();        
+
+        return view('jtk.senarai-semak-harian',[
+            'ss_semua' => $ss_semua,
+            'ss_user' => $ss_user
+        ]);
+    }
+    public function SenaraiSemakan()
+    {
+        $ss_semua = SenaraiSemakan::where('user_id','0')->get();
+        $ss_user = SenaraiSemakan::where('user_id',Auth::user()->id)->get();        
+        return view('jtk.senarai-semakan',[
+            'ss_semua' => $ss_semua,
+            'ss_user' => $ss_user
+        ]);
+    }
+    public function SaveSenaraiSemakan(Request $r)
+    {
+        $perkara = htmlentities($r->input('_perkara'),ENT_QUOTES);
+        $cara_pengujian = htmlentities($r->input('_cara_pengujian'),ENT_QUOTES);
+
+        if ($r->_id != 0 || $r->_id != '0')
+        {
+            # Update
+            $ss = SenaraiSemakan::find($r->_id);
+            $ss->perkara = $perkara;
+            $ss->cara_pengujian = $cara_pengujian;
+            $ss->save();
+        }
+        else
+        {
+            # Insert
+            $ss = new SenaraiSemakan;
+            $ss->perkara = $perkara;
+            $ss->cara_pengujian = $cara_pengujian;
+            $ss->user_id = Auth::user()->id;
+            $ss->save();
+        }
+
+        return redirect('/senarai-semakan');
+    }
+    public function EditSenaraiSemakan(Request $r, $id)
+    {
+        $ss = SenaraiSemakan::find($id);
+        $perkara = addslashes(html_entity_decode($ss->perkara,ENT_QUOTES));
+        $perkara = str_replace('<br />', '\n', nl2br($perkara));
+        $perkara = trim(preg_replace('/\s\s+/', '', $perkara));
+        
+        $cara_pengujian = addslashes(html_entity_decode($ss->cara_pengujian,ENT_QUOTES));
+        $cara_pengujian = str_replace('<br />', '\n', nl2br($cara_pengujian));
+        $cara_pengujian = trim(preg_replace('/\s\s+/', '', $cara_pengujian));
+
+        echo "$('#_id').val('$id');";
+        echo "$('#SenaraiSemakanDialog').modal('show');";
+
+        echo "$('#_perkara').val(\"$perkara\");";
+        echo "$('#_cara_pengujian').val(\"$cara_pengujian\");";
+    }
+    public function PadamSenaraiSemakan(Request $r, $id)
+    {
+        $ss = SenaraiSemakan::destroy($id);
+        echo "SweetAlert('success','Berjaya Dipadam !','Rekod semakan ini telah berjaya dipadam !',\"window.location.href='/senarai-semakan';\");";
+    }
+    public function SaveSenaraiSemak(Request $r)    
+    {
+        $ss_semua = SenaraiSemakan::where('user_id','0')->get();
+        $record = array();
+        foreach ($ss_semua as $ss)
+        {
+            if ($ss->id == 1)
+            {
+                eval("\$_speedtest_a = \$r->_speedtest_a;");
+                eval("\$_speedtest_b = \$r->_speedtest_b;");
+                eval("\$_speedtest_c = \$r->_speedtest_c;");
+                eval("\$catatan = \$r->_catatan_".$ss->id.";");
+                $record[] = array(
+                    'id' => $ss->id,
+                    '_speedtest_a' => $_speedtest_a,
+                    '_speedtest_b' => $_speedtest_b,
+                    '_speedtest_c' => $_speedtest_c,
+                    'catatan' => $catatan
+                );
+            }
+            else
+            {
+                eval("\$status = \$r->_status_".$ss->id.";");
+                eval("\$catatan = \$r->_catatan_".$ss->id.";");            
+                $record[] = array('id' => $ss->id, 'status' => $status, 'catatan' => $catatan);
+            }
+        }        
+
+        $ss_user = SenaraiSemakan::where('user_id',Auth::user()->id)->get();
+        foreach ($ss_user as $ssu)
+        {
+            eval("\$status = \$r->_status_".$ssu->id.";");
+            eval("\$catatan = \$r->_catatan_".$ssu->id.";");            
+            $record[] = array('id' => $ssu->id, 'status' => $status, 'catatan' => $catatan);
+        }
+
+        $record = json_encode($record);
+
+        $tarikh_semakan = $r->_tarikh_semakan;
+        $db_tarikh_semakan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_semakan)->format('Y-m-d');
+        $masa_semakan = $r->_masa_semakan;
+
+        // Search
+        if (SenaraiSemakHarian::where('user_id',Auth::user()->id)->where('tarikh_semakan',$db_tarikh_semakan)->count() == 1)
+        {
+            // Update
+            $ssh = SenaraiSemakHarian::find($r->_id_ssh);
+            $ssh->masa_semakan = $masa_semakan;
+            $ssh->status_semakan = $record;
+            $ssh->save();
+        }
+        else
+        {
+            // Insert
+            $ssh = new SenaraiSemakHarian;
+            $ssh->user_id = Auth::user()->id;
+            $ssh->tarikh_semakan = $db_tarikh_semakan;
+            $ssh->masa_semakan = $masa_semakan;
+            $ssh->status_semakan = $record;
+            $ssh->save();
+        }
+
+        return redirect('/senarai-semak-harian');
+    }
+    public function EditSenaraiSemakHarian(Request $r)
+    {
+        $id = $r->id;
+        $ssh = SenaraiSemakHarian::find($id);
+
+        $s = json_decode($ssh->status_semakan);
+
+        echo "$('#_id_ssh').val('$id');";
+        echo "$('#btn_u_print').removeClass('hide');";
+        echo "$('#SemakanDialog').modal('show');\n";
+
+        if (count($s) > 0)
+        {
+            foreach ($s as $_val)
+            {
+                $sshid = $_val->id;
+
+                if ($sshid == '1')
+                {
+                    echo "$('#_speedtest_a').val('".$_val->_speedtest_a."');";
+                    echo "$('#_speedtest_b').val('".$_val->_speedtest_b."');";
+                    echo "$('#_speedtest_c').val('".$_val->_speedtest_c."');";
+
+                    $catatan = addslashes(html_entity_decode($_val->catatan,ENT_QUOTES));
+                    $catatan = str_replace('<br />', '\n', nl2br($catatan));
+                    $catatan = trim(preg_replace('/\s\s+/', '', $catatan));
+                    echo "$('#_catatan_$sshid').val('".$catatan."');";
+                }
+                else
+                {
+                    if ($_val->status == '1') {
+                        echo "$('input[name=\"_status_$sshid\"]').filter('[value=1]').prop('checked', true);";
+                    } else {
+                        echo "$('input[name=\"_status_$sshid\"]').filter('[value=0]').prop('checked', true);";
+                    }
+
+                    $catatan = addslashes(html_entity_decode($_val->catatan,ENT_QUOTES));
+                    $catatan = str_replace('<br />', '\n', nl2br($catatan));
+                    $catatan = trim(preg_replace('/\s\s+/', '', $catatan));
+                    echo "$('#_catatan_$sshid').val('".$catatan."');";
+                }
+            }
+
+            echo "$('#_tarikh_semakan').val('".$ssh->tarikh_semakan_formatted."');";
+            echo "$('#_tarikh_semakan').prop('disabled','disabled');";
+
+            if (strlen($ssh->masa_semakan) > 0) {
+                $ms = explode(':', $ssh->masa_semakan);
+                echo "$('#_masa_semakan').val('".$ms[0].':'.$ms[1]."');";
+            }            
+        }        
+    }
+    public function CetakSenaraiSemakHarian($id)
+    {
+        $ssh = SenaraiSemakHarian::find($id);
+        $_tarikh_semakan = $ssh->tarikh_semakan;
+        $dt = explode('-', $_tarikh_semakan);
+        $tarikh_smkan = $dt[2].'-'.$dt[1].'-'.$dt[0];
+
+        $masa_semakan = $ssh->masa_semakan;
+        if (strlen($masa_semakan) > 0) {
+            $ms = explode(':', $masa_semakan);
+            $masa_semakan = $ms[0].':'.$ms[1];
+        } else {
+            $masa_semakan = '';
+        }
+
+        $s = json_decode($ssh->status_semakan);
+
+        if (count($s) > 0)
+        {
+            $user_id = $ssh->user_id;
+            $usr = User::find($user_id);
+            $nama_sekolah = $usr->jabatan->nama_sekolah_detail_cetakan;
+            $jawatan = $usr->greds->gred_title_cetakan;
+
+            // Data
+            $data = '';
+            $i = 1;
+            $ss_semua = SenaraiSemakan::where('user_id','0')->get();
+            foreach ($ss_semua as $sss)
+            {
+                if ($sss->id == '1')
+                {
+                    foreach ($s as $_val)
+                    {
+                        $sshid = $_val->id;
+                        if ($sshid == '1')
+                        {
+                            $data .= '<tr>
+                                <td align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
+                                <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
+                                <td valign="top" bgcolor="#FFFFFF">'.$sss->cara_pengujian.'</td>
+                                <td align="center" valign="top" bgcolor="#FFFFFF">
+                                    <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                                      <tr>
+                                        <td>ZOOM-A</td>
+                                        <td>'.$_val->_speedtest_a.'</td>
+                                      </tr>
+                                      <tr>
+                                        <td>ZOOM-B</td>
+                                        <td>'.$_val->_speedtest_b.'</td>
+                                      </tr>
+                                      <tr>
+                                        <td>ZOOM-C</td>
+                                        <td>'.$_val->_speedtest_c.'</td>
+                                      </tr>
+                                    </table>
+                                </td>
+                                <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
+                            </tr>';
+                        }
+                    }
+                }
+                else
+                {
+                    foreach ($s as $_val)
+                    {
+                        $sshid = $_val->id;
+                        if ($sshid == $sss->id)
+                        {
+                            $_status = ($_val->status=='1') ? "BERJAYA":"TIDAK BERJAYA";
+
+                            $data .= '<tr>
+                                <td align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
+                                <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
+                                <td valign="top" bgcolor="#FFFFFF">'.$sss->cara_pengujian.'</td>
+                                <td align="center" valign="top" bgcolor="#FFFFFF">'.$_status.'</td>
+                                <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
+                            </tr>';
+                        }
+                    }
+                }                
+            }
+
+            $ss_user = SenaraiSemakan::where('user_id',Auth::user()->id)->get();
+            foreach ($ss_user as $ssu) {
+                foreach ($s as $_val)
+                {
+                    $sshid = $_val->id;
+                    if ($sshid == $ssu->id)
+                    {
+                        $_status = ($_val->status=='1') ? "BERJAYA":"TIDAK BERJAYA";
+
+                        $data .= '<tr>
+                            <td align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
+                            <td valign="top" bgcolor="#FFFFFF">'.$ssu->perkara.'</td>
+                            <td valign="top" bgcolor="#FFFFFF">'.$ssu->cara_pengujian.'</td>
+                            <td align="center" valign="top" bgcolor="#FFFFFF">'.$_status.'</td>
+                            <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
+                        </tr>';
+                    }
+                }
+            }
+
+            $ds = DIRECTORY_SEPARATOR;
+            $t = new Template;
+            $t->Load(public_path().$ds."cetakan".$ds."ssh.tpl");
+            $t->Replace('NAMA_SEKOLAH', $nama_sekolah);
+            $t->Replace('JAWATAN', $jawatan);
+            $t->Replace('NAMA_JURUTEKNIK', strtoupper($usr->name));
+            $t->Replace('TARIKH_SEMAKAN', $ssh->tarikh_semakan_formatted.' '.$masa_semakan.' ('.$this->replaceDay(date('l', strtotime($tarikh_smkan))).')');
+            $t->Replace('DATA', $data);
+            $_output = $t->Evaluate();
+
+            $options = new Options();
+            $options->set('defaultFont', 'Century Gothic');
+            $dpdf = new Dompdf($options);
+            $dpdf->loadHtml($_output);
+            $dpdf->setPaper('A4', 'landscape');
+            $dpdf->render();
+            $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
+            $dpdf->add_info('Title','Senarai Semak Harian - '.$tarikh_smkan);
+            $dpdf->stream("Senarai-Semak-Harian-$tarikh_smkan",array('Attachment'=>0));
+        }
+        else
+        {
+            echo "- Rekod tiada dalam pangkalan data ! -";
+        }
+    }
+
+    public function replaceDay($day) {
+        $day = strtolower($day);
+        if ($day == 'monday') {
+            return 'Isnin';
+        } else if ($day == 'tuesday') {
+            return 'Selasa';
+        } else if ($day == 'wednesday') {
+            return 'Rabu';
+        } else if ($day == 'thursday') {
+            return 'Khamis';
+        } else if ($day == 'friday') {
+            return 'Jumaat';
+        } else if ($day == 'saturday') {
+            return 'Sabtu';
+        } else {
+            return 'Ahad';
         }
     }
 }

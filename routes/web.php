@@ -105,3 +105,18 @@ Route::post('/smart-team/aktiviti/padam-gambar/{public_id}', 'JTKController@Pada
 # Aktiviti Ad-Hoc
 Route::post('/smart-team/aktiviti-adhoc', 'JTKController@SaveAktivitiAdhoc'); // Insert, Update Aktiviti Adhoc
 Route::get('/smart-team/aktiviti-adhoc-detail/{xtvtid}', 'JTKController@DetailAktivitiAdhoc'); // Detail Aktiviti Adhoc
+
+/**
+
+	SENARAI SEMAK HARIAN
+
+*/
+
+Route::get('/senarai-semak-harian', 'JTKController@SenaraiSemakHarian'); // Senarai Semak Harian
+Route::get('/senarai-semakan', 'JTKController@SenaraiSemakan'); // Senarai Semakan
+Route::post('/senarai-semakan', 'JTKController@SaveSenaraiSemakan'); // Save Senarai Semakan
+Route::post('/edit-senarai-semakan/{id}', 'JTKController@EditSenaraiSemakan'); // Edit Senarai Semakan
+Route::post('/delete-senarai-semakan/{id}', 'JTKController@PadamSenaraiSemakan'); // Padam Senarai Semakan
+Route::post('/save-senarai-semakan', 'JTKController@SaveSenaraiSemak'); // Save Senarai Semak Harian
+Route::post('/edit-senarai-semak-harian', 'JTKController@EditSenaraiSemakHarian'); // Edit Senarai Semak Harian
+Route::get('/cetak-senarai-semak-harian/{id}', 'JTKController@CetakSenaraiSemakHarian'); // Cetak Senarai Semak Harian

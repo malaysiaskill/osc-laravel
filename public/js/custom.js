@@ -1,6 +1,9 @@
 /* Ajax */
 function Ajx(ajax){ ajax.method = "POST"; ajax.setVar('_token', Laravel.csrfToken); ajax.onCompletion = function(){ var text = ajax.response; eval(text);}; ajax.runAJAX();}
 
+function OpenWindow(theURL,winName,features) {
+    window.open(theURL,winName,features);
+}
 function jump(targ,selObj,restore){
   eval(targ+".location='"+selObj.options[selObj.selectedIndex].value+"'");
   if (restore) selObj.selectedIndex=0;
@@ -467,4 +470,66 @@ function PadamAktivitiAdhoc(id) {
         ajax.setVar('flag','1');
         Ajx(ajax);
     });
+}
+
+/* Senarai Semakan */
+function ClearSenaraiSemakan() {
+    $('#_perkara').val('');
+    $('#_cara_pengujian').val('');
+    $('#_id').val('0');
+}
+function TambahSemakanDialog() {
+    ClearSenaraiSemakan();
+    $('#SenaraiSemakanDialog').modal();
+    setTimeout(function(){
+        $('#_perkara').focus();
+    },500);
+}
+function EditSenaraiSemakan(id) {
+    var ajax = new sack();
+    ajax.requestFile = "/edit-senarai-semakan/" + id;
+    Ajx(ajax);
+}
+function DeleteSenaraiSemakan(id) {
+    swal({
+        title: "Padam ?",
+        text: "Anda pasti untuk memadam rekod ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/delete-senarai-semakan/" + id;
+        Ajx(ajax);
+    });
+}
+function Semakan() {
+    $('#SemakanDialog').modal();
+    setTimeout(function(){
+        $('#_speedtest_a').focus();
+    },500);
+}
+function EditSemakan(id) {
+    ClearSemakan();
+    var ajax = new sack();
+    ajax.requestFile = "/edit-senarai-semak-harian";
+    ajax.setVar('id',id);
+    Ajx(ajax);
+}
+function CetakSSH() {
+    var id = $('#_id_ssh').val();
+    if (id == '0') {
+        SweetAlert('error','Ops !',"Sila pastikan rekod anda telah disimpan dalam pangkalan data.");
+    }
+    else
+    {        
+        OpenWindow("/cetak-senarai-semak-harian/"+id,'CetakSSH','top=10,left=10,width=650,height=500');
+    }
 }

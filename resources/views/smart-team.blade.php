@@ -18,6 +18,29 @@ $('#XtvtAdhoc').DataTable();
 </div>
 <!-- END Page Header -->
 
+<!-- Menu -->
+<div class="content padding-5-t bg-white border-b">
+    <div class="push-15 push-10-t">
+        <div class="row">
+            <div class="col-md-6">
+                <a class="btn btn-default" href="{{ url('/') }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </div>
+            <div class="col-md-6 pull-right">
+                <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
+                    <option></option>
+                    <option value="/smart-team">LIHAT SEMUA</option>
+                    @foreach (App\PPD::all() as $_ppd)
+                        <option value="/smart-team/{{ $_ppd->kod_ppd }}" {{ ($kod_ppd == $_ppd->kod_ppd) ? 'selected':'' }}>{{ $_ppd->ppd }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Menu -->
+
 <!-- Page Content -->
 <div class="content content-narrow">
     <div class="row">
@@ -34,15 +57,6 @@ $('#XtvtAdhoc').DataTable();
                             <i class="fa fa-plus push-5-r"></i><i class="fa fa-ambulance"></i>
                         </button>
                     @endif
-                    <div class="pull-right">
-                        <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
-                            <option></option>
-                            <option value="/smart-team">LIHAT SEMUA</option>
-                            @foreach (App\PPD::all() as $_ppd)
-                                <option value="/smart-team/{{ $_ppd->kod_ppd }}" {{ ($kod_ppd == $_ppd->kod_ppd) ? 'selected':'' }}>{{ $_ppd->ppd }}</option>
-                            @endforeach
-                        </select>
-                    </div>
                 </div>
                 
                 <div class="block-content">
