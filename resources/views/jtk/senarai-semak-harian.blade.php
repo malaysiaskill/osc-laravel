@@ -16,31 +16,35 @@ jQuery('.js-calendar').fullCalendar({
     },
     events:
     [
-        @foreach (\App\SenaraiSemakHarian::all() as $ssh)
-        <?php
-            $event = array();
-            $tarikh = $ssh->tarikh_semakan;
-            $id = $ssh->id;
+        @if (Auth::user()->hasRole('ppd'))
 
-            $Data_Tarikh = explode(' ', $tarikh);                   
-            $DataTarikh = explode('-', $Data_Tarikh[0]);
-            $Year = $DataTarikh[0];
-            $Mon = $DataTarikh[1]-1;
-            $Day = $DataTarikh[2];
+        @else
+            @foreach (\App\SenaraiSemakHarian::where('user_id',Auth::user()->id) as $ssh)
+            <?php
+                $event = array();
+                $tarikh = $ssh->tarikh_semakan;
+                $id = $ssh->id;
 
-            $event[] = "{
-                title: 'Semakan Selesai',
-                icon: \"check\",
-                start: new Date($Year, $Mon, $Day, 0, 0),
-                allDay: true,
-                color: '#26802c',
-                id: '$id',
-                tooltip: 'Semakan Harian Telah Dibuat'
-            },";
-            $events = implode(',', $event);
-            echo $events;
-        ?>
-        @endforeach
+                $Data_Tarikh = explode(' ', $tarikh);                   
+                $DataTarikh = explode('-', $Data_Tarikh[0]);
+                $Year = $DataTarikh[0];
+                $Mon = $DataTarikh[1]-1;
+                $Day = $DataTarikh[2];
+
+                $event[] = "{
+                    title: 'Semakan Selesai',
+                    icon: \"check\",
+                    start: new Date($Year, $Mon, $Day, 0, 0),
+                    allDay: true,
+                    color: '#26802c',
+                    id: '$id',
+                    tooltip: 'Semakan Harian Telah Dibuat'
+                },";
+                $events = implode(',', $event);
+                echo $events;
+            ?>
+            @endforeach
+        @endif
     ],
     eventRender: function(event, element) {
         if(event.icon) {
@@ -94,7 +98,12 @@ function ClearSemakan() {
     <div class="push-15 push-10-t">
         <div class="row">
             @if (Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
-                <div class="col-md-4">
+                <div class="col-md-7">
+                    <a class="btn btn-default" href="{{ url('/') }}">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </div>
+                <div class="col-md-5 pull-right">
                     <div class="row">
                         <div class="col-xs-5">
                             <select name="qmonth" id="qmonth" data-placeholder="Bulan" class="form-control js-select2">
@@ -132,11 +141,6 @@ function ClearSemakan() {
                             </button>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-8 pull-right">
-                    <a class="btn btn-default" href="{{ url('/') }}">
-                        <i class="fa fa-home"></i>
-                    </a>                    
                 </div>
             @else
                 <div class="col-md-6">
