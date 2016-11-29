@@ -68,6 +68,13 @@ function ClearSemakan() {
     $('#_speedtest_a').val('');
     $('#_speedtest_b').val('');
     $('#_speedtest_c').val('');
+    $('#_speedtest_d').val('');
+    $('#_speedtest_e').val('');
+    $('#_speedtest_a1').val('');
+    $('#_speedtest_b1').val('');
+    $('#_speedtest_c1').val('');
+    $('#_speedtest_d1').val('');
+    $('#_speedtest_e1').val('');
     @foreach ($ss_semua as $ss_h)
         $('#_catatan_{{ $ss_h->id }}').val('');
         $('input[name="_status_{{ $ss_h->id }}"]').filter(':checked').each(function(){
@@ -357,20 +364,77 @@ function ClearSemakan() {
                                             {{ $ss->cara_pengujian }}
                                         </div>
                                     </td>
-                                    <td width="200">
+                                    <td width="250">
                                         @if ($ss->id == 1)
                                             <div class="row items-push">
-                                                <div class="col-xs-4">ZOOM-A</div>
-                                                <div class="col-xs-8">
-                                                    <input type="text" id="_speedtest_a" name="_speedtest_a" class="form-control input-sm" placeholder="0.00">
+                                                <div class="col-xs-12 push-5">ZOOM-A</div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                        <input type="text" id="_speedtest_a" name="_speedtest_a" class="form-control input-sm" placeholder="0.00" title="Download">
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-4">ZOOM-B</div>
-                                                <div class="col-xs-8">
-                                                    <input type="text" id="_speedtest_b" name="_speedtest_b" class="form-control input-sm" placeholder="0.00">
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                        <input type="text" id="_speedtest_a1" name="_speedtest_a1" class="form-control input-sm" placeholder="0.00" title="Upload">
+                                                    </div>
                                                 </div>
-                                                <div class="col-xs-4">ZOOM-C</div>
-                                                <div class="col-xs-8">
-                                                    <input type="text" id="_speedtest_c" name="_speedtest_c" class="form-control input-sm" placeholder="0.00">
+
+                                                <div class="col-xs-12 push-5">ZOOM-B</div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                        <input type="text" id="_speedtest_b" name="_speedtest_b" class="form-control input-sm" placeholder="0.00" title="Download">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                        <input type="text" id="_speedtest_b1" name="_speedtest_b1" class="form-control input-sm" placeholder="0.00" title="Upload">
+                                                    </div>
+                                                </div>
+                                                
+                                                <div class="col-xs-12 push-5">ZOOM-C</div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                        <input type="text" id="_speedtest_c" name="_speedtest_c" class="form-control input-sm" placeholder="0.00" title="Download">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                        <input type="text" id="_speedtest_c1" name="_speedtest_c1" class="form-control input-sm" placeholder="0.00" title="Upload">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 push-5">SUPER ZOOM (A)</div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                        <input type="text" id="_speedtest_d" name="_speedtest_d" class="form-control input-sm" placeholder="0.00" title="Download">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                        <input type="text" id="_speedtest_d1" name="_speedtest_d1" class="form-control input-sm" placeholder="0.00" title="Upload">
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-xs-12 push-5">SUPER ZOOM (B)</div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                        <input type="text" id="_speedtest_e" name="_speedtest_e" class="form-control input-sm" placeholder="0.00" title="Download">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-6">
+                                                    <div class="input-group">
+                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                        <input type="text" id="_speedtest_e1" name="_speedtest_e1" class="form-control input-sm" placeholder="0.00" title="Upload">
+                                                    </div>
                                                 </div>
                                             </div>
                                         @else

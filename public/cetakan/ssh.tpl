@@ -9,7 +9,7 @@ body,td,th {
 	font-weight:bold;
 }
 </style>
-<table width="100%" border="0" cellspacing="0" cellpadding="5">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td align="center" valign="top">
     <h2>
@@ -27,8 +27,7 @@ body,td,th {
     <td><strong>#TARIKH_SEMAKAN#</strong></td>
   </tr>
   <tr>
-    <td>&nbsp;</td>
-    <td>&nbsp;</td>
+    <td colspan="2" height="2"></td>
   </tr>
 </table>
 <table width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#333333">
@@ -41,21 +40,20 @@ body,td,th {
   </tr>
   #DATA#
 </table>
-<table width="100%" border="0" cellspacing="0" cellpadding="3">
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
-    <td>&nbsp;</td>
+    <td height="10"></td>
   </tr>
   <tr>
     <td>Di Sediakan Oleh :</td>
   </tr>
   <tr>
-    <td height="50" align="left" valign="bottom">.................................................</td>
-  </tr>
-  <tr>
-    <td align="left" valign="bottom"><p><strong>#NAMA_JURUTEKNIK#<br />
+    <td height="40" align="left" valign="bottom"><br><br><br>.................................................<br>
+<p><strong>#NAMA_JURUTEKNIK#<br />
       #JAWATAN#
     </strong><strong><br />
         #NAMA_SEKOLAH#
-    </strong></p></td>
+    </strong></p>
+    </td>
   </tr>
 </table>

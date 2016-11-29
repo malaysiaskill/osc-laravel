@@ -1034,12 +1034,26 @@ class JTKController extends Controller
                 eval("\$_speedtest_a = \$r->_speedtest_a;");
                 eval("\$_speedtest_b = \$r->_speedtest_b;");
                 eval("\$_speedtest_c = \$r->_speedtest_c;");
+                eval("\$_speedtest_d = \$r->_speedtest_d;");
+                eval("\$_speedtest_e = \$r->_speedtest_e;");
+                eval("\$_speedtest_a1 = \$r->_speedtest_a1;");
+                eval("\$_speedtest_b1 = \$r->_speedtest_b1;");
+                eval("\$_speedtest_c1 = \$r->_speedtest_c1;");
+                eval("\$_speedtest_d1 = \$r->_speedtest_d1;");
+                eval("\$_speedtest_e1 = \$r->_speedtest_e1;");
                 eval("\$catatan = \$r->_catatan_".$ss->id.";");
                 $record[] = array(
                     'id' => $ss->id,
                     '_speedtest_a' => $_speedtest_a,
                     '_speedtest_b' => $_speedtest_b,
                     '_speedtest_c' => $_speedtest_c,
+                    '_speedtest_d' => $_speedtest_d,
+                    '_speedtest_e' => $_speedtest_e,
+                    '_speedtest_a1' => $_speedtest_a1,
+                    '_speedtest_b1' => $_speedtest_b1,
+                    '_speedtest_c1' => $_speedtest_c1,
+                    '_speedtest_d1' => $_speedtest_d1,
+                    '_speedtest_e1' => $_speedtest_e1,
                     'catatan' => $catatan
                 );
             }
@@ -1121,6 +1135,13 @@ class JTKController extends Controller
                     echo "$('#_speedtest_a').val('".$_val->_speedtest_a."');";
                     echo "$('#_speedtest_b').val('".$_val->_speedtest_b."');";
                     echo "$('#_speedtest_c').val('".$_val->_speedtest_c."');";
+                    echo "$('#_speedtest_d').val('".$_val->_speedtest_d."');";
+                    echo "$('#_speedtest_e').val('".$_val->_speedtest_e."');";
+                    echo "$('#_speedtest_a1').val('".$_val->_speedtest_a1."');";
+                    echo "$('#_speedtest_b1').val('".$_val->_speedtest_b1."');";
+                    echo "$('#_speedtest_c1').val('".$_val->_speedtest_c1."');";
+                    echo "$('#_speedtest_d1').val('".$_val->_speedtest_d1."');";
+                    echo "$('#_speedtest_e1').val('".$_val->_speedtest_e1."');";
 
                     $catatan = addslashes(html_entity_decode($_val->catatan,ENT_QUOTES));
                     $catatan = str_replace('<br />', '\n', nl2br($catatan));
@@ -1189,22 +1210,40 @@ class JTKController extends Controller
                         if ($sshid == '1')
                         {
                             $data .= '<tr>
-                                <td align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
+                                <td width="20" align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
                                 <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
                                 <td valign="top" bgcolor="#FFFFFF">'.$sss->cara_pengujian.'</td>
-                                <td align="center" valign="top" bgcolor="#FFFFFF">
+                                <td align="center" valign="top" bgcolor="#FFFFFF" width="180">
                                     <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                                      <tr>
+                                        <td>&nbsp;</td>
+                                        <td>Down</td>
+                                        <td>Up</td>
+                                      </tr>
                                       <tr>
                                         <td>ZOOM-A</td>
                                         <td>'.$_val->_speedtest_a.'</td>
+                                        <td>'.$_val->_speedtest_a1.'</td>
                                       </tr>
                                       <tr>
                                         <td>ZOOM-B</td>
                                         <td>'.$_val->_speedtest_b.'</td>
+                                        <td>'.$_val->_speedtest_b1.'</td>
                                       </tr>
                                       <tr>
                                         <td>ZOOM-C</td>
                                         <td>'.$_val->_speedtest_c.'</td>
+                                        <td>'.$_val->_speedtest_c1.'</td>
+                                      </tr>
+                                      <tr>
+                                        <td>SUPER ZOOM (A)</td>
+                                        <td>'.$_val->_speedtest_d.'</td>
+                                        <td>'.$_val->_speedtest_d1.'</td>
+                                      </tr>
+                                      <tr>
+                                        <td>SUPER ZOOM (B)</td>
+                                        <td>'.$_val->_speedtest_e.'</td>
+                                        <td>'.$_val->_speedtest_e1.'</td>
                                       </tr>
                                     </table>
                                 </td>
