@@ -216,7 +216,7 @@ function ClearSemakan() {
                                     $mon = str_pad($mon,2,'0',STR_PAD_LEFT);
                                     $k = str_pad($k,2,'0',STR_PAD_LEFT);
 
-                                    if ($k == date('d')) {
+                                    if ($k == date('d') && $mon == date('m')) {
                                         $tr_bgcolor = "bg-success-light";
                                     } else {
                                         $tr_bgcolor = "bg-white";
@@ -269,7 +269,7 @@ function ClearSemakan() {
                                     for ($k=1; $k <= $TotalDay; $k++)
                                     {
                                         $listjtk = '';
-                                        foreach (\App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->get() as $jtk)
+                                        foreach (\App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->orderBy('name','asc')->get() as $jtk)
                                         {
                                             if (\App\SenaraiSemakHarian::where('user_id',$jtk->id)->where('tarikh_semakan',date('Y')."-".$i."-".$k)->count()==1) {
                                                 $status = "ok";
@@ -285,7 +285,7 @@ function ClearSemakan() {
                                         $i = str_pad($i,2,'0',STR_PAD_LEFT);
                                         $k = str_pad($k,2,'0',STR_PAD_LEFT);
 
-                                        if ($k == date('d')) {
+                                        if ($k == date('d') && $i == date('m')) {
                                             $tr_bgcolor = "bg-success-light";
                                         } else {
                                             $tr_bgcolor = "bg-white";
