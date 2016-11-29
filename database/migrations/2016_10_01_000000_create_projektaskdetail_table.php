@@ -20,6 +20,7 @@ class CreateProjektaskdetailTable extends Migration
             $table->integer('task_id')->unsigned();
             $table->integer('timeline_by')->nullable()->default(0);
             $table->text('detail')->nullable();
+            $table->string('progress_type')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             $table->foreign('task_id')->references('id')->on('projek_task')->onDelete('cascade');

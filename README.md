@@ -15,11 +15,12 @@ Template Sistem (Web-Based) & Platform utama sistem bersepadu bagi Kumpulan DEV-
 * Modul Pendaftaran Pengguna bagi sistem (Full authentication).
 * Maklumat JPN, PPD, dan Sekolah di dalam Negeri PERAK sahaja (buat masa ini).
 * Dimurnikan lagi dengan template Themes (Kredit [@putera](https://github.com/putera)) yang sangat cantik dan fluid untuk mobile.
-* Dibangunkan khusus untuk **SMART DEVELOPMENT TEAM** bagi JTKPK.
+* Dibangunkan khusus untuk Juruteknik Negeri Perak.
 * Modul Development Team iaitu pengurusan projek dan kumpulan Development Team bagi JTKPK.
 * Modul SMART Team yakni pengurusan SMART Team serta aktiviti.
 * Aktiviti Ad-Hoc (Selain daripada SMART Team)
 * Modul FORUM
+* Modul Senarai Semak Harian
 
 **Plug-ins yang telah dimasukkan antaranya ialah :**
 
