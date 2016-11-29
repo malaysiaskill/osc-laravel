@@ -27,8 +27,13 @@ use App\SenaraiSemakHarian;
 
 class JTKController extends Controller
 {
-    public function __construct()
+    
+    protected $req;
+
+    public function __construct(Request $r)
     {
+        $this->req = $r;
+
         # Memastikan semua pengguna log masuk sebelum mengakses
         # method di dalam Controller JTKPK
 
@@ -625,7 +630,8 @@ class JTKController extends Controller
     {
         $smart_team = SmartTeam::find($team_id);
         return view('smartteam.detail',[
-            'st' => $smart_team
+            'st' => $smart_team,
+            'error' => $this->req->error
         ]);
     }
     public function SaveSmartTeam(Request $r)
@@ -948,14 +954,17 @@ class JTKController extends Controller
     SENARAI SEMAK HARIAN
 
     */
-    public function SenaraiSemakHarian()
+    public function SenaraiSemakHarian($mon=null, $year=null)
     {
         $ss_semua = SenaraiSemakan::where('user_id','0')->get();
         $ss_user = SenaraiSemakan::where('user_id',Auth::user()->id)->get();        
 
         return view('jtk.senarai-semak-harian',[
             'ss_semua' => $ss_semua,
-            'ss_user' => $ss_user
+            'ss_user' => $ss_user,
+            'mon' => $mon,
+            'year' => $year,
+            'error' => $this->req->error
         ]);
     }
     public function SenaraiSemakan()
@@ -1052,18 +1061,30 @@ class JTKController extends Controller
 
         $record = json_encode($record);
 
-        $tarikh_semakan = $r->_tarikh_semakan;
-        $db_tarikh_semakan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_semakan)->format('Y-m-d');
+        if ($r->_id_ssh == '0') {
+            $tarikh_semakan = $r->_tarikh_semakan;
+            $db_tarikh_semakan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_semakan)->format('Y-m-d');
+        } else {
+            $dbts = DB::table('semakan_harian')->where('id',$r->_id_ssh)->first();
+            $db_tarikh_semakan = $dbts->tarikh_semakan;
+        }
         $masa_semakan = $r->_masa_semakan;
 
         // Search
         if (SenaraiSemakHarian::where('user_id',Auth::user()->id)->where('tarikh_semakan',$db_tarikh_semakan)->count() == 1)
         {
-            // Update
-            $ssh = SenaraiSemakHarian::find($r->_id_ssh);
-            $ssh->masa_semakan = $masa_semakan;
-            $ssh->status_semakan = $record;
-            $ssh->save();
+            if ($r->_id_ssh == '0')
+            {
+                return redirect('/senarai-semak-harian/?error=already_exists');
+            }
+            else
+            {
+                // Update
+                $ssh = SenaraiSemakHarian::find($r->_id_ssh);
+                $ssh->masa_semakan = $masa_semakan;
+                $ssh->status_semakan = $record;
+                $ssh->save();
+            }
         }
         else
         {

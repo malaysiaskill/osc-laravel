@@ -113,6 +113,7 @@ Route::get('/smart-team/aktiviti-adhoc-detail/{xtvtid}', 'JTKController@DetailAk
 */
 
 Route::get('/senarai-semak-harian', 'JTKController@SenaraiSemakHarian'); // Senarai Semak Harian
+Route::get('/senarai-semak-harian/{mon}/{year}', 'JTKController@SenaraiSemakHarian'); // Senarai Semak Harian
 Route::get('/senarai-semakan', 'JTKController@SenaraiSemakan'); // Senarai Semakan
 Route::post('/senarai-semakan', 'JTKController@SaveSenaraiSemakan'); // Save Senarai Semakan
 Route::post('/edit-senarai-semakan/{id}', 'JTKController@EditSenaraiSemakan'); // Edit Senarai Semakan

@@ -155,11 +155,13 @@
                                 <!--
                                     MODULE TERSEDIA
                                 -->
+                                @if (!Auth::user()->hasRole('jpn'))
                                 <li>
                                     <a class="{{ (Request::path()=='senarai-semak-harian') ? 'active':'' }}" href="{{ url('/senarai-semak-harian') }}">
                                         <i class="fa fa-book"></i><span class="sidebar-mini-hide">Senarai Semak Harian</span>
                                     </a>
                                 </li>
+                                @endif
                                 <li>
                                     <a class="{{ (Request::path()=='dev-team') ? 'active':'' }}" href="{{ url('/dev-team') }}">
                                         <i class="fa fa-users"></i><span class="sidebar-mini-hide">Development Team</span>

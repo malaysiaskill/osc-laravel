@@ -493,3 +493,16 @@ blockquote span{display:block;font-size:70%;line-height:1.42857143;color:#777}
 .fc-event{
     cursor: pointer;
 }
+
+.ok {
+  border-radius: 64px;
+  display: inline-block;;
+  border: 2px solid #5CB85C;
+  padding: 2px;
+}
+.ko {
+  border-radius: 64px;
+  display: inline-block;;
+  border: 2px solid #d26a5c;
+  padding: 2px;
+}

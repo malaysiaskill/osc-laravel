@@ -533,3 +533,6 @@ function CetakSSH() {
         OpenWindow("/cetak-senarai-semak-harian/"+id,'CetakSSH','top=10,left=10,width=650,height=500');
     }
 }
+function ViewSSH(mon,year) {
+    window.location.href = "/senarai-semak-harian/"+mon+"/"+year;
+}

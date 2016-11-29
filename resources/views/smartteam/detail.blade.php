@@ -62,10 +62,10 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            @if (isset($error))
+                            @if ($error == 'title_exists')
                                 <div class="alert alert-danger alert-dismissable">
                                     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                    <i class="fa fa-exclamation push-5-r text-danger"></i> Tajuk aktiviti telah wujud ! Sila pilih tajuk lain.
+                                    <i class="fa fa-exclamation push-5-r text-danger"></i> Tajuk aktiviti telah wujud. Sila pilih tajuk lain.
                                 </div>
                             @endif
                             @if ($st->aktiviti->count() == 0)

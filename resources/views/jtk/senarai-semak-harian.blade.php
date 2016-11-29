@@ -3,62 +3,66 @@
 @section('site.description', 'Senarai Semak Harian')
 
 @section('jquery')
-jQuery('.js-calendar').fullCalendar({
-    firstDay: 1,
-    editable: false,
-    droppable: false,
-    header: {
-        left: 'title',
-        right: 'prev,next'
-    },
-    eventRender: function(event, element) {
-        element.attr('title', event.tooltip);
-    },
-    events:
-    [
-        @if (Auth::user()->hasRole('ppd'))
+    @if (Auth::user()->hasRole('ppd'))
 
-        @else
-            @foreach (\App\SenaraiSemakHarian::where('user_id',Auth::user()->id) as $ssh)
-            <?php
-                $event = array();
-                $tarikh = $ssh->tarikh_semakan;
-                $id = $ssh->id;
-
-                $Data_Tarikh = explode(' ', $tarikh);                   
-                $DataTarikh = explode('-', $Data_Tarikh[0]);
-                $Year = $DataTarikh[0];
-                $Mon = $DataTarikh[1]-1;
-                $Day = $DataTarikh[2];
-
-                $event[] = "{
-                    title: 'Semakan Selesai',
-                    icon: \"check\",
-                    start: new Date($Year, $Mon, $Day, 0, 0),
-                    allDay: true,
-                    color: '#26802c',
-                    id: '$id',
-                    tooltip: 'Semakan Harian Telah Dibuat'
-                },";
-                $events = implode(',', $event);
-                echo $events;
-            ?>
-            @endforeach
+    @else
+        @if ($error == 'already_exists')
+            SweetAlert('error','Ops !',"Rekod telah wujud dalam pangkalan data!");
         @endif
-    ],
-    eventRender: function(event, element) {
-        if(event.icon) {
-            element.find(".fc-title").prepend("<i class='fa fa-"+event.icon+"'></i> ");
-        }
-    },
-    eventClick: function(calEvent, jsEvent, view) {
-        EditSemakan(calEvent.id);
-    }
-});
+
+        jQuery('.js-calendar').fullCalendar({
+            firstDay: 1,
+            editable: false,
+            droppable: false,
+            header: {
+                left: 'title',
+                right: 'prev,next'
+            },
+            eventRender: function(event, element) {
+                element.attr('title', event.tooltip);
+            },
+            events:
+            [
+                @foreach (\App\SenaraiSemakHarian::where('user_id',Auth::user()->id)->get() as $ssh)
+                <?php
+                    $event = array();
+                    $tarikh = $ssh->tarikh_semakan;
+                    $id = $ssh->id;
+
+                    $dt = explode('-', $tarikh);
+                    $Year = $dt[0];
+                    $Mon = $dt[1]-1;
+                    $Day = $dt[2];
+
+                    $event[] = "{
+                        title: 'Semakan Selesai',
+                        icon: \"check\",
+                        start: new Date($Year, $Mon, $Day, 0, 0),
+                        allDay: true,
+                        color: '#26802c',
+                        id: '$id',
+                        tooltip: 'Semakan Harian Telah Dibuat'
+                    },";
+                    $events = implode(',', $event);
+                    echo $events;
+                ?>
+                @endforeach
+            ],
+            eventRender: function(event, element) {
+                if(event.icon) {
+                    element.find(".fc-title").prepend("<i class='fa fa-"+event.icon+"'></i> ");
+                }
+            },
+            eventClick: function(calEvent, jsEvent, view) {
+                EditSemakan(calEvent.id);
+            }
+        });
+    @endif
 @endsection
 
 @section('content')
 
+@if (!Auth::user()->hasRole('ppd'))
 <script type="text/javascript">
 function ClearSemakan() {
     $('#_speedtest_a').val('');
@@ -82,9 +86,10 @@ function ClearSemakan() {
     $('#_tarikh_semakan').removeAttr('disabled');
 }
 </script>
+@endif
 
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('assets/img/photos/photo3@2x.jpg');">
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
     <div class="push-50-t push-15">
         <h1 class="h2 text-white animated fadeInUp">
             <i class="fa fa-check-square-o push-15-r"></i> Senarai Semak Harian
@@ -97,7 +102,7 @@ function ClearSemakan() {
 <div class="content padding-5-t bg-white border-b">
     <div class="push-15 push-10-t">
         <div class="row">
-            @if (Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
+            @if (Auth::user()->hasRole('ppd'))
                 <div class="col-md-7">
                     <a class="btn btn-default" href="{{ url('/') }}">
                         <i class="fa fa-home"></i>
@@ -105,7 +110,7 @@ function ClearSemakan() {
                 </div>
                 <div class="col-md-5 pull-right">
                     <div class="row">
-                        <div class="col-xs-5">
+                        <div class="col-xs-6">
                             <select name="qmonth" id="qmonth" data-placeholder="Bulan" class="form-control js-select2">
                                 <option></option>
                                 <?php
@@ -120,7 +125,7 @@ function ClearSemakan() {
                                 <?php } ?>
                             </select>
                         </div>
-                        <div class="col-xs-5">
+                        <div class="col-xs-3">
                             <select name="qyear" id="qyear" data-placeholder="Tahun" class="form-control js-select2">
                                 <option></option>
                                 <?php
@@ -135,9 +140,9 @@ function ClearSemakan() {
                                 <?php } ?>
                             </select>
                         </div>
-                        <div class="col-xs-2">
-                            <button type="button" class="btn btn-primary">
-                                <i class="fa fa-search push-5-r"></i>Cari
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-primary" onclick="javascript:ViewSSH($('#qmonth').val(),$('#qyear').val());">
+                                <i class="fa fa-eye push-5-r"></i>Lihat
                             </button>
                         </div>
                     </div>
@@ -169,7 +174,147 @@ function ClearSemakan() {
         <div class="col-xs-12">
             <div class="block block-themed block-rounded">
                 <div class="block-content block-content-full">
-                    <div class="js-calendar"></div>
+                    @if (Auth::user()->hasRole('ppd'))
+                        @if (strlen($mon) != 0 && strlen($year) != 0)
+                            <?php
+                                if ($mon == 1) $TotalDay = 31;
+                                if ($mon == 2) {
+                                    if (date("L") == true) {
+                                        $TotalDay = 29;
+                                    } else {
+                                        $TotalDay = 28;
+                                    }
+                                }
+                                if ($mon == 3) $TotalDay = 31;
+                                if ($mon == 4) $TotalDay = 30;
+                                if ($mon == 5) $TotalDay = 31;
+                                if ($mon == 6) $TotalDay = 30;
+                                if ($mon == 7) $TotalDay = 31;
+                                if ($mon == 8) $TotalDay = 31;
+                                if ($mon == 9) $TotalDay = 30;
+                                if ($mon == 10) $TotalDay = 31;
+                                if ($mon == 11) $TotalDay = 30;
+                                if ($mon == 12) $TotalDay = 31;
+
+                                $rowday = '';
+                                for ($k=1; $k <= $TotalDay; $k++)
+                                {
+                                    $listjtk = '';
+                                    foreach (\App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->orderBy('name','asc')->get() as $jtk)
+                                    {
+                                        if (\App\SenaraiSemakHarian::where('user_id',$jtk->id)->where('tarikh_semakan',$year."-".$mon."-".$k)->count()==1) {
+                                            $status = "ok";
+                                            $status_semakan = "(OK)";
+                                        } else {
+                                            $status = "ko";
+                                            $status_semakan = "(Tiada Semakan)";
+                                        }
+
+                                        $listjtk .= '<img src="/avatar/'.$jtk->id.'" class="img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'"> ';
+                                    }
+
+                                    $mon = str_pad($mon,2,'0',STR_PAD_LEFT);
+                                    $k = str_pad($k,2,'0',STR_PAD_LEFT);
+
+                                    if ($k == date('d')) {
+                                        $tr_bgcolor = "bg-success-light";
+                                    } else {
+                                        $tr_bgcolor = "bg-white";
+                                    }
+
+                                    $rowday .= '<tr class="'.$tr_bgcolor.'">
+                                        <td class="text-center">'.$k.'/'.$mon.'/'.$year.'</td>
+                                        <td>'.$listjtk.'</td>
+                                    </tr>';
+                                }
+                            ?>
+                            <h2 class="text-right">{{ $bulan[ltrim($mon,'0')-1] }}, {{ $year }}</h2>
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 50px;">Tarikh</th>
+                                        <th>Semakan Harian</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php echo $rowday; ?>
+                                </tbody>
+                            </table> 
+                        @else
+                            <h2 class="text-right">{{ $bulan[date('m')-1] }}, {{ date('Y') }}</h2>
+                            <?php
+                            for ($i=1; $i <= 12; $i++) {
+                                if ($i == date('m'))
+                                {
+                                    if ($i == 1) $TotalDay = 31;
+                                    if ($i == 2) {
+                                        if (date("L") == true) {
+                                            $TotalDay = 29;
+                                        } else {
+                                            $TotalDay = 28;
+                                        }
+                                    }
+                                    if ($i == 3) $TotalDay = 31;
+                                    if ($i == 4) $TotalDay = 30;
+                                    if ($i == 5) $TotalDay = 31;
+                                    if ($i == 6) $TotalDay = 30;
+                                    if ($i == 7) $TotalDay = 31;
+                                    if ($i == 8) $TotalDay = 31;
+                                    if ($i == 9) $TotalDay = 30;
+                                    if ($i == 10) $TotalDay = 31;
+                                    if ($i == 11) $TotalDay = 30;
+                                    if ($i == 12) $TotalDay = 31;
+
+                                    $rowday = '';
+                                    for ($k=1; $k <= $TotalDay; $k++)
+                                    {
+                                        $listjtk = '';
+                                        foreach (\App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->get() as $jtk)
+                                        {
+                                            if (\App\SenaraiSemakHarian::where('user_id',$jtk->id)->where('tarikh_semakan',date('Y')."-".$i."-".$k)->count()==1) {
+                                                $status = "ok";
+                                                $status_semakan = "(OK)";
+                                            } else {
+                                                $status = "ko";
+                                                $status_semakan = "(Tiada Semakan)";
+                                            }
+
+                                            $listjtk .= '<img src="/avatar/'.$jtk->id.'" class="img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'"> ';
+                                        }
+
+                                        $i = str_pad($i,2,'0',STR_PAD_LEFT);
+                                        $k = str_pad($k,2,'0',STR_PAD_LEFT);
+
+                                        if ($k == date('d')) {
+                                            $tr_bgcolor = "bg-success-light";
+                                        } else {
+                                            $tr_bgcolor = "bg-white";
+                                        }
+
+                                        $rowday .= '<tr class="'.$tr_bgcolor.'">                                        
+                                            <td class="text-center">'.$k.'/'.$i.'/'.date('Y').'</td>
+                                            <td>'.$listjtk.'</td>
+                                        </tr>';
+                                    }
+                                }
+                            }
+                            ?>
+
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center" style="width: 50px;">Tarikh</th>
+                                        <th>Semakan Harian</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php echo $rowday; ?>
+                                </tbody>
+                            </table>                            
+                        @endif
+                    @else
+                        <div class="js-calendar"></div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -177,6 +322,7 @@ function ClearSemakan() {
 </div>
 <!-- END Page Content -->
 
+@if (!Auth::user()->hasRole('ppd'))
 <!-- Senarai Semak Dialog //-->
 <div id="SemakanDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -302,5 +448,6 @@ function ClearSemakan() {
         </div>
     </div>
 </div>
+@endif
 
 @endsection

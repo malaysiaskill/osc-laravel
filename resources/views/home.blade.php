@@ -78,6 +78,7 @@
                         @endif
 
                         <!-- Senarai Semak Harian -->
+                        @if (!Auth::user()->hasRole('jpn'))
                         <div class="col-sm-6 col-md-3">
                             <a class="block block-bordered block-rounded block-link-hover3" href="{{ url('/senarai-semak-harian') }}">
                                 <div class="block-content block-content-full text-center">
@@ -88,6 +89,7 @@
                                 </div>
                             </a>
                         </div>
+                        @endif
 
                         <!-- Development Team -->
                         <div class="col-sm-6 col-md-3">
