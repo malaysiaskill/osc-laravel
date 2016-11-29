@@ -217,7 +217,7 @@ function ClearSemakan() {
                                             $status_semakan = "(Tiada Semakan)";
                                         }
 
-                                        $listjtk .= '<img src="/avatar/'.$jtk->id.'" class="img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'"> ';
+                                        $listjtk .= '<img src="/avatar/'.$jtk->id.'" class="push-5 img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'"> ';
                                     }
 
                                     $mon = str_pad($mon,2,'0',STR_PAD_LEFT);
@@ -286,7 +286,7 @@ function ClearSemakan() {
                                                 $status_semakan = "(Tiada Semakan)";
                                             }
 
-                                            $listjtk .= '<img src="/avatar/'.$jtk->id.'" class="img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'"> ';
+                                            $listjtk .= '<img src="/avatar/'.$jtk->id.'" class="push-5 img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'"> ';
                                         }
 
                                         $i = str_pad($i,2,'0',STR_PAD_LEFT);
