@@ -1348,7 +1348,11 @@ class JTKController extends Controller
     */
     public function getLatestNoSiriAduan() {
         $akp = AKP::where('user_id',Auth::user()->id)->whereYear('tarikh_aduan',date('Y'))->orderBy('id','desc')->first();
-        echo "$('#_no_siri_aduan').val('".($akp->no_siri_aduan + 1)."');";
+        if (count($akp) > 0) {
+            echo "$('#_no_siri_aduan').val('".($akp->no_siri_aduan + 1)."');";
+        } else {
+            echo "$('#_no_siri_aduan').val('1');";
+        }
         echo "$('#_tarikh_aduan').val('".date('d/m/Y')."');";
     }
     public function AduanKerosakan()
@@ -1539,55 +1543,7 @@ class JTKController extends Controller
             $usr = User::find($akp->user_id);
             $nama_sekolah = $usr->jabatan->nama_sekolah_detail_cetakan;
             $jawatan = $usr->greds->gred_title_cetakan;
-
-            /*$keterangan_kerosakan = addslashes(html_entity_decode($akp->keterangan_kerosakan,ENT_QUOTES));
-            $keterangan_kerosakan = str_replace('<br />', '\n', nl2br($keterangan_kerosakan));
-            $keterangan_kerosakan = trim(preg_replace('/\s\s+/', '', $keterangan_kerosakan));
-
-            $laporan_tindakan = addslashes(html_entity_decode($akp->laporan_tindakan,ENT_QUOTES));
-            $laporan_tindakan = str_replace('<br />', '\n', nl2br($laporan_tindakan));
-            $laporan_tindakan = trim(preg_replace('/\s\s+/', '', $laporan_tindakan));*/
-
             $kk = json_decode($akp->kategori_kerosakan);
-
-            /*echo "$('#_tarikh_aduan').val('".$akp->tarikh_aduan_formatted."');";
-            echo "$('#_tarikh_aduan').prop('disabled','disabled');";
-            echo "$('#_no_siri_aduan').val('".$akp->no_siri_aduan."');";
-            echo "$('#_no_siri_aduan').prop('disabled','disabled');";
-            echo "$('#_nama').val('".$akp->nama."');";
-            echo "$('#_email').val('".$akp->email."');";
-            echo "$('#_jawatan').val('".$akp->jawatan."');";
-            echo "$('#_no_telefon').val('".$akp->no_telefon."');";
-            echo "$('#_lokasi_peralatan').val('".$akp->lokasi_peralatan."');";
-            echo "$('#_no_dhm').val('".$akp->no_dhm."');";
-            echo "$('#_keterangan_kerosakan').val('".$keterangan_kerosakan."');";
-            echo "$('#_laporan_tindakan').val('".$laporan_tindakan."');";
-            echo "$('#_tarikh_pemeriksaan').val('".$akp->tarikh_pemeriksaan_formatted."');";
-            echo "$('#_tarikh_selesai').val('".$akp->tarikh_selesai_formatted."');";
-            
-            echo "$('input[name=\"_hakmilik\"]').filter('[value=\"".$akp->hakmilik_peralatan."\"]').prop('checked', true);";
-            echo "$('input[name=\"_status_aduan\"]').filter('[value=\"".$akp->status_aduan."\"]').prop('checked', true);";
-            echo "$('input[name=\"_kategori_aduan\"]').filter('[value=\"".$akp->kategori_aduan."\"]').prop('checked', true);";
-            
-            /*if (count($kk) > 0)
-            {
-                foreach ($kk as $vl)
-                {
-                    $kkid = $vl->_id;
-
-                    if ($vl->_kerosakan != null) {
-                        echo "$('input[name=\"_kerosakan_$kkid\"]').filter('[value=\"$kkid\"]').prop('checked', true);";
-                    } else {
-                        echo "$('input[name=\"_kerosakan_$kkid\"]').filter('[value=\"$kkid\"]').prop('checked', false);";
-                    }
-
-                    if (!empty($vl->_lain)) {
-                        echo "$('input[name=\"_lainlain_$kkid\"]').val('".$vl->_lain."');";
-                    }
-                }
-            }*/
-
-
 
             $datakk = '';
             foreach (KategoriKerosakan::where('parent_id','0')->get() as $_kk)
