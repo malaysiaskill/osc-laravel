@@ -121,6 +121,7 @@ Route::post('/delete-senarai-semakan/{id}', 'JTKController@PadamSenaraiSemakan')
 Route::post('/save-senarai-semakan', 'JTKController@SaveSenaraiSemak'); // Save Senarai Semak Harian
 Route::post('/edit-senarai-semak-harian', 'JTKController@EditSenaraiSemakHarian'); // Edit Senarai Semak Harian
 Route::get('/cetak-senarai-semak-harian/{id}', 'JTKController@CetakSenaraiSemakHarian'); // Cetak Senarai Semak Harian
+Route::post('/ppd-semak-ssh', 'JTKController@PPDSemakSSH'); // PPD Semak SSH
 
 /**
 

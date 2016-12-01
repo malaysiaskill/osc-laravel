@@ -1,4 +1,8 @@
 <style type="text/css">
+@page {
+   margin-top: 0.5cm;
+   margin-bottom: 0cm;
+}
 body,td,th {
 	font-family: "Helvetica";
 	font-size: 12px;
@@ -40,20 +44,25 @@ body,td,th {
   </tr>
   #DATA#
 </table>
-<table width="100%" border="0" cellspacing="0" cellpadding="0">
+<table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr>
-    <td height="10"></td>
-  </tr>
-  <tr>
-    <td>Di Sediakan Oleh :</td>
-  </tr>
-  <tr>
-    <td height="40" align="left" valign="bottom"><br><br><br>.................................................<br>
-<p><strong>#NAMA_JURUTEKNIK#<br />
-      #JAWATAN#
-    </strong><strong><br />
-        #NAMA_SEKOLAH#
-    </strong></p>
-    </td>
+    <td width="50%" align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="10"></td>
+      </tr>
+      <tr>
+        <td>Di Sediakan Oleh :</td>
+      </tr>
+      <tr>
+        <td height="40" align="left" valign="bottom"><br />
+          <br />
+          <br />
+          .................................................<br />
+          <strong>#NAMA_JURUTEKNIK#<br />
+            #JAWATAN# </strong><strong><br />
+              #NAMA_SEKOLAH# </strong></td>
+      </tr>
+    </table></td>
+    <td width="50%" align="left" valign="top">#DATA_SEMAK#</td>
   </tr>
 </table>

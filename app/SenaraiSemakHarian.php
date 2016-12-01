@@ -17,4 +17,19 @@ class SenaraiSemakHarian extends Model
 	    	return '-';
 		}
 	}
+
+    public function getTarikhPpdSemakFormattedAttribute()
+	{
+	    $date = $this->tarikh_ppd_semak;
+	    if (strlen($date) != 0) {
+	    	return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format('d/m/Y');
+	    } else {
+	    	return '-';
+		}
+	}
+
+	public function user()
+    {
+        return $this->belongsTo('App\User', 'user_id', 'id');
+    }
 }

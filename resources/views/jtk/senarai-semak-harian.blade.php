@@ -16,10 +16,20 @@
             droppable: false,
             header: {
                 left: 'title',
-                right: 'prev,next'
+                right: 'today,prev,next'
             },
-            eventRender: function(event, element) {
+            eventRender: function(event, element, view) {
                 element.attr('title', event.tooltip);
+                if (view.name == 'month') {
+                    $(element).height(50);
+                }
+                element.find(".fc-content").addClass("text-center push-5-t");
+                if (event.icon) {
+                    element.find(".fc-title").prepend("&nbsp;<i class='text-success fa fa-"+event.icon+"'></i> ");
+                }
+                if (event.semakan_ppd) {
+                    element.find(".fc-title").append("&nbsp;<i class='fa fa-"+event.semakan_ppd+"'></i> ");
+                }
             },
             events:
             [
@@ -34,25 +44,26 @@
                     $Mon = $dt[1]-1;
                     $Day = $dt[2];
 
+                    if ($ssh->ppd_semak == '1') {
+                        $_ppdsemak = 'check-circle fa-2x text-success';
+                    } else {
+                        $_ppdsemak = 'exclamation-circle fa-2x text-warning';
+                    }
+
                     $event[] = "{
-                        title: 'Semakan Selesai',
-                        icon: \"check\",
+                        color: '#FFF',
+                        icon: 'check-square fa-2x',
+                        semakan_ppd: '$_ppdsemak',
                         start: new Date($Year, $Mon, $Day, 0, 0),
                         allDay: true,
-                        color: '#26802c',
                         id: '$id',
-                        tooltip: 'Semakan Harian Telah Dibuat'
+                        tooltip: 'Klik untuk lihat rekod'
                     },";
                     $events = implode(',', $event);
                     echo $events;
                 ?>
                 @endforeach
             ],
-            eventRender: function(event, element) {
-                if(event.icon) {
-                    element.find(".fc-title").prepend("<i class='fa fa-"+event.icon+"'></i> ");
-                }
-            },
             eventClick: function(calEvent, jsEvent, view) {
                 EditSemakan(calEvent.id);
             }
@@ -91,6 +102,8 @@ function ClearSemakan() {
     $('#_masa_semakan').val('');
     $('#btn_u_print').addClass('hide');
     $('#_tarikh_semakan').removeAttr('disabled');
+    $('#_semakan_ppd').removeClass('block-content block-content-full block-content-mini text-white bg-success bg-warning');
+    $('#_semakan_ppd').html('');
 }
 </script>
 @endif
@@ -182,42 +195,46 @@ function ClearSemakan() {
             <div class="block block-themed block-rounded">
                 <div class="block-content block-content-full">
                     @if (Auth::user()->hasRole('ppd'))
+                        <div class="row items-push border-b push">
+                            <div class="col-xs-12 h5 font-w300 text-right">
+                                <span class="push-10-r"><img src="{{ asset('/img/default_avatar.jpg') }}" class="img-avatar img-avatar32 ko push-5-r"> Tiada Semakan Harian Dibuat</span>
+                                <span class="push-10-r"><img src="{{ asset('/img/default_avatar.jpg') }}" class="img-avatar img-avatar32 warning push-5-r"> Perlu Semakan</span>
+                                <span><img src="{{ asset('/img/default_avatar.jpg') }}" class="img-avatar img-avatar32 ok push-5-r"> Telah Disemak Oleh PPD</span>
+                            </div>
+                        </div>
+                        
                         @if (strlen($mon) != 0 && strlen($year) != 0)
                             <?php
-                                if ($mon == 1) $TotalDay = 31;
-                                if ($mon == 2) {
-                                    if (date("L") == true) {
-                                        $TotalDay = 29;
-                                    } else {
-                                        $TotalDay = 28;
-                                    }
-                                }
-                                if ($mon == 3) $TotalDay = 31;
-                                if ($mon == 4) $TotalDay = 30;
-                                if ($mon == 5) $TotalDay = 31;
-                                if ($mon == 6) $TotalDay = 30;
-                                if ($mon == 7) $TotalDay = 31;
-                                if ($mon == 8) $TotalDay = 31;
-                                if ($mon == 9) $TotalDay = 30;
-                                if ($mon == 10) $TotalDay = 31;
-                                if ($mon == 11) $TotalDay = 30;
-                                if ($mon == 12) $TotalDay = 31;
-
+                                $TotalDay = cal_days_in_month(CAL_GREGORIAN, $mon, $year);
                                 $rowday = '';
                                 for ($k=1; $k <= $TotalDay; $k++)
                                 {
                                     $listjtk = '';
                                     foreach (\App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->orderBy('name','asc')->get() as $jtk)
                                     {
-                                        if (\App\SenaraiSemakHarian::where('user_id',$jtk->id)->where('tarikh_semakan',$year."-".$mon."-".$k)->count()==1) {
-                                            $status = "ok";
-                                            $status_semakan = "(OK)";
-                                        } else {
+                                        $date = "$year-$mon-".str_pad($k,2,'0',STR_PAD_LEFT);
+                                        $_ssh = $jtk->ssh->where('tarikh_semakan',$date)->first();
+                                        
+                                        if (count($_ssh) == 1)
+                                        {
+                                            if ($_ssh->ppd_semak == '0') {
+                                                $status = "warning";
+                                                $status_semakan = "(Perlu Semakan)";
+                                            } else {
+                                                $status = "ok";
+                                                $status_semakan = "(OK)";
+                                            }
+
+                                            $listjtk .= '<a href="#" onclick="javascript:Cetak_SSH(\''.$_ssh->id.'\');return false;">
+                                                <img src="/avatar/'.$jtk->id.'" class="push-5 img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'">
+                                            </a> ';
+                                        }
+                                        else
+                                        {
                                             $status = "ko";
                                             $status_semakan = "(Tiada Semakan)";
+                                            $listjtk .= '<img src="/avatar/'.$jtk->id.'" class="push-5 img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'"> ';
                                         }
-
-                                        $listjtk .= '<img src="/avatar/'.$jtk->id.'" class="push-5 img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'"> ';
                                     }
 
                                     $mon = str_pad($mon,2,'0',STR_PAD_LEFT);
@@ -231,11 +248,18 @@ function ClearSemakan() {
 
                                     $rowday .= '<tr class="'.$tr_bgcolor.'">
                                         <td class="text-center">'.$k.'/'.$mon.'/'.$year.'</td>
-                                        <td>'.$listjtk.'</td>
+                                        <td class="border-l">'.$listjtk.'</td>
                                     </tr>';
                                 }
                             ?>
-                            <h2 class="text-right">{{ $bulan[ltrim($mon,'0')-1] }}, {{ $year }}</h2>
+                            <div class="row">
+                                <div class="col-md-6"><h2 class="text-left">{{ $bulan[ltrim($mon,'0')-1] }}, {{ $year }}</h2></div>
+                                <div class="col-md-6 text-right">
+                                    <button type="button" class="btn btn-success" onclick="javascript:PPDSemakSSH('{{ $mon }}-{{ $year }}');">
+                                        <i class="fa fa-check push-5-r"></i>Semak Untuk Bulan Ini ({{ $bulan[ltrim($mon,'0')-1] }})
+                                    </button>
+                                </div>
+                            </div>
                             <table class="table">
                                 <thead>
                                     <tr>
@@ -248,63 +272,61 @@ function ClearSemakan() {
                                 </tbody>
                             </table> 
                         @else
-                            <h2 class="text-right">{{ $bulan[date('m')-1] }}, {{ date('Y') }}</h2>
+                            <div class="row">
+                                <div class="col-md-6"><h2 class="text-left">{{ $bulan[date('m')-1] }}, {{ date('Y') }}</h2></div>
+                                <div class="col-md-6 text-right">
+                                    <button type="button" class="btn btn-success" onclick="javascript:PPDSemakSSH('{{ date('m') }}-{{ date('Y') }}');">
+                                        <i class="fa fa-check push-5-r"></i>Semak Untuk Bulan Ini ({{ $bulan[date('m')-1] }})
+                                    </button>
+                                </div>
+                            </div>
                             <?php
-                            for ($i=1; $i <= 12; $i++) {
-                                if ($i == date('m'))
+                                $TotalDay = cal_days_in_month(CAL_GREGORIAN, date('n'), date('Y'));
+                                $rowday = '';
+                                for ($k=1; $k <= $TotalDay; $k++)
                                 {
-                                    if ($i == 1) $TotalDay = 31;
-                                    if ($i == 2) {
-                                        if (date("L") == true) {
-                                            $TotalDay = 29;
-                                        } else {
-                                            $TotalDay = 28;
-                                        }
-                                    }
-                                    if ($i == 3) $TotalDay = 31;
-                                    if ($i == 4) $TotalDay = 30;
-                                    if ($i == 5) $TotalDay = 31;
-                                    if ($i == 6) $TotalDay = 30;
-                                    if ($i == 7) $TotalDay = 31;
-                                    if ($i == 8) $TotalDay = 31;
-                                    if ($i == 9) $TotalDay = 30;
-                                    if ($i == 10) $TotalDay = 31;
-                                    if ($i == 11) $TotalDay = 30;
-                                    if ($i == 12) $TotalDay = 31;
-
-                                    $rowday = '';
-                                    for ($k=1; $k <= $TotalDay; $k++)
+                                    $listjtk = '';
+                                    foreach (\App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->orderBy('name','asc')->get() as $jtk)
                                     {
-                                        $listjtk = '';
-                                        foreach (\App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->orderBy('name','asc')->get() as $jtk)
+                                        $date = date('Y')."-".date('m')."-".str_pad($k,2,'0',STR_PAD_LEFT);
+                                        $_ssh = $jtk->ssh->where('tarikh_semakan',$date)->first();
+                                        
+                                        if (count($_ssh) == 1)
                                         {
-                                            if (\App\SenaraiSemakHarian::where('user_id',$jtk->id)->where('tarikh_semakan',date('Y')."-".$i."-".$k)->count()==1) {
+                                            if ($_ssh->ppd_semak == '0') {
+                                                $status = "warning";
+                                                $status_semakan = "(Perlu Semakan)";
+                                            } else {
                                                 $status = "ok";
                                                 $status_semakan = "(OK)";
-                                            } else {
-                                                $status = "ko";
-                                                $status_semakan = "(Tiada Semakan)";
                                             }
 
+                                            $listjtk .= '<a href="#" onclick="javascript:Cetak_SSH(\''.$_ssh->id.'\');return false;">
+                                                <img src="/avatar/'.$jtk->id.'" class="push-5 img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'">
+                                            </a> ';
+                                        }
+                                        else
+                                        {
+                                            $status = "ko";
+                                            $status_semakan = "(Tiada Semakan)";
                                             $listjtk .= '<img src="/avatar/'.$jtk->id.'" class="push-5 img-avatar img-avatar32 '.$status.'" data-toggle="tooltip" title="'.$jtk->name.' '.$status_semakan.'"> ';
                                         }
-
-                                        $i = str_pad($i,2,'0',STR_PAD_LEFT);
-                                        $k = str_pad($k,2,'0',STR_PAD_LEFT);
-
-                                        if ($k == date('d') && $i == date('m')) {
-                                            $tr_bgcolor = "bg-success-light";
-                                        } else {
-                                            $tr_bgcolor = "bg-white";
-                                        }
-
-                                        $rowday .= '<tr class="'.$tr_bgcolor.'">                                        
-                                            <td class="text-center">'.$k.'/'.$i.'/'.date('Y').'</td>
-                                            <td>'.$listjtk.'</td>
-                                        </tr>';
                                     }
+
+                                    $i = str_pad($i,2,'0',STR_PAD_LEFT);
+                                    $k = str_pad($k,2,'0',STR_PAD_LEFT);
+
+                                    if ($k == date('d')) {
+                                        $tr_bgcolor = "bg-success-light";
+                                    } else {
+                                        $tr_bgcolor = "bg-white";
+                                    }
+
+                                    $rowday .= '<tr class="'.$tr_bgcolor.'">                                        
+                                        <td class="text-center">'.$k.'/'.date('m').'/'.date('Y').'</td>
+                                        <td class="border-l">'.$listjtk.'</td>
+                                    </tr>';
                                 }
-                            }
                             ?>
 
                             <table class="table">
@@ -320,6 +342,13 @@ function ClearSemakan() {
                             </table>                            
                         @endif
                     @else
+                        <div class="row items-push">
+                            <div class="col-xs-12 h5 font-w300">
+                                <span class="push-10-r"><i class="fa fa-check-square text-success push-5-r"></i> Semakan Harian Telah Dibuat</span>
+                                <span class="push-10-r"><i class="fa fa-exclamation-circle text-warning push-5-r"></i> PPD Belum Membuat Semakan</span>
+                                <span><i class="fa fa-check-circle text-success push-5-r"></i> Telah Disemak Oleh PPD</span>
+                            </div>
+                        </div>
                         <div class="js-calendar"></div>
                     @endif
                 </div>
@@ -339,10 +368,11 @@ function ClearSemakan() {
                 <div class="block block-themed block-transparent remove-margin-b">
                     <div class="block-header bg-primary-dark">
                         <h3 class="block-title">
-                            <i class="fa fa-list-ul push-10-r"></i>Senarai Semakan
+                            <i class="fa fa-list-ul push-10-r"></i>Senarai Semak Harian
                         </h3>
                     </div>
-                    <div class="block-content">
+                    <div id="_semakan_ppd" class="h5 font-w300"></div>
+                    <div class="block-content block-content-mini">
                         <table class="table">
                             <thead>
                                 <tr>

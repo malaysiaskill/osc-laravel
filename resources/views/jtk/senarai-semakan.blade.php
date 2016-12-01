@@ -72,9 +72,6 @@
                     <a class="btn btn-primary" href="{{ url('/senarai-semak-harian') }}">
                         <i class="fa fa-arrow-left"></i>
                     </a>
-                    <button type="button" class="btn btn-success" onclick="javascript:TambahSemakanDialog();">
-                        <i class="fa fa-plus push-5-r"></i>Tambah
-                    </button>
                 </div>                
             @endif
         </div>
@@ -100,8 +97,15 @@
                     <h3 class="block-title">
                         <i class="fa fa-list-ul push-10-r"></i>Senarai Semakan (SEMUA)
                     </h3>
-                </div>                
-                <div class="block-content block-content-full">
+                </div>
+                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin'))
+                <div class="block-content block-content-full block-content-mini text-right border-b bg-gray-lighter">
+                    <button type="button" class="btn btn-success" onclick="javascript:TambahSemakanDialog('1');">
+                        <i class="fa fa-plus push-5-r"></i>Tambah
+                    </button>
+                </div>
+                @endif
+                <div class="block-content block-content-mini">
                     <table class="table">
                         <thead>
                             <tr>
@@ -149,8 +153,13 @@
                     <h3 class="block-title">
                         <i class="fa fa-list-ul push-10-r"></i>Senarai Semakan (Tambahan)
                     </h3>
-                </div>                
-                <div class="block-content block-content-full">
+                </div>
+                <div class="block-content block-content-full block-content-mini text-right border-b bg-gray-lighter">
+                    <button type="button" class="btn btn-success" onclick="javascript:TambahSemakanDialog('0');">
+                        <i class="fa fa-plus push-5-r"></i>Tambah
+                    </button>
+                </div>
+                <div class="block-content block-content-mini">
                     <table class="table">
                         <thead>
                             <tr>
@@ -207,13 +216,13 @@
                     </div>
                     <div class="block-content">
                         <div class="form-group items-push border-b">
-                            <div class="col-sm-12">Perkara :</div>
+                            <div class="col-sm-12 push-5">Perkara :</div>
                             <div class="col-sm-12">
                                 <textarea name="_perkara" id="_perkara" class="form-control" rows="5"></textarea>
                             </div>
                         </div>
                         <div class="form-group items-push">
-                            <div class="col-sm-12">Cara Pengujian :</div>
+                            <div class="col-sm-12 push-5">Cara Pengujian :</div>
                             <div class="col-sm-12">
                                 <textarea name="_cara_pengujian" id="_cara_pengujian" class="form-control" rows="5"></textarea>
                             </div>
@@ -228,6 +237,7 @@
                         <i class="fa fa-times push-5-r"></i>Batal
                     </button>                
                     <input id="_id" name="_id" type="hidden" value="0" />
+                    <input id="_flag" name="_flag" type="hidden" value="0" />
                 </div>
             </form>
         </div>

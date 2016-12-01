@@ -477,10 +477,12 @@ function ClearSenaraiSemakan() {
     $('#_perkara').val('');
     $('#_cara_pengujian').val('');
     $('#_id').val('0');
+    $('#_flag').val('0');
 }
-function TambahSemakanDialog() {
+function TambahSemakanDialog(flag) {
     ClearSenaraiSemakan();
     $('#SenaraiSemakanDialog').modal();
+    $('#_flag').val(flag);
     setTimeout(function(){
         $('#_perkara').focus();
     },500);
@@ -533,6 +535,9 @@ function CetakSSH() {
         OpenWindow("/cetak-senarai-semak-harian/"+id,'CetakSSH','top=10,left=10,width=650,height=500');
     }
 }
+function Cetak_SSH(id) {
+    OpenWindow("/cetak-senarai-semak-harian/"+id,'Cetak_SSH','top=10,left=10,width=650,height=500');
+}
 function ViewSSH(mon,year) {
     window.location.href = "/senarai-semak-harian/"+mon+"/"+year;
 }
@@ -582,4 +587,25 @@ function CetakAKP(id) {
 }
 function ViewAKP(mon,year) {
     window.location.href = "/aduan-kerosakan/"+mon+"/"+year;
+}
+function PPDSemakSSH(monyear) {
+    swal({
+        title: "Buat Semakan ?",
+        text: "Anda pasti untuk membuat semakan ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/ppd-semak-ssh";
+        ajax.setVar('monyear',monyear);
+        Ajx(ajax);
+    });
 }

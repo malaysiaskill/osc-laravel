@@ -1,6 +1,6 @@
 <style type="text/css">
 @page {
-   margin-top: 1cm;
+   margin-top: 0.5cm;
    margin-bottom: 0cm;
 }
 body,td,th {
