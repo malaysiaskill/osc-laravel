@@ -74,6 +74,37 @@ class JTKController extends Controller
         }
     }
 
+    public function replaceMonth($MonthNo) {
+        $MonthNo = intval($MonthNo);
+        
+        if ($MonthNo == 1) {
+            $ret = "Januari";
+        } else if ($MonthNo == 2) {
+            $ret = "Februari";
+        } else if ($MonthNo == 3) {
+            $ret = "Mac";
+        } else if ($MonthNo == 4) {
+            $ret = "April";
+        } else if ($MonthNo == 5) {
+            $ret = "Mei";
+        } else if ($MonthNo == 6) {
+            $ret = "Jun";
+        } else if ($MonthNo == 7) {
+            $ret = "Julai";
+        } else if ($MonthNo == 8) {
+            $ret = "Ogos";
+        } else if ($MonthNo == 9) {
+            $ret = "September";
+        } else if ($MonthNo == 10) {
+            $ret = "Oktober";
+        } else if ($MonthNo == 11) {
+            $ret = "November";
+        } else if ($MonthNo == 12) {
+            $ret = "Disember";
+        }
+        return $ret;
+    }
+
     /**
 
     PROFIL JURUTEKNIK KOMPUTER
@@ -1355,12 +1386,14 @@ class JTKController extends Controller
         }
         echo "$('#_tarikh_aduan').val('".date('d/m/Y')."');";
     }
-    public function AduanKerosakan()
+    public function AduanKerosakan($mon=null, $year=null)
     {
         $akp = AKP::where('user_id',Auth::user()->id)->get();
 
         return view('jtk.senarai-aduan-kerosakan',[
             'akp' => $akp,
+            'mon' => $mon,
+            'year' => $year,
             'error' => $this->req->error
         ]);
     }
@@ -1425,6 +1458,8 @@ class JTKController extends Controller
             {
                 // Update
                 $akp = AKP::find($r->_id);
+                $akp->kod_ppd = Auth::user()->kod_ppd;
+                $akp->kod_jpn = Auth::user()->kod_jpn;
                 $akp->nama = $r->_nama;
                 $akp->email = $r->_email;
                 $akp->jawatan = $r->_jawatan;
@@ -1447,6 +1482,8 @@ class JTKController extends Controller
             // Insert
             $akp = new AKP;
             $akp->user_id = Auth::user()->id;
+            $akp->kod_ppd = Auth::user()->kod_ppd;
+            $akp->kod_jpn = Auth::user()->kod_jpn;
             $akp->no_siri_aduan = $r->_no_siri_aduan;
             $akp->tarikh_aduan = $db_tarikh_aduan;
             $akp->nama = $r->_nama;
@@ -1534,11 +1571,7 @@ class JTKController extends Controller
     {
         $akp = AKP::find($id);
 
-        if ($akp->user_id != Auth::user()->id)
-        {
-            echo "<center><h3>Akses Disekat !</h3></center>";
-        }
-        else
+        if ($akp->user_id == Auth::user()->id || Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
         {
             $usr = User::find($akp->user_id);
             $nama_sekolah = $usr->jabatan->nama_sekolah_detail_cetakan;
@@ -1699,6 +1732,10 @@ class JTKController extends Controller
             $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
             $dpdf->add_info('Title','Aduan Kerosakan - '.str_replace('/', '-', $akp->no_siri_akp));
             $dpdf->stream("Aduan-Kerosakan_".str_replace('/', '-', $akp->no_siri_akp),array('Attachment'=>0));
+        }
+        else
+        {
+            echo "<center><h1>Akses Disekat !</h1></center>";
         }
     }
     

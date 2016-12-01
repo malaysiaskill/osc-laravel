@@ -18,6 +18,8 @@ class CreateAduanKerosakanTable extends Migration
             $table->engine = 'InnoDB';
             $table->increments('id');
             $table->integer('user_id')->unsigned()->nullable()->default(0);
+            $table->string('kod_ppd')->nullable();
+            $table->string('kod_jpn')->nullable();
             $table->integer('no_siri_aduan')->nullable()->default(0);
             $table->date('tarikh_aduan');
             $table->string('nama')->nullable();

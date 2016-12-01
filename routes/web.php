@@ -129,6 +129,7 @@ Route::get('/cetak-senarai-semak-harian/{id}', 'JTKController@CetakSenaraiSemakH
 */
 
 Route::get('/aduan-kerosakan', 'JTKController@AduanKerosakan'); // Senarai Aduan Kerosakan
+Route::get('/aduan-kerosakan/{mon}/{year}', 'JTKController@AduanKerosakan'); // Senarai Aduan Kerosakan
 Route::post('/aduan-kerosakan', 'JTKController@SaveAduanKerosakan'); // Save Aduan Kerosakan
 Route::post('/get-latest-nosiriaduan', 'JTKController@getLatestNoSiriAduan'); // Dapatkan No Siri Aduan Terkini
 Route::post('/delete-aduan-kerosakan', 'JTKController@PadamAduanKerosakan'); // Padam Aduan Kerosakan

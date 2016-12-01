@@ -580,3 +580,6 @@ function PadamAKP(id) {
 function CetakAKP(id) {
     OpenWindow("/cetak-aduan-kerosakan/"+id,'CetakAKP','top=10,left=10,width=650,height=500');
 }
+function ViewAKP(mon,year) {
+    window.location.href = "/aduan-kerosakan/"+mon+"/"+year;
+}

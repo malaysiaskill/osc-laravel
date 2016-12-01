@@ -85,4 +85,10 @@ class User extends Authenticatable
         $dppd = \App\PPD::where('kod_ppd',$this->kod_ppd)->first();
         return $dppd->ppd . " (".$this->kod_ppd.")";
     }
+
+    public function getNamaJpnAttribute()
+    {
+        $djpn = \App\JPN::where('kod_jpn',$this->kod_jpn)->first();
+        return $djpn->jpn . " (".$this->kod_jpn.")";
+    }
 }

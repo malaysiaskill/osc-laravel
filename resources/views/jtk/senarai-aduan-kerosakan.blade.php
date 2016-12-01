@@ -1,13 +1,379 @@
+@inject('jtkc', '\App\Http\Controllers\JTKController')
+
 @extends('master.app')
 @section('title', 'Senarai Aduan Kerosakan')
 @section('site.description', 'Senarai Aduan Kerosakan Peralatan ICT')
 
 @section('jquery')
 $('#data').DataTable({ responsive: true });
+
+@if (Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
+<?php
+
+# Daily
+if (Auth::user()->hasRole('jpn')) {
+    foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd) {
+        eval("\$daily_akp_".$ppd->kod_ppd." = array();");
+    }
+} else {
+    $daily_akp = array();
+}
+
+if (strlen($mon) != 0 && strlen($year) != 0)
+{
+    $mon = ltrim($mon, '0');
+    $TotalDays = cal_days_in_month(CAL_GREGORIAN, $mon, $year);
+    for ($i=1; $i <= $TotalDays; $i++) {
+        if (Auth::user()->hasRole('jpn')) {
+            foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd)
+            {
+                $TotalAKP = \App\AKP::where('kod_ppd',$ppd->kod_ppd)->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',$mon)->whereDay('tarikh_aduan',$i)->count();
+                eval("\$daily_akp_".$ppd->kod_ppd."[] = array(".$i.", intval(".$TotalAKP."));");
+            }
+        } else {
+            $TotalAKP = \App\AKP::where('kod_ppd',Auth::user()->kod_ppd)->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',$mon)->whereDay('tarikh_aduan',$i)->count();
+            $daily_akp[] = array($i, intval($TotalAKP));
+        }
+    }
+}
+else
+{
+    $TotalDays = cal_days_in_month(CAL_GREGORIAN, date('n'), date('Y'));
+    for ($i=1; $i <= $TotalDays; $i++) {
+        if (Auth::user()->hasRole('jpn')) {
+            foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd)
+            {
+                $TotalAKP = \App\AKP::where('kod_ppd',$ppd->kod_ppd)->whereYear('tarikh_aduan',date('Y'))->whereMonth('tarikh_aduan',date('n'))->whereDay('tarikh_aduan',$i)->count();
+                eval("\$daily_akp_".$ppd->kod_ppd."[] = array(".$i.", intval(".$TotalAKP."));");
+            }
+        } else {
+            $TotalAKP = \App\AKP::where('kod_ppd',Auth::user()->kod_ppd)->whereYear('tarikh_aduan',date('Y'))->whereMonth('tarikh_aduan',date('n'))->whereDay('tarikh_aduan',$i)->count();
+            $daily_akp[] = array($i, intval($TotalAKP));
+        }
+    }
+}
+
+if (Auth::user()->hasRole('jpn')) {
+    foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd) {
+        eval("\$stats_daily_".$ppd->kod_ppd." = json_encode(\$daily_akp_".$ppd->kod_ppd.");");
+    }
+} else {
+    $stats_daily = json_encode($daily_akp);
+}
+
+# Monthly
+$_month = array();
+if (Auth::user()->hasRole('jpn')) {
+    foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd) {
+        eval("\$monthly_akp_".$ppd->kod_ppd." = array();");
+    }
+} else {
+    $monthly_akp = array();
+}
+
+for ($i=1; $i <= 12; $i++) {
+    $_month[] = substr($jtkc->replaceMonth($i),0,3);
+    if (Auth::user()->hasRole('jpn')) {
+        foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd)
+        {
+            $TotalM_AKP = \App\AKP::where('kod_ppd',$ppd->kod_ppd)->whereYear('tarikh_aduan',date('Y'))->whereMonth('tarikh_aduan',$i)->count();
+            eval("\$monthly_akp_".$ppd->kod_ppd."[] = array(".$i.", intval(".$TotalM_AKP."));");
+        }
+    } else {
+        $TotalM_AKP = \App\AKP::where('kod_ppd',Auth::user()->kod_ppd)->whereYear('tarikh_aduan',date('Y'))->whereMonth('tarikh_aduan',$i)->count();
+        $monthly_akp[] = array(intval($i), intval($TotalM_AKP));
+    }
+}
+$MonthNames = json_encode($_month);
+if (Auth::user()->hasRole('jpn')) {
+    foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd) {
+        eval("\$stats_monthly_".$ppd->kod_ppd." = json_encode(\$monthly_akp_".$ppd->kod_ppd.");");
+    }
+} else {
+    $stats_monthly = json_encode($monthly_akp);
+}
+
+# Yearly
+$_year = array();
+if (Auth::user()->hasRole('jpn')) {
+    foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd) {
+        eval("\$yearly_akp_".$ppd->kod_ppd." = array();");
+    }
+} else {
+    $yearly_akp = array();
+}
+for ($i=1; $i <= 6; $i++) {
+    $last_year = (date('Y')-1);
+    if ($i == 1) {
+        $ayear = $last_year;
+    } else {
+        $ayear = ($last_year-1) + $i;
+    }
+    $_year[] = intval($ayear);
+
+    if (Auth::user()->hasRole('jpn')) {
+        foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd)
+        {
+            $TotalY_AKP = \App\AKP::where('kod_ppd',$ppd->kod_ppd)->whereYear('tarikh_aduan',$ayear)->count();
+            eval("\$yearly_akp_".$ppd->kod_ppd."[] = array(".$i.", intval(".$TotalY_AKP."));");
+        }
+    } else {
+        $TotalY_AKP = \App\AKP::where('kod_ppd',Auth::user()->kod_ppd)->whereYear('tarikh_aduan',$ayear)->count();
+        $yearly_akp[] = array(intval($i),intval($TotalY_AKP));
+    }
+}
+$YearNames = json_encode($_year);
+if (Auth::user()->hasRole('jpn')) {
+    foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd) {
+        eval("\$stats_yearly_".$ppd->kod_ppd." = json_encode(\$yearly_akp_".$ppd->kod_ppd.");");
+    }
+} else {
+    $stats_yearly = json_encode($yearly_akp);
+}
+?>
+var MonthNames = <?php echo $MonthNames ?>; var YearNames = <?php echo $YearNames ?>;
+var StatDaily = [
+    @if (Auth::user()->hasRole('jpn'))
+        @foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd)
+            {label: "{{ $ppd->ppd }} ({{ $ppd->kod_ppd }})", data: <?php eval("\$data = \$stats_daily_".$ppd->kod_ppd.";"); echo $data; ?> },
+        @endforeach
+    @else
+        {label: "Jumlah Aduan Kerosakan", color: "#5c90d2", data: {{ $stats_daily }} }
+    @endif
+];
+
+var StatMonthly = [
+    @if (Auth::user()->hasRole('jpn'))
+        @foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd)
+            {label: "{{ $ppd->ppd }} ({{ $ppd->kod_ppd }})", data: <?php eval("\$data = \$stats_monthly_".$ppd->kod_ppd.";"); echo $data; ?> },
+        @endforeach
+    @else
+        {label: "Jumlah Aduan Kerosakan", color: "#5c90d2", data: {{ $stats_monthly }} }
+    @endif
+];
+
+var StatYearly = [
+    @if (Auth::user()->hasRole('jpn'))
+        @foreach (\App\PPD::where('kod_jpn',Auth::user()->kod_jpn)->get() as $ppd)
+            {label: "{{ $ppd->ppd }} ({{ $ppd->kod_ppd }})", data: <?php eval("\$data = \$stats_yearly_".$ppd->kod_ppd.";"); echo $data; ?> },
+        @endforeach
+    @else
+        {label: "Jumlah Aduan Kerosakan", color: "#5c90d2", data: {{ $stats_yearly }} }
+    @endif
+];
+
+
+"use strict";
+
+function showTooltip(x, y, contents) {
+    jQuery('<div id="tooltip" class="tooltipflot">' + contents + '</div>').css({
+        position: 'absolute',
+        display: 'none',
+        top: y + 5,
+        left: x + 5
+    }).appendTo("body").fadeIn(200);
+}
+/* STATISTICS DAILY */
+var PlotDaily = jQuery.plot(jQuery("#DailyChart"),StatDaily,
+{
+    series: {
+        lines: {
+            show: false
+        },
+        splines: {
+            show: true,
+            tension: 0.4,
+            lineWidth: 1,
+            fill: 0
+        },
+        shadowSize: 0
+    },
+    points: {
+        show: true,
+    },
+    legend: {
+        container: '#DC_Legend',
+        noColumns: 3
+    },
+    grid: {
+        hoverable: true,
+        clickable: true,
+        borderColor: '#ddd',
+        borderWidth: 0,
+        labelMargin: 5,
+        backgroundColor: '#fff'
+    },
+    yaxis: {
+        label: "test",
+        min: 0,
+        color: '#eee'
+    },
+    xaxis: {
+        color: '#eee',
+        tickSize: 1,
+        tickDecimals: 0
+    }
+});
+var iDaily = null;
+jQuery("#DailyChart").bind("plothover",function(event,pos,item){
+    if (item) {
+        if (iDaily != item.dataIndex) {
+            iDaily = item.dataIndex;           
+            jQuery("#tooltip").remove();
+            var x = item.datapoint[0],y = item.datapoint[1];
+            showTooltip(item.pageX, item.pageY, y);
+        }
+    } else {
+        jQuery("#tooltip").remove();
+        iDaily = null;
+    }
+});
+jQuery("#DailyChart").bind("plotclick",function(event,pos,item){
+    /*alert("You clicked at " + item.datapoint[0]);*/
+});
+
+/* STATISTICS MONTHLY */
+var PlotMonthly = jQuery.plot(jQuery("#MonthlyChart"),StatMonthly,
+{
+    series: {
+        lines: {
+            show: false
+        },
+        splines: {
+            show: true,
+            tension: 0.4,
+            lineWidth: 1,
+            fill: 0
+        },
+        shadowSize: 0
+    },
+    points: {
+        show: true,
+    },
+    legend: {
+        container: '#MC_Legend',
+        noColumns: 3
+    },
+    grid: {
+        hoverable: true,
+        clickable: true,
+        borderColor: '#ddd',
+        borderWidth: 0,
+        labelMargin: 5,
+        backgroundColor: '#fff'
+    },
+    yaxis: {
+        min: 0,
+        color: '#eee'
+    },
+    xaxis: {
+        color: '#eee',
+        tickSize: 1,
+        tickFormatter: function(v) {
+            v = MonthNames[v-1];
+            return v;
+        }
+    }
+});
+var iMonthly = null;
+jQuery("#MonthlyChart").bind("plothover",function(event,pos,item){
+    if (item) {
+        if (iMonthly != item.dataIndex) {
+            iMonthly = item.dataIndex;           
+            jQuery("#tooltip").remove();
+            var x = item.datapoint[0],y = item.datapoint[1];
+            showTooltip(item.pageX, item.pageY, y);
+        }
+    } else {
+        jQuery("#tooltip").remove();
+        iMonthly = null;
+    }
+});
+jQuery("#MonthlyChart").bind("plotclick",function(event,pos,item){
+    /*alert("You clicked at " + item.datapoint[0]);*/
+});
+
+/* STATISTICS YEARLY */
+var PlotYearly = jQuery.plot(jQuery("#YearlyChart"),StatYearly,
+{
+    series: {
+        lines: {
+            show: false
+        },
+        splines: {
+            show: true,
+            tension: 0.4,
+            lineWidth: 1,
+            fill: 0
+        },
+        shadowSize: 0
+    },
+    points: {
+        show: true,
+    },
+    legend: {
+        container: '#YC_Legend',
+        noColumns: 3
+    },
+    grid: {
+        hoverable: true,
+        clickable: true,
+        borderColor: '#ddd',
+        borderWidth: 0,
+        labelMargin: 5,
+        backgroundColor: '#fff'
+    },
+    yaxis: {
+        min: 0,
+        color: '#eee'
+    },
+    xaxis: {
+        color: '#eee',
+        tickSize: 1,
+        tickFormatter: function(v) {
+            v = YearNames[v-1];
+            return v;
+        }
+    }
+});
+var iYearly = null;
+jQuery("#YearlyChart").bind("plothover",function(event,pos,item){
+    if (item) {
+        if (iYearly != item.dataIndex) {
+            iYearly = item.dataIndex;           
+            jQuery("#tooltip").remove();
+            var x = item.datapoint[0],y = item.datapoint[1];
+            showTooltip(item.pageX, item.pageY, y);
+        }
+    } else {
+        jQuery("#tooltip").remove();
+        iYearly = null;
+    }
+});
+jQuery("#YearlyChart").bind("plotclick",function(event,pos,item){
+    /*alert("You clicked at " + YearNames[item.datapoint[0]-1]);*/
+});
+
+
+
+@endif
+@endsection
+
+@section('js')
+@if (Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
+<script src="/assets/js/plugins/sparkline/jquery.sparkline.min.js"></script>
+<script src="/assets/js/plugins/easy-pie-chart/jquery.easypiechart.min.js"></script>
+<script src="/assets/js/plugins/chartjs/Chart.min.js"></script>
+<script src="/assets/js/plugins/flot/jquery.flot.min.js"></script>
+<script src="/assets/js/plugins/flot/jquery.flot.pie.min.js"></script>
+<script src="/assets/js/plugins/flot/jquery.flot.stack.min.js"></script>
+<script src="/assets/js/plugins/flot/jquery.flot.resize.min.js"></script>
+<script src="/assets/js/plugins/flot/jquery.flot.spline.min.js"></script>
+@endif
 @endsection
 
 @section('content')
-
+@if (!Auth::user()->hasRole('ppd') && !Auth::user()->hasRole('jpn'))
 <script type="text/javascript">
 function ClearAKP() {
     $('#_tarikh_aduan').val('');
@@ -41,6 +407,7 @@ function ClearAKP() {
     $('#_id').val('0');
 }
 </script>
+@endif
 
 <!-- Page Header -->
 <div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
@@ -56,16 +423,65 @@ function ClearAKP() {
 <div class="content padding-5-t bg-white border-b">
     <div class="push-15 push-10-t">
         <div class="row">
-            <div class="col-md-6">
-                <a class="btn btn-default" href="{{ url('/') }}">
-                    <i class="fa fa-home"></i>
-                </a>
-            </div>
-            <div class="col-md-6 text-right">
-                <button type="button" class="btn btn-primary" onclick="javascript:AddAKP();return false;">
-                    <i class="fa fa-plus"></i> Tambah Aduan
-                </button>
-            </div>
+            @if (Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
+                <div class="col-md-7">
+                    <a class="btn btn-default" href="{{ url('/') }}">
+                        <i class="fa fa-home"></i>
+                    </a>
+                    <a class="btn btn-primary" href="#" onclick="javascript:window.print();return false;">
+                        <i class="fa fa-print"></i> Cetak
+                    </a>
+                </div>
+                <div class="col-md-5 pull-right">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <select name="qmonth" id="qmonth" data-placeholder="Bulan" class="form-control js-select2">
+                                <option></option>
+                                <?php
+                                    for ($i = 1; $i <= 12; $i++) { 
+                                ?>
+                                @if (str_pad($i,2,'0',STR_PAD_LEFT) == date('m'))
+                                    <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}" selected>{{ $jtkc->replaceMonth($i) }}</option>
+                                @else
+                                    <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}">{{ $jtkc->replaceMonth($i) }}</option>
+                                @endif
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="col-xs-3">
+                            <select name="qyear" id="qyear" data-placeholder="Tahun" class="form-control js-select2">
+                                <option></option>
+                                <?php
+                                    for ($i = date('Y'); $i < date('Y')+10; $i++) { 
+                                ?>
+                                @if ($i == date('Y'))
+                                    <option value="{{ $i }}" selected>{{ $i }}</option>
+                                @else
+                                    <option value="{{ $i }}">{{ $i }}</option>
+                                @endif
+
+                                <?php } ?>
+                            </select>
+                        </div>
+                        <div class="col-xs-3">
+                            <button type="button" class="btn btn-primary" onclick="javascript:ViewAKP($('#qmonth').val(),$('#qyear').val());">
+                                <i class="fa fa-eye push-5-r"></i>Lihat
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            @else
+                <div class="col-md-6">
+                    <a class="btn btn-default" href="{{ url('/') }}">
+                        <i class="fa fa-home"></i>
+                    </a>
+                </div>
+                <div class="col-md-6 text-right">
+                    <button type="button" class="btn btn-primary" onclick="javascript:AddAKP();return false;">
+                        <i class="fa fa-plus"></i> Tambah Aduan
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 </div>
@@ -78,67 +494,183 @@ function ClearAKP() {
             <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
             <i class="fa fa-exclamation push-5-r text-danger"></i> Rekod telah wujud dalam pangkalan data.
         </div>
-    @endif                            
+    @endif
     <div class="row">
-        <div class="col-xs-12">
-            <div id="_users" class="block block-themed block-rounded push-5">
-                
-                <div class="block-content">
-                    <table id="data" class="table table-striped table-bordered responsive h6">
-                        <thead>
-                            <tr>
-                                <th class="text-center">Bil</th>
-                                <th class="text-center">Tarikh Aduan</th>
-                                <th class="text-center">No. Siri Aduan</th>
-                                <th class="text-center">Nama Pengadu</th>
-                                <th class="text-center">Status</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php $i = 0; ?>
-                            @foreach ($akp as $akpd)
-                            <?php $i++; ?>
-                            <tr>
-                                <td class="text-center">{{ $i }}.</td>
-                                <td class="text-center">
-                                    {{ $akpd->tarikh_aduan_formatted }}
-                                </td>
-                                <td class="text-center">
-                                    <a href="#" onclick="javascript:EditAKP('{{ $akpd->id }}');return false;">
-                                        <div class="font-w300 text-primary">
-                                            {{ $akpd->no_siri_akp }}
-                                        </div>
-                                    </a>
-                                </td>
-                                <td class="text-left">
-                                    {{ $akpd->nama }}
-                                </td>
-                                <td class="text-center">
-                                    {{ $akpd->status_aduan_view }}
-                                </td>
-                                <td class="text-center" width="150">
-                                    <button id="btn_print" class="btn btn-sm btn-primary" type="button" onClick="javascript:CetakAKP('{{ $akpd->id }}');return false;">
-                                        <i class="fa fa-print push-5-r"></i>Cetak
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit" onclick="javascript:EditAKP('{{ $akpd->id }}');return false;">
-                                        <i class="fa fa-pencil"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Padam" onclick="javascript:PadamAKP('{{ $akpd->id }}');return false;">
-                                        <i class="fa fa-trash-o"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+        @if (Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
+            <div class="col-xs-12">
+                <div class="block block-bordered">
+                    <div class="block-header bg-gray-lighter">
+                        @if (Auth::user()->hasRole('jpn'))
+                            <h3 class="block-title"><i class="fa fa-line-chart push-10-r"></i>Statistik Aduan Kerosakan - <b>{{ Auth::user()->nama_jpn }}</b></h3>
+                        @else
+                            <h3 class="block-title"><i class="fa fa-line-chart push-10-r"></i>Statistik Aduan Kerosakan - <b>{{ Auth::user()->nama_ppd }}</b></h3>
+                        @endif
+                    </div>
+                    <div class="block-content block-content-full">
+                        @if (strlen($mon) != 0 && strlen($year) != 0)
+                            <h5 class="push-5"><b>Harian ({{ $jtkc->replaceMonth($mon) }}, {{ $year }})</b></h5>
+                        @else
+                            <h5 class="push-5"><b>Harian ({{ $jtkc->replaceMonth(date('m')) }}, {{ date('Y') }})</b></h5>
+                        @endif
+                        <div id="DC_Legend" class="flotLegend"></div>
+                        <div id="DailyChart" class="flotGraph"></div>
+                    </div>
+                    @if (strlen($mon) == 0 && strlen($year) == 0)
+                        <hr class="remove-margin">
+                        <div class="block-content block-content-full">
+                            <h5 class="push-5"><b>Bulanan ({{ date('Y') }})</b></h5>
+                            <div id="MC_Legend" class="flotLegend"></div>
+                            <div id="MonthlyChart" class="flotGraph"></div>
+                        </div>
+                        <hr class="remove-margin">
+                        <div class="block-content block-content-full">
+                            <h5 class="push-5"><b>Tahunan</b></h5>
+                            <div id="YC_Legend" class="flotLegend"></div>
+                            <div id="YearlyChart" class="flotGraph"></div>
+                        </div>
+                    @endif
                 </div>
             </div>
-        </div>
+
+            @if (strlen($mon) != 0 && strlen($year) != 0)
+            <div class="col-xs-12">
+                <div class="block block-themed block-rounded push-5">
+                    <div class="block-content">
+                        <table id="data" class="table table-striped table-bordered responsive h6">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Bil</th>
+                                    <th class="text-center">Tarikh Aduan</th>
+                                    <th class="text-center">No. Siri Aduan</th>
+                                    @if (Auth::user()->hasRole('jpn'))
+                                        <th class="text-center">PPD</th>
+                                    @endif
+                                    <th class="text-center">Sekolah</th>
+                                    <th class="text-center">Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $i = 0; ?>
+                                <?php $i++; ?>                                
+                                @if (Auth::user()->hasRole('jpn'))
+                                    @foreach (\App\AKP::where('kod_jpn',Auth::user()->kod_jpn)->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',ltrim($mon,'0'))->orderBy('id','desc')->get() as $akpd)
+                                    <tr>
+                                        <td class="text-center">{{ $i }}.</td>
+                                        <td class="text-center">
+                                            {{ $akpd->tarikh_aduan_formatted }}
+                                        </td>
+                                        <td class="text-center">                                        
+                                            {{ $akpd->no_siri_akp }}                                        
+                                        </td>
+                                        <td class="text-center">
+                                            {{ $akpd->user->nama_ppd }}
+                                        </td>                                        
+                                        <td class="text-center">
+                                            {{ $akpd->user->jabatan->nama_sekolah_detail_cetakan }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ $akpd->status_aduan_view }}
+                                        </td>
+                                        <td class="text-center" width="150">
+                                            <button id="btn_print" class="btn btn-sm btn-primary" type="button" onClick="javascript:CetakAKP('{{ $akpd->id }}');return false;">
+                                                <i class="fa fa-print push-5-r"></i>Cetak
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @else
+                                    @foreach (\App\AKP::where('kod_ppd',Auth::user()->kod_ppd)->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',ltrim($mon,'0'))->orderBy('id','desc')->get() as $akpd)
+                                    <tr>
+                                        <td class="text-center">{{ $i }}.</td>
+                                        <td class="text-center">
+                                            {{ $akpd->tarikh_aduan_formatted }}
+                                        </td>
+                                        <td class="text-center">                                        
+                                            {{ $akpd->no_siri_akp }}                                        
+                                        </td>
+                                        <td class="text-center">
+                                            {{ $akpd->user->jabatan->nama_sekolah_detail_cetakan }}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ $akpd->status_aduan_view }}
+                                        </td>
+                                        <td class="text-center" width="150">
+                                            <button id="btn_print" class="btn btn-sm btn-primary" type="button" onClick="javascript:CetakAKP('{{ $akpd->id }}');return false;">
+                                                <i class="fa fa-print push-5-r"></i>Cetak
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            @endif
+
+        @else
+            <div class="col-xs-12">
+                <div class="block block-themed block-rounded push-5">
+                    <div class="block-content">
+                        <table id="data" class="table table-striped table-bordered responsive h6">
+                            <thead>
+                                <tr>
+                                    <th class="text-center">Bil</th>
+                                    <th class="text-center">Tarikh Aduan</th>
+                                    <th class="text-center">No. Siri Aduan</th>
+                                    <th class="text-center">Nama Pengadu</th>
+                                    <th class="text-center">Status</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php $i = 0; ?>
+                                @foreach ($akp as $akpd)
+                                <?php $i++; ?>
+                                <tr>
+                                    <td class="text-center">{{ $i }}.</td>
+                                    <td class="text-center">
+                                        {{ $akpd->tarikh_aduan_formatted }}
+                                    </td>
+                                    <td class="text-center">
+                                        <a href="#" onclick="javascript:EditAKP('{{ $akpd->id }}');return false;">
+                                            <div class="font-w300 text-primary">
+                                                {{ $akpd->no_siri_akp }}
+                                            </div>
+                                        </a>
+                                    </td>
+                                    <td class="text-left">
+                                        {{ $akpd->nama }}
+                                    </td>
+                                    <td class="text-center">
+                                        {{ $akpd->status_aduan_view }}
+                                    </td>
+                                    <td class="text-center" width="150">
+                                        <button id="btn_print" class="btn btn-sm btn-primary" type="button" onClick="javascript:CetakAKP('{{ $akpd->id }}');return false;">
+                                            <i class="fa fa-print push-5-r"></i>Cetak
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-primary" data-toggle="tooltip" title="Edit" onclick="javascript:EditAKP('{{ $akpd->id }}');return false;">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger" data-toggle="tooltip" title="Padam" onclick="javascript:PadamAKP('{{ $akpd->id }}');return false;">
+                                            <i class="fa fa-trash-o"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 </div>
 <!-- END Page Content -->
 
+@if (!Auth::user()->hasRole('ppd') && !Auth::user()->hasRole('jpn'))
 <!-- AKP Dialog //-->
 <div id="AKPDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -337,4 +869,5 @@ function ClearAKP() {
         </div>
     </div>
 </div>
+@endif
 @endsection
