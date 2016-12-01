@@ -163,6 +163,11 @@
                                 </li>
                                 @endif
                                 <li>
+                                    <a class="{{ (Request::path()=='aduan-kerosakan') ? 'active':'' }}" href="{{ url('/aduan-kerosakan') }}">
+                                        <i class="fa fa-wrench"></i><span class="sidebar-mini-hide">Aduan Kerosakan</span>
+                                    </a>
+                                </li>
+                                <li>
                                     <a class="{{ (Request::path()=='dev-team') ? 'active':'' }}" href="{{ url('/dev-team') }}">
                                         <i class="fa fa-users"></i><span class="sidebar-mini-hide">Development Team</span>
                                     </a>

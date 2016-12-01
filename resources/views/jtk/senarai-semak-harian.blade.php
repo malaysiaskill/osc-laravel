@@ -447,7 +447,7 @@ function ClearSemakan() {
                                         @endif
                                     </td>
                                     <td>
-                                        <textarea id="_catatan_{{ $ss->id }}" name="_catatan_{{ $ss->id }}" class="form-control"></textarea>
+                                        <textarea id="_catatan_{{ $ss->id }}" name="_catatan_{{ $ss->id }}" class="form-control input-sm"></textarea>
                                     </td>
                                 </tr>
                                 @endforeach

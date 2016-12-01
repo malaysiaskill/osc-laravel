@@ -20,7 +20,8 @@ Template Sistem (Web-Based) & Platform utama sistem bersepadu bagi Kumpulan DEV-
 * Modul SMART Team yakni pengurusan SMART Team serta aktiviti.
 * Aktiviti Ad-Hoc (Selain daripada SMART Team)
 * Modul FORUM
-* Modul Senarai Semak Harian
+* Modul Senarai Semak Harian - 29/11/2016
+* Modul Aduan Kerosakan Peralatan ICT (AKP) - 01/12/2016
 
 **Plug-ins yang telah dimasukkan antaranya ialah :**
 

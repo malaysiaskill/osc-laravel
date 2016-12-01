@@ -91,6 +91,18 @@
                         </div>
                         @endif
 
+                        <!-- Aduan Kerosakan -->
+                        <div class="col-sm-6 col-md-3">
+                            <a class="block block-bordered block-rounded block-link-hover3" href="{{ url('/aduan-kerosakan') }}">
+                                <div class="block-content block-content-full text-center">
+                                    <div>
+                                        <i class="fa fa-wrench fa-3x"></i>
+                                    </div>
+                                    <div class="text-uppercase h5 font-w500 push-15-t push-5">Aduan Kerosakan</div>
+                                </div>
+                            </a>
+                        </div>
+
                         <!-- Development Team -->
                         <div class="col-sm-6 col-md-3">
                             <a class="block block-bordered block-rounded block-link-hover3" href="{{ url('/dev-team') }}">

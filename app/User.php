@@ -79,4 +79,10 @@ class User extends Authenticatable
             return false;
         }
     }
+
+    public function getNamaPpdAttribute()
+    {
+        $dppd = \App\PPD::where('kod_ppd',$this->kod_ppd)->first();
+        return $dppd->ppd . " (".$this->kod_ppd.")";
+    }
 }

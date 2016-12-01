@@ -121,3 +121,16 @@ Route::post('/delete-senarai-semakan/{id}', 'JTKController@PadamSenaraiSemakan')
 Route::post('/save-senarai-semakan', 'JTKController@SaveSenaraiSemak'); // Save Senarai Semak Harian
 Route::post('/edit-senarai-semak-harian', 'JTKController@EditSenaraiSemakHarian'); // Edit Senarai Semak Harian
 Route::get('/cetak-senarai-semak-harian/{id}', 'JTKController@CetakSenaraiSemakHarian'); // Cetak Senarai Semak Harian
+
+/**
+
+	ADUAN KEROSAKAN
+
+*/
+
+Route::get('/aduan-kerosakan', 'JTKController@AduanKerosakan'); // Senarai Aduan Kerosakan
+Route::post('/aduan-kerosakan', 'JTKController@SaveAduanKerosakan'); // Save Aduan Kerosakan
+Route::post('/get-latest-nosiriaduan', 'JTKController@getLatestNoSiriAduan'); // Dapatkan No Siri Aduan Terkini
+Route::post('/delete-aduan-kerosakan', 'JTKController@PadamAduanKerosakan'); // Padam Aduan Kerosakan
+Route::post('/edit-aduan-kerosakan', 'JTKController@EditAduanKerosakan'); // Edit Aduan Kerosakan
+Route::get('/cetak-aduan-kerosakan/{id}', 'JTKController@CetakAduanKerosakan'); // Cetak Aduan Kerosakan

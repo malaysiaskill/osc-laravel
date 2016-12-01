@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 use DB;
 use Dompdf\Dompdf;
 use Dompdf\Options;
@@ -24,6 +25,8 @@ use App\GambarAktivitiSmartTeam;
 use App\AktivitiAdhoc;
 use App\SenaraiSemakan;
 use App\SenaraiSemakHarian;
+use App\AKP;
+use App\KategoriKerosakan;
 
 class JTKController extends Controller
 {
@@ -50,6 +53,25 @@ class JTKController extends Controller
         $this->middleware('role:jpn-ppd',[
             'only' => ['SenaraiProjekAll']
         ]);
+    }
+
+    public function replaceDay($day) {
+        $day = strtolower($day);
+        if ($day == 'monday') {
+            return 'Isnin';
+        } else if ($day == 'tuesday') {
+            return 'Selasa';
+        } else if ($day == 'wednesday') {
+            return 'Rabu';
+        } else if ($day == 'thursday') {
+            return 'Khamis';
+        } else if ($day == 'friday') {
+            return 'Jumaat';
+        } else if ($day == 'saturday') {
+            return 'Sabtu';
+        } else {
+            return 'Ahad';
+        }
     }
 
     /**
@@ -1319,22 +1341,409 @@ class JTKController extends Controller
         }
     }
 
-    public function replaceDay($day) {
-        $day = strtolower($day);
-        if ($day == 'monday') {
-            return 'Isnin';
-        } else if ($day == 'tuesday') {
-            return 'Selasa';
-        } else if ($day == 'wednesday') {
-            return 'Rabu';
-        } else if ($day == 'thursday') {
-            return 'Khamis';
-        } else if ($day == 'friday') {
-            return 'Jumaat';
-        } else if ($day == 'saturday') {
-            return 'Sabtu';
+    /**
+
+        ADUAN KEROSAKAN
+
+    */
+    public function getLatestNoSiriAduan() {
+        $akp = AKP::where('user_id',Auth::user()->id)->whereYear('tarikh_aduan',date('Y'))->orderBy('id','desc')->first();
+        echo "$('#_no_siri_aduan').val('".($akp->no_siri_aduan + 1)."');";
+        echo "$('#_tarikh_aduan').val('".date('d/m/Y')."');";
+    }
+    public function AduanKerosakan()
+    {
+        $akp = AKP::where('user_id',Auth::user()->id)->get();
+
+        return view('jtk.senarai-aduan-kerosakan',[
+            'akp' => $akp,
+            'error' => $this->req->error
+        ]);
+    }
+    public function SaveAduanKerosakan(Request $r)    
+    {
+        $kk = KategoriKerosakan::where('parent_id','<>','0')->get();
+        $kategori_kerosakan = array();
+        foreach ($kk as $dbkk)
+        {
+            $kkid = $dbkk->id;
+            eval("\$_kerosakan = \$r->_kerosakan_".$kkid.";");
+            eval("\$_lain = \$r->_lainlain_".$kkid.";");
+
+            if ($_lain != NULL) {
+                $kategori_kerosakan[] = array(
+                    '_id' => $kkid,
+                    '_kerosakan' => $_kerosakan,
+                    '_lain' => $_lain
+                );
+            } else {
+                $kategori_kerosakan[] = array(
+                    '_id' => $kkid,
+                    '_kerosakan' => $_kerosakan
+                );
+            }
+        }        
+        $kategori_kerosakan = json_encode($kategori_kerosakan);
+
+        if ($r->_id == '0') {
+            $tarikh_aduan = $r->_tarikh_aduan;
+            $db_tarikh_aduan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_aduan)->format('Y-m-d');
+            $nosiriaduan = $r->_no_siri_aduan;
         } else {
-            return 'Ahad';
+            $dbta = DB::table('aduan_kerosakan')->where('id',$r->_id)->first();
+            $db_tarikh_aduan = $dbta->tarikh_aduan;
+            $nosiriaduan = $dbta->no_siri_aduan;
+        }
+
+        // Get year
+        $dt = explode('-', $db_tarikh_aduan);
+        if (strlen($r->_tarikh_pemeriksaan) != 0) {
+            $tarikh_pemeriksaan = $r->_tarikh_pemeriksaan;
+            $tarikh_pemeriksaan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_pemeriksaan)->format('Y-m-d');
+        } else {
+            $tarikh_pemeriksaan = null;
+        }
+        if (strlen($r->_tarikh_selesai) != 0) {
+            $tarikh_selesai = $r->_tarikh_selesai;
+            $tarikh_selesai = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_selesai)->format('Y-m-d');
+        } else {
+            $tarikh_selesai = null;
+        }
+
+        // Search
+        if (AKP::where('user_id',Auth::user()->id)->whereYear('tarikh_aduan',$dt[0])->where('no_siri_aduan',$nosiriaduan)->count() == 1)
+        {
+            if ($r->_id == '0')
+            {
+                return redirect('/aduan-kerosakan/?error=already_exists');
+            }
+            else
+            {
+                // Update
+                $akp = AKP::find($r->_id);
+                $akp->nama = $r->_nama;
+                $akp->email = $r->_email;
+                $akp->jawatan = $r->_jawatan;
+                $akp->no_telefon = $r->_no_telefon;
+                $akp->lokasi_peralatan = $r->_lokasi_peralatan;
+                $akp->no_dhm = $r->_no_dhm;
+                $akp->kategori_kerosakan = $kategori_kerosakan;
+                $akp->kategori_aduan = $r->_kategori_aduan;
+                $akp->keterangan_kerosakan = $r->_keterangan_kerosakan;
+                $akp->laporan_tindakan = $r->_laporan_tindakan;
+                $akp->tarikh_pemeriksaan = $tarikh_pemeriksaan;
+                $akp->status_aduan = $r->_status_aduan;
+                $akp->tarikh_selesai = $tarikh_selesai;
+                $akp->hakmilik_peralatan = $r->_hakmilik;
+                $akp->save();
+            }
+        }
+        else
+        {
+            // Insert
+            $akp = new AKP;
+            $akp->user_id = Auth::user()->id;
+            $akp->no_siri_aduan = $r->_no_siri_aduan;
+            $akp->tarikh_aduan = $db_tarikh_aduan;
+            $akp->nama = $r->_nama;
+            $akp->email = $r->_email;
+            $akp->jawatan = $r->_jawatan;
+            $akp->no_telefon = $r->_no_telefon;
+            $akp->lokasi_peralatan = $r->_lokasi_peralatan;
+            $akp->no_dhm = $r->_no_dhm;
+            $akp->kategori_kerosakan = $kategori_kerosakan;
+            $akp->kategori_aduan = $r->_kategori_aduan;
+            $akp->keterangan_kerosakan = $r->_keterangan_kerosakan;
+            $akp->laporan_tindakan = $r->_laporan_tindakan;
+            $akp->tarikh_pemeriksaan = $tarikh_pemeriksaan;
+            $akp->status_aduan = $r->_status_aduan;
+            $akp->tarikh_selesai = $tarikh_selesai;
+            $akp->hakmilik_peralatan = $r->_hakmilik;
+            $akp->created_at = Carbon::now();
+            $akp->save();
+        }
+
+        return redirect('/aduan-kerosakan');
+    }
+    public function PadamAduanKerosakan(Request $r)
+    {
+        $akp = AKP::destroy($r->id);
+        echo "SweetAlert('success','Berjaya Dipadam !','Rekod aduan kerosakan telah berjaya dipadam !',\"window.location.href='/aduan-kerosakan';\");";
+    }
+    public function EditAduanKerosakan(Request $r)
+    {
+        $id = $r->id;
+        $akp = AKP::find($id);
+
+        $keterangan_kerosakan = addslashes(html_entity_decode($akp->keterangan_kerosakan,ENT_QUOTES));
+        $keterangan_kerosakan = str_replace('<br />', '\n', nl2br($keterangan_kerosakan));
+        $keterangan_kerosakan = trim(preg_replace('/\s\s+/', '', $keterangan_kerosakan));
+
+        $laporan_tindakan = addslashes(html_entity_decode($akp->laporan_tindakan,ENT_QUOTES));
+        $laporan_tindakan = str_replace('<br />', '\n', nl2br($laporan_tindakan));
+        $laporan_tindakan = trim(preg_replace('/\s\s+/', '', $laporan_tindakan));
+
+        $kk = json_decode($akp->kategori_kerosakan);
+
+        echo "$('#_id').val('$id');";
+        echo "$('#btn_print').removeClass('hide');";
+        echo "$('#AKPDialog').modal('show');\n";
+
+        echo "$('#_tarikh_aduan').val('".$akp->tarikh_aduan_formatted."');";
+        echo "$('#_tarikh_aduan').prop('disabled','disabled');";
+        echo "$('#_no_siri_aduan').val('".$akp->no_siri_aduan."');";
+        echo "$('#_no_siri_aduan').prop('disabled','disabled');";
+        echo "$('#_nama').val('".$akp->nama."');";
+        echo "$('#_email').val('".$akp->email."');";
+        echo "$('#_jawatan').val('".$akp->jawatan."');";
+        echo "$('#_no_telefon').val('".$akp->no_telefon."');";
+        echo "$('#_lokasi_peralatan').val('".$akp->lokasi_peralatan."');";
+        echo "$('#_no_dhm').val('".$akp->no_dhm."');";
+        echo "$('#_keterangan_kerosakan').val('".$keterangan_kerosakan."');";
+        echo "$('#_laporan_tindakan').val('".$laporan_tindakan."');";
+        echo "$('#_tarikh_pemeriksaan').val('".$akp->tarikh_pemeriksaan_formatted."');";
+        echo "$('#_tarikh_selesai').val('".$akp->tarikh_selesai_formatted."');";
+        
+        echo "$('input[name=\"_hakmilik\"]').filter('[value=\"".$akp->hakmilik_peralatan."\"]').prop('checked', true);";
+        echo "$('input[name=\"_status_aduan\"]').filter('[value=\"".$akp->status_aduan."\"]').prop('checked', true);";
+        echo "$('input[name=\"_kategori_aduan\"]').filter('[value=\"".$akp->kategori_aduan."\"]').prop('checked', true);";
+        
+        if (count($kk) > 0)
+        {
+            foreach ($kk as $vl)
+            {
+                $kkid = $vl->_id;
+
+                if ($vl->_kerosakan != null) {
+                    echo "$('input[name=\"_kerosakan_$kkid\"]').filter('[value=\"$kkid\"]').prop('checked', true);";
+                } else {
+                    echo "$('input[name=\"_kerosakan_$kkid\"]').filter('[value=\"$kkid\"]').prop('checked', false);";
+                }
+
+                if (!empty($vl->_lain)) {
+                    echo "$('input[name=\"_lainlain_$kkid\"]').val('".$vl->_lain."');";
+                }
+            }
         }
     }
+    public function CetakAduanKerosakan($id)
+    {
+        $akp = AKP::find($id);
+
+        if ($akp->user_id != Auth::user()->id)
+        {
+            echo "<center><h3>Akses Disekat !</h3></center>";
+        }
+        else
+        {
+            $usr = User::find($akp->user_id);
+            $nama_sekolah = $usr->jabatan->nama_sekolah_detail_cetakan;
+            $jawatan = $usr->greds->gred_title_cetakan;
+
+            /*$keterangan_kerosakan = addslashes(html_entity_decode($akp->keterangan_kerosakan,ENT_QUOTES));
+            $keterangan_kerosakan = str_replace('<br />', '\n', nl2br($keterangan_kerosakan));
+            $keterangan_kerosakan = trim(preg_replace('/\s\s+/', '', $keterangan_kerosakan));
+
+            $laporan_tindakan = addslashes(html_entity_decode($akp->laporan_tindakan,ENT_QUOTES));
+            $laporan_tindakan = str_replace('<br />', '\n', nl2br($laporan_tindakan));
+            $laporan_tindakan = trim(preg_replace('/\s\s+/', '', $laporan_tindakan));*/
+
+            $kk = json_decode($akp->kategori_kerosakan);
+
+            /*echo "$('#_tarikh_aduan').val('".$akp->tarikh_aduan_formatted."');";
+            echo "$('#_tarikh_aduan').prop('disabled','disabled');";
+            echo "$('#_no_siri_aduan').val('".$akp->no_siri_aduan."');";
+            echo "$('#_no_siri_aduan').prop('disabled','disabled');";
+            echo "$('#_nama').val('".$akp->nama."');";
+            echo "$('#_email').val('".$akp->email."');";
+            echo "$('#_jawatan').val('".$akp->jawatan."');";
+            echo "$('#_no_telefon').val('".$akp->no_telefon."');";
+            echo "$('#_lokasi_peralatan').val('".$akp->lokasi_peralatan."');";
+            echo "$('#_no_dhm').val('".$akp->no_dhm."');";
+            echo "$('#_keterangan_kerosakan').val('".$keterangan_kerosakan."');";
+            echo "$('#_laporan_tindakan').val('".$laporan_tindakan."');";
+            echo "$('#_tarikh_pemeriksaan').val('".$akp->tarikh_pemeriksaan_formatted."');";
+            echo "$('#_tarikh_selesai').val('".$akp->tarikh_selesai_formatted."');";
+            
+            echo "$('input[name=\"_hakmilik\"]').filter('[value=\"".$akp->hakmilik_peralatan."\"]').prop('checked', true);";
+            echo "$('input[name=\"_status_aduan\"]').filter('[value=\"".$akp->status_aduan."\"]').prop('checked', true);";
+            echo "$('input[name=\"_kategori_aduan\"]').filter('[value=\"".$akp->kategori_aduan."\"]').prop('checked', true);";
+            
+            /*if (count($kk) > 0)
+            {
+                foreach ($kk as $vl)
+                {
+                    $kkid = $vl->_id;
+
+                    if ($vl->_kerosakan != null) {
+                        echo "$('input[name=\"_kerosakan_$kkid\"]').filter('[value=\"$kkid\"]').prop('checked', true);";
+                    } else {
+                        echo "$('input[name=\"_kerosakan_$kkid\"]').filter('[value=\"$kkid\"]').prop('checked', false);";
+                    }
+
+                    if (!empty($vl->_lain)) {
+                        echo "$('input[name=\"_lainlain_$kkid\"]').val('".$vl->_lain."');";
+                    }
+                }
+            }*/
+
+
+
+            $datakk = '';
+            foreach (KategoriKerosakan::where('parent_id','0')->get() as $_kk)
+            {
+                $datakk .= '<table width="95%" border="0" align="center" cellpadding="3" cellspacing="0">
+                    <tr>
+                      <td colspan="4"><b><u>'.$_kk->kategori.'</u></b></td>
+                    </tr>';
+                $i = 1;
+                $lain = '';
+                foreach (KategoriKerosakan::where('parent_id',$_kk->id)->get() as $_skk)
+                {
+
+                    foreach ($kk as $vl)
+                    {
+                        $kkid = $vl->_id;
+
+                        if ($kkid == $_skk->id)
+                        {
+                            if ($vl->_kerosakan != null) {
+                                $bgc = "#666666";
+                            } else {
+                                $bgc = "#F1F1F1";                                
+                            }
+
+                            if (!empty($vl->_lain)) {
+                                $lain = "(<i>".$vl->_lain."</i>)";
+                            }
+
+                            break;
+                        }                        
+                    }
+
+
+                    if ($i == 1) {
+                        $datakk .= '<tr>';
+                    }
+
+                    if (strlen($lain) > 0) {
+                        $datakk .= '<td width="150">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td width="10" bgcolor="'.$bgc.'">&nbsp;</td>
+                                <td width="8">&nbsp;</td>
+                                <td>'.$_skk->kategori.' '.$lain.'</td>
+                              </tr>
+                            </table>
+                        </td>';
+                    } else {
+                        $datakk .= '<td width="150">
+                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                              <tr>
+                                <td width="10" bgcolor="'.$bgc.'">&nbsp;</td>
+                                <td width="8">&nbsp;</td>
+                                <td>'.$_skk->kategori.'</td>
+                              </tr>
+                            </table>
+                        </td>';
+                    }
+
+                    if ($i == 3) {
+                        $datakk .= '</tr>';
+                        $i = 0;
+                    }
+
+                    $i++;            
+                }                
+
+                $datakk .= '<tr>
+                      <td colspan="4" height="2"></td>
+                    </tr>
+                </table>';
+            }
+
+            if (strtoupper($akp->hakmilik_peralatan) == 'KERAJAAN') {
+                $bgck = '#666666';
+                $bgcp = '#F1F1F1';
+            } else if (strtoupper($akp->hakmilik_peralatan) == 'PERSENDIRIAN') {
+                $bgck = '#F1F1F1';
+                $bgcp = '#666666';
+            } else {
+                $bgck = '#F1F1F1';
+                $bgcp = '#F1F1F1';
+            }
+
+            if (strtoupper($akp->kategori_aduan) == 'BIASA') {
+                $bgckab = '#666666';
+                $bgckas = '#F1F1F1';
+            } else if (strtoupper($akp->kategori_aduan) == 'SEGERA') {
+                $bgckab = '#F1F1F1';
+                $bgckas = '#666666';
+            } else {
+                $bgckab = '#F1F1F1';
+                $bgckas = '#F1F1F1';
+            }
+
+            if (strtoupper($akp->status_aduan) == 'SELESAI') {
+                $bgc_sa_s = '#666666';
+                $bgc_sa_ts = '#F1F1F1';
+                $bgc_sa_hkp = '#F1F1F1';
+            } else if (strtoupper($akp->status_aduan) == 'TIDAK SELESAI') {
+                $bgc_sa_s = '#F1F1F1';
+                $bgc_sa_ts = '#666666';
+                $bgc_sa_hkp = '#F1F1F1';
+            } else if (strtoupper($akp->status_aduan) == 'HANTAR KE PEMBEKAL') {
+                $bgc_sa_s = '#F1F1F1';
+                $bgc_sa_ts = '#F1F1F1';
+                $bgc_sa_hkp = '#666666';
+            } else {
+                $bgc_sa_s = '#F1F1F1';
+                $bgc_sa_ts = '#F1F1F1';
+                $bgc_sa_hkp = '#F1F1F1';
+            }
+
+            $ds = DIRECTORY_SEPARATOR;
+            $t = new Template;
+            $t->Load(public_path().$ds."cetakan".$ds."aduan-kerosakan.tpl");
+            $t->Replace('PUBLIC_PATH', public_path().$ds."img".$ds);
+            $t->Replace('NAMA_SEKOLAH', $nama_sekolah);
+            $t->Replace('JAWATAN', $jawatan);
+            $t->Replace('NAMA_JURUTEKNIK', strtoupper($usr->name));
+            $t->Replace('PPD', $usr->nama_ppd);
+
+            // Data
+            $t->Replace('NO_AKP', strtoupper($akp->no_siri_akp));
+            $t->Replace('NAMA', strtoupper($akp->nama));
+            $t->Replace('EMAIL', $akp->email);
+            $t->Replace('DJAWATAN', strtoupper($akp->jawatan));
+            $t->Replace('NO_TELEFON', strtoupper($akp->no_telefon));
+            $t->Replace('LOKASI_PERALATAN', strtoupper($akp->lokasi_peralatan));
+            $t->Replace('NO_DHM', strtoupper($akp->no_dhm));
+            $t->Replace('DATA_KK', $datakk);
+            $t->Replace('KETERANGAN_KEROSAKAN', nl2br($akp->keterangan_kerosakan));
+            $t->Replace('bgc_hakmilik_k', $bgck);
+            $t->Replace('bgc_hakmilik_p', $bgcp);
+            $t->Replace('bgc_ka_b', $bgckab);
+            $t->Replace('bgc_ka_s', $bgckas);
+            $t->Replace('LAPORAN_TINDAKAN', nl2br($akp->laporan_tindakan));
+            $t->Replace('bgc_sa_s', $bgc_sa_s);
+            $t->Replace('bgc_sa_ts', $bgc_sa_ts);
+            $t->Replace('bgc_sa_hkp', $bgc_sa_hkp);
+            $t->Replace('TARIKH_PEMERIKSAAN', $akp->tarikh_pemeriksaan_formatted);
+            $t->Replace('TARIKH_SELESAI', $akp->tarikh_selesai_formatted);
+
+            $_output = $t->Evaluate();
+
+            $options = new Options();
+            $options->set('defaultFont', 'Century Gothic');
+            $dpdf = new Dompdf($options);
+            $dpdf->loadHtml($_output);
+            $dpdf->setPaper('A4', 'portrait');
+            $dpdf->render();
+            $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
+            $dpdf->add_info('Title','Aduan Kerosakan - '.str_replace('/', '-', $akp->no_siri_akp));
+            $dpdf->stream("Aduan-Kerosakan_".str_replace('/', '-', $akp->no_siri_akp),array('Attachment'=>0));
+        }
+    }
+    
 }

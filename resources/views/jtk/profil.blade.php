@@ -58,7 +58,7 @@
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('assets/img/photos/photo3@2x.jpg');">
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
     <div class="push-50-t push-15">
         <h1 class="h2 text-white animated fadeInUp">
             <i class="fa fa-user push-15-r"></i> Profil

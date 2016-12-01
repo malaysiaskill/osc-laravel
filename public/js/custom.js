@@ -536,3 +536,47 @@ function CetakSSH() {
 function ViewSSH(mon,year) {
     window.location.href = "/senarai-semak-harian/"+mon+"/"+year;
 }
+
+/* Aduan Kerosakan */
+function AddAKP() {
+    $('#AKPDialog').modal();
+
+    var ajax = new sack();
+    ajax.requestFile = "/get-latest-nosiriaduan";
+    Ajx(ajax);
+
+    setTimeout(function(){
+        $('#_nama').focus();
+    },500);
+}
+function EditAKP(id) {
+    ClearAKP();
+    var ajax = new sack();
+    ajax.requestFile = "/edit-aduan-kerosakan";
+    ajax.setVar('id',id);
+    Ajx(ajax);
+}
+function PadamAKP(id) {
+    swal({
+        title: "Padam ?",
+        text: "Anda pasti untuk memadam rekod ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/delete-aduan-kerosakan";
+        ajax.setVar('id',id);
+        Ajx(ajax);
+    });
+}
+function CetakAKP(id) {
+    OpenWindow("/cetak-aduan-kerosakan/"+id,'CetakAKP','top=10,left=10,width=650,height=500');
+}
