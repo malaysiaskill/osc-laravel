@@ -1380,7 +1380,7 @@ class JTKController extends Controller
                 if ($ssh->ppd_semak == '1')
                 {
                     $id_penyemak = $ssh->id_penyemak;
-                    $usr = User::find($id_penyemak);
+                    $usr_ppd = User::find($id_penyemak);
 
                     $data_semak = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
@@ -1392,9 +1392,9 @@ class JTKController extends Controller
                       <tr>
                         <td align="left" valign="bottom">
                             <strong>
-                                '.strtoupper($usr->name).'<br />
-                                '.$usr->greds->gred_title_cetakan.'<br />
-                                '.$usr->nama_ppd.'<br /><br />
+                                '.strtoupper($usr_ppd->name).'<br />
+                                '.$usr_ppd->greds->gred_title_cetakan.'<br />
+                                '.$usr_ppd->nama_ppd.'<br /><br />
                             </strong>
 
                             Tarikh Semakan : <strong>'.$ssh->tarikh_ppd_semak_formatted.'</strong>
