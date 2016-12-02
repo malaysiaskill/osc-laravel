@@ -17,63 +17,16 @@
 <div class="content padding-5-t bg-white border-b">
     <div class="push-15 push-10-t">
         <div class="row">
-            @if (Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
-                <div class="col-md-4">
-                    <div class="row">
-                        <div class="col-xs-5">
-                            <select name="qmonth" id="qmonth" data-placeholder="Bulan" class="form-control js-select2">
-                                <option></option>
-                                <?php
-                                    $bulan = array('Januari','Februari','Mac','April','Mei','Jun','Julai','Ogos','September','Oktober','November','Disember');
-                                    for ($i = 0; $i < 12; $i++) { 
-                                ?>
-                                @if (str_pad($i+1,2,'0',STR_PAD_LEFT) == date('m'))
-                                    <option value="{{ str_pad($i+1,2,'0',STR_PAD_LEFT) }}" selected>{{ $bulan[$i] }}</option>
-                                @else
-                                    <option value="{{ str_pad($i+1,2,'0',STR_PAD_LEFT) }}">{{ $bulan[$i] }}</option>
-                                @endif
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="col-xs-5">
-                            <select name="qyear" id="qyear" data-placeholder="Tahun" class="form-control js-select2">
-                                <option></option>
-                                <?php
-                                    for ($i = 2016; $i < date('Y')+10; $i++) { 
-                                ?>
-                                @if ($i == date('Y'))
-                                    <option value="{{ $i }}" selected>{{ $i }}</option>
-                                @else
-                                    <option value="{{ $i }}">{{ $i }}</option>
-                                @endif
-
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="col-xs-2">
-                            <button type="button" class="btn btn-primary">
-                                <i class="fa fa-search push-5-r"></i>Cari
-                            </button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-8 pull-right">
-                    <a class="btn btn-default" href="{{ url('/') }}">
-                        <i class="fa fa-home"></i>
-                    </a>
-                </div>
-            @else
-                <div class="col-md-6">
-                    <a class="btn btn-default" href="{{ url('/') }}">
-                        <i class="fa fa-home"></i>
-                    </a>
-                </div>
-                <div class="col-md-6 text-right">
-                    <a class="btn btn-primary" href="{{ url('/senarai-semak-harian') }}">
-                        <i class="fa fa-arrow-left"></i>
-                    </a>
-                </div>                
-            @endif
+            <div class="col-md-6">
+                <a class="btn btn-default" href="{{ url('/') }}">
+                    <i class="fa fa-home"></i>
+                </a>
+            </div>
+            <div class="col-md-6 text-right">
+                <a class="btn btn-primary" href="{{ url('/senarai-semak-harian') }}">
+                    <i class="fa fa-arrow-left"></i>
+                </a>
+            </div>
         </div>
     </div>
 </div>
@@ -112,7 +65,7 @@
                                 <th class="text-center" style="width: 50px;">#</th>
                                 <th>Perkara</th>
                                 <th>Cara Pengujian</th>
-                                @if (Auth::user()->hasRole('super-admin'))
+                                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin'))
                                     <th></th>
                                 @endif
                             </tr>
@@ -124,14 +77,16 @@
                                 <td class="text-center">{{ $i++ }}</td>
                                 <td>{{ $ss->perkara }}</td>
                                 <td>{{ $ss->cara_pengujian }}</td>
-                                @if (Auth::user()->hasRole('super-admin'))
+                                @if (Auth::user()->hasRole('super-admin') || Auth::user()->hasRole('admin'))
                                     <td>
                                         <button type="button" class="btn btn-sm btn-primary" onclick="javascript:EditSenaraiSemakan('{{ $ss->id }}');">
                                             <i class="fa fa-pencil"></i>
                                         </button>
+                                        @if ($ss->id != '1')
                                         <button type="button" class="btn btn-sm btn-danger" onclick="javascript:DeleteSenaraiSemakan('{{ $ss->id }}');">
                                             <i class="fa fa-trash-o"></i>
                                         </button>
+                                        @endif
                                     </td>
                                 @endif
                             </tr>
@@ -141,6 +96,7 @@
                 </div>
             </div>
 
+            @if (!Auth::user()->hasRole('ppd'))
             <div class="block block-themed block-rounded">
                 <div class="block-header bg-primary-dark">
                     <ul class="block-options">
@@ -196,6 +152,7 @@
                     </table>
                 </div>
             </div>
+            @endif
 
         </div>
     </div>

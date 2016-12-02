@@ -431,6 +431,11 @@ function ClearAKP() {
                     <a class="btn btn-primary" href="#" onclick="javascript:window.print();return false;">
                         <i class="fa fa-print"></i> Cetak
                     </a>
+                    @if (strlen($mon) != 0 && strlen($year) != 0)
+                    <a class="btn btn-primary" href="{{ url('/aduan-kerosakan') }}">
+                        <i class="fa fa-arrow-left"></i>
+                    </a>
+                    @endif
                 </div>
                 <div class="col-md-5 pull-right">
                     <div class="row">

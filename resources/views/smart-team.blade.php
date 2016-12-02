@@ -89,7 +89,7 @@ $('#XtvtAdhoc').DataTable();
                                                                 <img src="/avatar/{{ $ahli }}" class="img-avatar img-avatar32" data-toggle="tooltip" title="{{ App\User::find($ahli)->name }}"> 
                                                             @endforeach
                                                         </div>
-                                                        <div class="row">
+                                                        <div class="row push">
                                                             <div class="col-xs-6 border-r">
                                                                 <h2 class="font-w300">{{ count($st->aktiviti) }}</h2>
                                                                 <span class="text-primary"><small>Aktiviti</small></span>
@@ -99,7 +99,10 @@ $('#XtvtAdhoc').DataTable();
                                                                 <span class="text-primary"><small>Ahli</small></span>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                        <button type="button" class="btn btn-block btn-success">
+                                                            Lihat Kumpulan
+                                                        </button>
+                                                    </div>                                                    
                                                 </a>
                                                 @if (Auth::user()->hasRole('leader') && Auth::user()->kod_ppd == $kod_ppd)
                                                 <div class="push-10 text-right">

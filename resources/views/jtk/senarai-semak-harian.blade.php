@@ -127,6 +127,9 @@ function ClearSemakan() {
                     <a class="btn btn-default" href="{{ url('/') }}">
                         <i class="fa fa-home"></i>
                     </a>
+                    <a class="btn btn-primary" href="{{ url('/senarai-semakan') }}">
+                        <i class="fa fa-list-ul push-5-r"></i>Senarai Semakan
+                    </a>                    
                 </div>
                 <div class="col-md-5 pull-right">
                     <div class="row">
