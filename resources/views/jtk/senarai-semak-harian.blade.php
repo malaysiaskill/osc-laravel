@@ -1,3 +1,5 @@
+@inject('jtkc', '\App\Http\Controllers\JTKController')
+
 @extends('master.app')
 @section('title', 'Senarai Semak Harian')
 @section('site.description', 'Senarai Semak Harian')
@@ -241,16 +243,21 @@ function ClearSemakan() {
                                     }
 
                                     $mon = str_pad($mon,2,'0',STR_PAD_LEFT);
+                                    $_k = $k;
                                     $k = str_pad($k,2,'0',STR_PAD_LEFT);
 
                                     if ($k == date('d') && $mon == date('m')) {
                                         $tr_bgcolor = "bg-success-light";
                                     } else {
-                                        $tr_bgcolor = "bg-white";
+                                        if (strtolower(date('D',strtotime("$year-$mon-$_k"))) == 'sun' || strtolower(date('D',strtotime("$year-$mon-$_k"))) == 'sat') {
+                                            $tr_bgcolor = "bg-danger-light";
+                                        } else {
+                                            $tr_bgcolor = "bg-white";
+                                        }
                                     }
 
                                     $rowday .= '<tr class="'.$tr_bgcolor.'">
-                                        <td class="text-center">'.$k.'/'.$mon.'/'.$year.'</td>
+                                        <td class="text-center">'.$k.'/'.$mon.'/'.$year.' ('.$jtkc->replaceDay(date('l',strtotime("$year-$mon-$_k"))).')</td>
                                         <td class="border-l">'.$listjtk.'</td>
                                     </tr>';
                                 }
@@ -317,16 +324,21 @@ function ClearSemakan() {
                                     }
 
                                     $i = str_pad($i,2,'0',STR_PAD_LEFT);
+                                    $_k = $k;
                                     $k = str_pad($k,2,'0',STR_PAD_LEFT);
 
                                     if ($k == date('d')) {
                                         $tr_bgcolor = "bg-success-light";
                                     } else {
-                                        $tr_bgcolor = "bg-white";
+                                        if (strtolower(date('D',strtotime(date('Y')."-".date('n')."-$_k"))) == 'sun' || strtolower(date('D',strtotime(date('Y')."-".date('n')."-$_k"))) == 'sat') {
+                                            $tr_bgcolor = "bg-danger-light";
+                                        } else {
+                                            $tr_bgcolor = "bg-white";
+                                        }
                                     }
 
                                     $rowday .= '<tr class="'.$tr_bgcolor.'">                                        
-                                        <td class="text-center">'.$k.'/'.date('m').'/'.date('Y').'</td>
+                                        <td class="text-center">'.$k.'/'.date('m').'/'.date('Y').' ('.$jtkc->replaceDay(date('l',strtotime(date('Y')."-".date('m')."-".$_k))).')</td>
                                         <td class="border-l">'.$listjtk.'</td>
                                     </tr>';
                                 }

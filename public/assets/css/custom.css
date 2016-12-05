@@ -512,3 +512,7 @@ blockquote span{display:block;font-size:70%;line-height:1.42857143;color:#777}
   border: 2px solid #d26a5c;
   padding: 2px;
 }
+
+.fc-sat, .fc-sun {
+    background-color: #fbf3f2 !important;
+}
