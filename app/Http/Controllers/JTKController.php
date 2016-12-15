@@ -1357,7 +1357,7 @@ class JTKController extends Controller
                     }                
                 }
 
-                $ss_user = SenaraiSemakan::where('user_id',Auth::user()->id)->get();
+                $ss_user = SenaraiSemakan::where('user_id',$user_id)->get();
                 foreach ($ss_user as $ssu) {
                     foreach ($s as $_val)
                     {
