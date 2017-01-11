@@ -6,30 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class SenaraiSemakHarian extends Model
 {
-    protected $table = 'semakan_harian';
-
-    public function getTarikhSemakanFormattedAttribute()
-	{
-	    $date = $this->tarikh_semakan;
-	    if (strlen($date) != 0) {
-	    	return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format('d/m/Y');
-	    } else {
-	    	return '-';
-		}
-	}
-
-    public function getTarikhPpdSemakFormattedAttribute()
-	{
-	    $date = $this->tarikh_ppd_semak;
-	    if (strlen($date) != 0) {
-	    	return \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format('d/m/Y');
-	    } else {
-	    	return '-';
-		}
-	}
-
-	public function user()
-    {
-        return $this->belongsTo('App\User', 'user_id', 'id');
-    }
+    protected $table = 'senarai_semak_harian';
 }

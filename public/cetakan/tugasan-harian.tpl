@@ -12,12 +12,28 @@ body,td,th {
 	color:#FFF;
 	font-weight:bold;
 }
+.header,
+.footer {
+  width: 100%;
+  text-align: right;
+  position: fixed;
+}
+.header  {
+  top: 0px;
+}
+.footer {
+  bottom: 50px;
+}
+.pagenum:before {
+  content: counter(page);
+}
 </style>
+<div class="footer">Tarikh : #TARIKH_SEMAKAN# &nbsp; &nbsp; Halaman #<span class="pagenum"></span></div>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td align="center" valign="top">
     <h2>
-    SENARAI SEMAK TUGAS HARIAN JURUTEKNIK KOMPUTER<br />
+    LOG TUGASAN & SENARAI SEMAK HARIAN JURUTEKNIK KOMPUTER<br />
     #NAMA_SEKOLAH#</h2></td>
   </tr>
 </table>
@@ -36,14 +52,27 @@ body,td,th {
 </table>
 <table width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#333333">
   <tr class="font14-white">
-    <td align="center" bgcolor="#004080">BIL.</td>
-    <td bgcolor="#004080" class="font11">PERKARA</td>
-    <td bgcolor="#004080">CARA PENGUJIAN</td>
-    <td align="center" bgcolor="#004080">STATUS SEMAKAN</td>
-    <td bgcolor="#004080">CATATAN</td>
+    <td align="left" bgcolor="#004070" colspan="5">SENARAI SEMAK HARIAN</td>
+  </tr>
+  <tr class="font14-white">
+    <td align="center" bgcolor="#1d79d5">BIL</td>
+    <td bgcolor="#1d79d5" class="font11">PERKARA</td>
+    <td bgcolor="#1d79d5">CARA PENGUJIAN</td>
+    <td align="center" bgcolor="#1d79d5">STATUS SEMAKAN</td>
+    <td align="center" bgcolor="#1d79d5">CATATAN</td>
   </tr>
   #DATA#
 </table>
+
+<table style="page-break-before: always;" width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#333333">
+  <tr class="font14-white">
+    <td align="left" bgcolor="#004070" colspan="5">TUGASAN HARIAN</td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFFFFF" align="left" colspan="5">#TUGASAN_HARIAN#</td>
+  </tr>
+</table>
+
 <table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr>
     <td width="50%" align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">

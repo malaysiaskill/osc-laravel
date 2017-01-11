@@ -8,7 +8,9 @@ use Carbon\Carbon;
 use DB;
 use Dompdf\Dompdf;
 use Dompdf\Options;
+use Emojione\Emojione;
 use App\Template;
+use PHPMailer;
 
 use App\User;
 use App\Gred;
@@ -23,7 +25,7 @@ use App\SmartTeam;
 use App\AktivitiSmartTeam;
 use App\GambarAktivitiSmartTeam;
 use App\AktivitiAdhoc;
-use App\SenaraiSemakan;
+use App\TugasanHarian;
 use App\SenaraiSemakHarian;
 use App\AKP;
 use App\KategoriKerosakan;
@@ -194,7 +196,13 @@ class JTKController extends Controller
         $JPN = $r->input('jabatan_jpn');
         $PPD = $r->input('jabatan_ppd');
     	$SEK = $r->input('jabatan');
-    	$PasswordBaru = $r->input('pwd');
+        $PasswordBaru = $r->input('pwd');
+    	$PasswordBN = $r->input('pwd_1bestarinet');
+
+        // Maklumat Perjawatan
+        $NamaKJ = $r->input('nama_kj');
+        $JawatanKJ = $r->input('nama_jaw');
+        $EmelKJ = $r->input('emel_kj');
 
         $user = User::find(Auth::user()->id);
         $user->name = $Nama;
@@ -215,6 +223,18 @@ class JTKController extends Controller
             $user->kod_jabatan = $SEK;
         }
         $user->save();
+
+        // Maklumat Perjawatan
+        if (!Auth::user()->hasRole('jpn') || !Auth::user()->hasRole('ppd')) {
+            $u_sek = Sekolah::where('kod_sekolah',$SEK)->first();
+            $u_sek->nama_kj = $NamaKJ;
+            $u_sek->jawatan_kj = $JawatanKJ;
+            $u_sek->emel_kj = $EmelKJ;
+            if (strlen($PasswordBN) != 0) {
+                $u_sek->pwd_1bestarinet = $PasswordBN;
+            }
+            $u_sek->save();
+        }
 
     	return redirect('/profil/?status=success');
     }
@@ -1004,27 +1024,27 @@ class JTKController extends Controller
 
     /**
 
-    SENARAI SEMAK HARIAN
+    TUGASAN HARIAN
 
     */
-    public function PPDSemakSSH(Request $r)
+    public function PPDSemakTH(Request $r)
     {
         $monyear = explode('-', $r->monyear);
 
-        $ssh = SenaraiSemakHarian::whereYear('tarikh_semakan',$monyear[1])->whereMonth('tarikh_semakan',$monyear[0])->update([
+        $ssh = TugasanHarian::whereYear('tarikh_semakan',$monyear[1])->whereMonth('tarikh_semakan',$monyear[0])->update([
             'ppd_semak' => 1,
             'tarikh_ppd_semak' => Carbon::now(),
             'id_penyemak' => Auth::user()->id
         ]);
 
-        echo "SweetAlert('success','Berjaya !','Semua rekod semakan harian juruteknik telah berjaya disemak !',\"window.location.href='/senarai-semak-harian';\");";
+        echo "SweetAlert('success','Berjaya !','Semua rekod tugasan harian juruteknik telah berjaya disemak !',\"window.location.href='/tugasan-harian';\");";
     }
-    public function SenaraiSemakHarian($mon=null, $year=null)
+    public function TugasanHarian($mon=null, $year=null)
     {
-        $ss_semua = SenaraiSemakan::where('user_id','0')->get();
-        $ss_user = SenaraiSemakan::where('user_id',Auth::user()->id)->get();        
+        $ss_semua = SenaraiSemakHarian::where('user_id','0')->get();
+        $ss_user = SenaraiSemakHarian::where('user_id',Auth::user()->id)->get();        
 
-        return view('jtk.senarai-semak-harian',[
+        return view('jtk.tugasan-harian',[
             'ss_semua' => $ss_semua,
             'ss_user' => $ss_user,
             'mon' => $mon,
@@ -1032,16 +1052,16 @@ class JTKController extends Controller
             'error' => $this->req->error
         ]);
     }
-    public function SenaraiSemakan()
+    public function SenaraiSemakHarian()
     {
-        $ss_semua = SenaraiSemakan::where('user_id','0')->get();
-        $ss_user = SenaraiSemakan::where('user_id',Auth::user()->id)->get();        
-        return view('jtk.senarai-semakan',[
+        $ss_semua = SenaraiSemakHarian::where('user_id','0')->get();
+        $ss_user = SenaraiSemakHarian::where('user_id',Auth::user()->id)->get();        
+        return view('jtk.senarai-semak-harian',[
             'ss_semua' => $ss_semua,
             'ss_user' => $ss_user
         ]);
     }
-    public function SaveSenaraiSemakan(Request $r)
+    public function SaveSenaraiSemakHarian(Request $r)
     {
         $perkara = htmlentities($r->input('_perkara'),ENT_QUOTES);
         $cara_pengujian = htmlentities($r->input('_cara_pengujian'),ENT_QUOTES);
@@ -1049,7 +1069,7 @@ class JTKController extends Controller
         if ($r->_id != 0 || $r->_id != '0')
         {
             # Update
-            $ss = SenaraiSemakan::find($r->_id);
+            $ss = SenaraiSemakHarian::find($r->_id);
             $ss->perkara = $perkara;
             $ss->cara_pengujian = $cara_pengujian;
             $ss->save();
@@ -1057,7 +1077,7 @@ class JTKController extends Controller
         else
         {
             # Insert
-            $ss = new SenaraiSemakan;
+            $ss = new SenaraiSemakHarian;
             $ss->perkara = $perkara;
             $ss->cara_pengujian = $cara_pengujian;
             if ($r->_flag == '1' || $r->_flag == 1) {
@@ -1068,11 +1088,11 @@ class JTKController extends Controller
             $ss->save();
         }
 
-        return redirect('/senarai-semakan');
+        return redirect('/senarai-semak-harian');
     }
-    public function EditSenaraiSemakan(Request $r, $id)
+    public function EditSenaraiSemakHarian(Request $r, $id)
     {
-        $ss = SenaraiSemakan::find($id);
+        $ss = SenaraiSemakHarian::find($id);
         $perkara = addslashes(html_entity_decode($ss->perkara,ENT_QUOTES));
         $perkara = str_replace('<br />', '\n', nl2br($perkara));
         $perkara = trim(preg_replace('/\s\s+/', '', $perkara));
@@ -1087,14 +1107,14 @@ class JTKController extends Controller
         echo "$('#_perkara').val(\"$perkara\");";
         echo "$('#_cara_pengujian').val(\"$cara_pengujian\");";
     }
-    public function PadamSenaraiSemakan(Request $r, $id)
+    public function PadamSenaraiSemakHarian(Request $r, $id)
     {
-        $ss = SenaraiSemakan::destroy($id);
-        echo "SweetAlert('success','Berjaya Dipadam !','Rekod semakan ini telah berjaya dipadam !',\"window.location.href='/senarai-semakan';\");";
+        $ss = SenaraiSemakHarian::destroy($id);
+        echo "SweetAlert('success','Berjaya Dipadam !','Rekod semakan ini telah berjaya dipadam !',\"window.location.href='/senarai-semak-harian';\");";
     }
-    public function SaveSenaraiSemak(Request $r)    
+    public function SaveTugasanHarian(Request $r)
     {
-        $ss_semua = SenaraiSemakan::where('user_id','0')->get();
+        $ss_semua = SenaraiSemakHarian::where('user_id','0')->get();
         $record = array();
         foreach ($ss_semua as $ss)
         {
@@ -1134,7 +1154,7 @@ class JTKController extends Controller
             }
         }        
 
-        $ss_user = SenaraiSemakan::where('user_id',Auth::user()->id)->get();
+        $ss_user = SenaraiSemakHarian::where('user_id',Auth::user()->id)->get();
         foreach ($ss_user as $ssu)
         {
             eval("\$status = \$r->_status_".$ssu->id.";");
@@ -1144,54 +1164,61 @@ class JTKController extends Controller
 
         $record = json_encode($record);
 
-        if ($r->_id_ssh == '0') {
+        if ($r->_id_th == '0') {
             $tarikh_semakan = $r->_tarikh_semakan;
             $db_tarikh_semakan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_semakan)->format('Y-m-d');
         } else {
-            $dbts = DB::table('semakan_harian')->where('id',$r->_id_ssh)->first();
+            $dbts = DB::table('tugasan_harian')->where('id',$r->_id_th)->first();
             $db_tarikh_semakan = $dbts->tarikh_semakan;
         }
         $masa_semakan = $r->_masa_semakan;
 
         // Search
-        if (SenaraiSemakHarian::where('user_id',Auth::user()->id)->where('tarikh_semakan',$db_tarikh_semakan)->count() == 1)
+        if (TugasanHarian::where('user_id',Auth::user()->id)->where('tarikh_semakan',$db_tarikh_semakan)->count() == 1)
         {
-            if ($r->_id_ssh == '0')
+            if ($r->_id_th == '0')
             {
-                return redirect('/senarai-semak-harian/?error=already_exists');
+                return redirect('/tugasan-harian/?error=already_exists');
             }
             else
             {
                 // Update
-                $ssh = SenaraiSemakHarian::find($r->_id_ssh);
+                $ssh = TugasanHarian::find($r->_id_th);
                 $ssh->masa_semakan = $masa_semakan;
                 $ssh->status_semakan = $record;
+                $ssh->tugasan_harian = $r->_tugasan_harian;
                 $ssh->save();
             }
         }
         else
         {
             // Insert
-            $ssh = new SenaraiSemakHarian;
+            $ssh = new TugasanHarian;
             $ssh->user_id = Auth::user()->id;
             $ssh->tarikh_semakan = $db_tarikh_semakan;
             $ssh->masa_semakan = $masa_semakan;
             $ssh->status_semakan = $record;
+            $ssh->tugasan_harian = $r->_tugasan_harian;
             $ssh->save();
         }
 
-        return redirect('/senarai-semak-harian');
+        return redirect('/tugasan-harian');
     }
-    public function EditSenaraiSemakHarian(Request $r)
+    public function EditTugasanHarian(Request $r)
     {
         $id = $r->id;
-        $ssh = SenaraiSemakHarian::find($id);
+        $th = TugasanHarian::find($id);
 
-        $s = json_decode($ssh->status_semakan);
+        $s = json_decode($th->status_semakan);
 
-        echo "$('#_id_ssh').val('$id');";
+        echo "$('#_id_th').val('$id');";
         echo "$('#btn_u_print').removeClass('hide');";
         echo "$('#SemakanDialog').modal('show');\n";
+
+        if (strlen(Auth::user()->emel_kj) != 0)
+        {
+            echo "$('#btn_u_mel').removeClass('hide');";
+        }
 
         if (count($s) > 0)
         {
@@ -1232,19 +1259,24 @@ class JTKController extends Controller
                 }
             }
 
-            echo "$('#_tarikh_semakan').val('".$ssh->tarikh_semakan_formatted."');";
+            echo "$('#_tarikh_semakan').val('".$th->tarikh_semakan_formatted."');";
             echo "$('#_tarikh_semakan').prop('disabled','disabled');";
 
-            if (strlen($ssh->masa_semakan) > 0) {
-                $ms = explode(':', $ssh->masa_semakan);
+            if (strlen($th->masa_semakan) > 0) {
+                $ms = explode(':', $th->masa_semakan);
                 echo "$('#_masa_semakan').val('".$ms[0].':'.$ms[1]."');";
             }
 
-            if ($ssh->ppd_semak == '1') {
-                $tarikh_ppd_semak = $ssh->tarikh_ppd_semak_formatted;
+            $tugasan_harian = addslashes(html_entity_decode($th->tugasan_harian,ENT_QUOTES));
+            $tugasan_harian = str_replace('<br />', '\n', nl2br($tugasan_harian));
+            $tugasan_harian = trim(preg_replace('/\s\s+/', '', $tugasan_harian));
+            echo "$('#_tugasan_harian').val('".$tugasan_harian."');";
+
+            if ($th->ppd_semak == '1') {
+                $tarikh_ppd_semak = $th->tarikh_ppd_semak_formatted;
                 echo "$('#_semakan_ppd').addClass('block-content block-content-full block-content-mini text-white bg-success');";
                 echo "$('#_semakan_ppd').html('<i class=\"fa fa-check-circle text-white push-5-r\"></i> Telah Disemak Oleh PPD ( $tarikh_ppd_semak )');";
-            } else if ($ssh->ppd_semak == '0') {
+            } else if ($th->ppd_semak == '0') {
                 echo "$('#_semakan_ppd').addClass('block-content block-content-full block-content-mini text-white bg-warning');";
                 echo "$('#_semakan_ppd').html('<i class=\"fa fa-exclamation-circle text-white push-5-r\"></i> PPD Belum Membuat Semakan');";
             } else {
@@ -1253,17 +1285,17 @@ class JTKController extends Controller
             }
         }        
     }
-    public function CetakSenaraiSemakHarian($id)
+    public function CetakTugasanHarian($id)
     {
-        $ssh = SenaraiSemakHarian::find($id);
+        $th = TugasanHarian::find($id);
 
-        if ($ssh->user_id == Auth::user()->id || Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
+        if ($th->user_id == Auth::user()->id || Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
         {
-            $_tarikh_semakan = $ssh->tarikh_semakan;
+            $_tarikh_semakan = $th->tarikh_semakan;
             $dt = explode('-', $_tarikh_semakan);
             $tarikh_smkan = $dt[2].'-'.$dt[1].'-'.$dt[0];
 
-            $masa_semakan = $ssh->masa_semakan;
+            $masa_semakan = $th->masa_semakan;
             if (strlen($masa_semakan) > 0) {
                 $ms = explode(':', $masa_semakan);
                 $masa_semakan = $ms[0].':'.$ms[1];
@@ -1271,21 +1303,27 @@ class JTKController extends Controller
                 $masa_semakan = '';
             }
 
-            $s = json_decode($ssh->status_semakan);
+            $s = json_decode($th->status_semakan);
 
             if (count($s) > 0)
             {
-                $user_id = $ssh->user_id;
+                $user_id = $th->user_id;
                 $usr = User::find($user_id);
                 $nama_sekolah = $usr->jabatan->nama_sekolah_detail_cetakan;
                 $jawatan = $usr->greds->gred_title_cetakan;
+                $kod_jabatan = $usr->kod_jabatan;
+                $web_ppd = $usr->web_ppd;
 
-                // Data
                 $data = '';
                 $i = 1;
-                $ss_semua = SenaraiSemakan::where('user_id','0')->get();
+
+                # Senarai Semak Harian (Standard)
+                $ss_semua = SenaraiSemakHarian::where('user_id','0')->get();
                 foreach ($ss_semua as $sss)
                 {
+                    $cara_pengujian = str_replace('#KOD_SEKOLAH#', $kod_jabatan, $sss->cara_pengujian);
+                    $cara_pengujian = str_replace('#WEB_PPD#', $web_ppd, $cara_pengujian);
+
                     if ($sss->id == '1')
                     {
                         foreach ($s as $_val)
@@ -1296,7 +1334,7 @@ class JTKController extends Controller
                                 $data .= '<tr>
                                     <td width="20" align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
                                     <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
-                                    <td valign="top" bgcolor="#FFFFFF">'.$sss->cara_pengujian.'</td>
+                                    <td valign="top" bgcolor="#FFFFFF">'.$cara_pengujian.'</td>
                                     <td align="center" valign="top" bgcolor="#FFFFFF" width="180">
                                         <table width="100%" border="0" cellspacing="0" cellpadding="3">
                                           <tr>
@@ -1348,7 +1386,7 @@ class JTKController extends Controller
                                 $data .= '<tr>
                                     <td align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
                                     <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
-                                    <td valign="top" bgcolor="#FFFFFF">'.$sss->cara_pengujian.'</td>
+                                    <td valign="top" bgcolor="#FFFFFF">'.$cara_pengujian.'</td>
                                     <td align="center" valign="top" bgcolor="#FFFFFF">'.$_status.'</td>
                                     <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
                                 </tr>';
@@ -1357,8 +1395,10 @@ class JTKController extends Controller
                     }                
                 }
 
-                $ss_user = SenaraiSemakan::where('user_id',$user_id)->get();
-                foreach ($ss_user as $ssu) {
+                # Senarai Semak Harian (Users)
+                $ss_user = SenaraiSemakHarian::where('user_id',$user_id)->get();
+                foreach ($ss_user as $ssu)
+                {
                     foreach ($s as $_val)
                     {
                         $sshid = $_val->id;
@@ -1377,9 +1417,9 @@ class JTKController extends Controller
                     }
                 }
 
-                if ($ssh->ppd_semak == '1')
+                if ($th->ppd_semak == '1')
                 {
-                    $id_penyemak = $ssh->id_penyemak;
+                    $id_penyemak = $th->id_penyemak;
                     $usr_ppd = User::find($id_penyemak);
 
                     $data_semak = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -1397,7 +1437,7 @@ class JTKController extends Controller
                                 '.$usr_ppd->nama_ppd.'<br /><br />
                             </strong>
 
-                            Tarikh Semakan : <strong>'.$ssh->tarikh_ppd_semak_formatted.'</strong>
+                            Tarikh Semakan : <strong>'.$th->tarikh_ppd_semak_formatted.'</strong>
                         </td>
                       </tr>
                     </table>';
@@ -1407,16 +1447,23 @@ class JTKController extends Controller
                     $data_semak = '';
                 }
 
+                $data_tugasan_harian = $th->tugasan_harian;
+                $data_tugasan_harian = nl2br($data_tugasan_harian);
+                if (strlen($data_tugasan_harian) == 0) {
+                    $data_tugasan_harian = '-';
+                }
+                //$data_tugasan_harian = addslashes(\Emojione\Emojione::shortnameToUnicode($data_tugasan_harian));
 
                 $ds = DIRECTORY_SEPARATOR;
                 $t = new Template;
-                $t->Load(public_path().$ds."cetakan".$ds."ssh.tpl");
+                $t->Load(public_path().$ds."cetakan".$ds."tugasan-harian.tpl");
                 $t->Replace('NAMA_SEKOLAH', $nama_sekolah);
                 $t->Replace('JAWATAN', $jawatan);
                 $t->Replace('NAMA_JURUTEKNIK', strtoupper($usr->name));
-                $t->Replace('TARIKH_SEMAKAN', $ssh->tarikh_semakan_formatted.' '.$masa_semakan.' ('.$this->replaceDay(date('l', strtotime($tarikh_smkan))).')');
+                $t->Replace('TARIKH_SEMAKAN', $th->tarikh_semakan_formatted.' '.$masa_semakan.' ('.$this->replaceDay(date('l', strtotime($tarikh_smkan))).')');
                 $t->Replace('DATA', $data);
                 $t->Replace('DATA_SEMAK', $data_semak);
+                $t->Replace('TUGASAN_HARIAN', $data_tugasan_harian);
                 $_output = $t->Evaluate();
 
                 $options = new Options();
@@ -1426,8 +1473,242 @@ class JTKController extends Controller
                 $dpdf->setPaper('A4', 'landscape');
                 $dpdf->render();
                 $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
-                $dpdf->add_info('Title','Senarai Semak Harian - '.$tarikh_smkan);
-                $dpdf->stream("Senarai-Semak-Harian-$tarikh_smkan",array('Attachment'=>0));
+                $dpdf->add_info('Title','Tugasan Harian - '.$tarikh_smkan);
+                $dpdf->stream("Tugasan-Harian-$tarikh_smkan",array('Attachment'=>0));
+            }
+            else
+            {
+                echo "- Rekod tiada dalam pangkalan data ! -";
+            }
+        }
+        else
+        {
+            echo "<center><h1>Akses Disekat !</h1></center>";
+        }
+    }
+    public function EmelTH(Request $r) {
+        $id = $r->id;
+        $th = TugasanHarian::find($id);
+
+        if ($th->user_id == Auth::user()->id || Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
+        {
+            $_tarikh_semakan = $th->tarikh_semakan;
+            $dt = explode('-', $_tarikh_semakan);
+            $tarikh_smkan = $dt[2].'-'.$dt[1].'-'.$dt[0];
+
+            $masa_semakan = $th->masa_semakan;
+            if (strlen($masa_semakan) > 0) {
+                $ms = explode(':', $masa_semakan);
+                $masa_semakan = $ms[0].':'.$ms[1];
+            } else {
+                $masa_semakan = '';
+            }
+
+            $s = json_decode($th->status_semakan);
+
+            if (count($s) > 0)
+            {
+                $user_id = $th->user_id;
+                $usr = User::find($user_id);
+                $nama_sekolah = $usr->jabatan->nama_sekolah_detail_cetakan;
+                $jawatan = $usr->greds->gred_title_cetakan;
+                $kod_jabatan = $usr->kod_jabatan;
+                $pwd_1bestarinet = $usr->pwd_bn;
+                $web_ppd = $usr->web_ppd;
+                $emel_kj = $usr->emel_kj;
+
+                $data = '';
+                $i = 1;
+
+                # Senarai Semak Harian (Standard)
+                $ss_semua = SenaraiSemakHarian::where('user_id','0')->get();
+                foreach ($ss_semua as $sss)
+                {
+                    $cara_pengujian = str_replace('#KOD_SEKOLAH#', $kod_jabatan, $sss->cara_pengujian);
+                    $cara_pengujian = str_replace('#WEB_PPD#', $web_ppd, $cara_pengujian);
+
+                    if ($sss->id == '1')
+                    {
+                        foreach ($s as $_val)
+                        {
+                            $sshid = $_val->id;
+                            if ($sshid == '1')
+                            {
+                                $data .= '<tr>
+                                    <td width="20" align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
+                                    <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
+                                    <td valign="top" bgcolor="#FFFFFF">'.$cara_pengujian.'</td>
+                                    <td align="center" valign="top" bgcolor="#FFFFFF" width="180">
+                                        <table width="100%" border="0" cellspacing="0" cellpadding="3">
+                                          <tr>
+                                            <td>&nbsp;</td>
+                                            <td>Down</td>
+                                            <td>Up</td>
+                                          </tr>
+                                          <tr>
+                                            <td>ZOOM-A</td>
+                                            <td>'.$_val->_speedtest_a.'</td>
+                                            <td>'.$_val->_speedtest_a1.'</td>
+                                          </tr>
+                                          <tr>
+                                            <td>ZOOM-B</td>
+                                            <td>'.$_val->_speedtest_b.'</td>
+                                            <td>'.$_val->_speedtest_b1.'</td>
+                                          </tr>
+                                          <tr>
+                                            <td>ZOOM-C</td>
+                                            <td>'.$_val->_speedtest_c.'</td>
+                                            <td>'.$_val->_speedtest_c1.'</td>
+                                          </tr>
+                                          <tr>
+                                            <td>SUPER ZOOM (A)</td>
+                                            <td>'.$_val->_speedtest_d.'</td>
+                                            <td>'.$_val->_speedtest_d1.'</td>
+                                          </tr>
+                                          <tr>
+                                            <td>SUPER ZOOM (B)</td>
+                                            <td>'.$_val->_speedtest_e.'</td>
+                                            <td>'.$_val->_speedtest_e1.'</td>
+                                          </tr>
+                                        </table>
+                                    </td>
+                                    <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
+                                </tr>';
+                            }
+                        }
+                    }
+                    else
+                    {
+                        foreach ($s as $_val)
+                        {
+                            $sshid = $_val->id;
+                            if ($sshid == $sss->id)
+                            {
+                                $_status = ($_val->status=='1') ? "BERJAYA":"TIDAK BERJAYA";
+
+                                $data .= '<tr>
+                                    <td align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
+                                    <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
+                                    <td valign="top" bgcolor="#FFFFFF">'.$cara_pengujian.'</td>
+                                    <td align="center" valign="top" bgcolor="#FFFFFF">'.$_status.'</td>
+                                    <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
+                                </tr>';
+                            }
+                        }
+                    }                
+                }
+
+                # Senarai Semak Harian (Users)
+                $ss_user = SenaraiSemakHarian::where('user_id',$user_id)->get();
+                foreach ($ss_user as $ssu)
+                {
+                    foreach ($s as $_val)
+                    {
+                        $sshid = $_val->id;
+                        if ($sshid == $ssu->id)
+                        {
+                            $_status = ($_val->status=='1') ? "BERJAYA":"TIDAK BERJAYA";
+
+                            $data .= '<tr>
+                                <td align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
+                                <td valign="top" bgcolor="#FFFFFF">'.$ssu->perkara.'</td>
+                                <td valign="top" bgcolor="#FFFFFF">'.$ssu->cara_pengujian.'</td>
+                                <td align="center" valign="top" bgcolor="#FFFFFF">'.$_status.'</td>
+                                <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
+                            </tr>';
+                        }
+                    }
+                }
+
+                if ($th->ppd_semak == '1')
+                {
+                    $id_penyemak = $th->id_penyemak;
+                    $usr_ppd = User::find($id_penyemak);
+
+                    $data_semak = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td height="10"></td>
+                      </tr>
+                      <tr>
+                        <td>Telah Disemak Oleh :</td>
+                      </tr>
+                      <tr>
+                        <td align="left" valign="bottom">
+                            <strong>
+                                '.strtoupper($usr_ppd->name).'<br />
+                                '.$usr_ppd->greds->gred_title_cetakan.'<br />
+                                '.$usr_ppd->nama_ppd.'<br /><br />
+                            </strong>
+
+                            Tarikh Semakan : <strong>'.$th->tarikh_ppd_semak_formatted.'</strong>
+                        </td>
+                      </tr>
+                    </table>';
+                }
+                else
+                {
+                    $data_semak = '';
+                }
+
+                $data_tugasan_harian = $th->tugasan_harian;
+                $data_tugasan_harian = nl2br($data_tugasan_harian);
+                if (strlen($data_tugasan_harian) == 0) {
+                    $data_tugasan_harian = '-';
+                }
+                //$data_tugasan_harian = addslashes(\Emojione\Emojione::shortnameToUnicode($data_tugasan_harian));
+
+                $ds = DIRECTORY_SEPARATOR;
+                $t = new Template;
+                $t->Load(public_path().$ds."cetakan".$ds."tugasan-harian.tpl");
+                $t->Replace('NAMA_SEKOLAH', $nama_sekolah);
+                $t->Replace('JAWATAN', $jawatan);
+                $t->Replace('NAMA_JURUTEKNIK', strtoupper($usr->name));
+                $t->Replace('TARIKH_SEMAKAN', $th->tarikh_semakan_formatted.' '.$masa_semakan.' ('.$this->replaceDay(date('l', strtotime($tarikh_smkan))).')');
+                $t->Replace('DATA', $data);
+                $t->Replace('DATA_SEMAK', $data_semak);
+                $t->Replace('TUGASAN_HARIAN', $data_tugasan_harian);
+                $_output = $t->Evaluate();
+
+                $options = new Options();
+                $options->set('defaultFont', 'Century Gothic');
+                $dpdf = new Dompdf($options);
+                $dpdf->loadHtml($_output);
+                $dpdf->setPaper('A4', 'landscape');
+                $dpdf->render();
+                $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
+                $dpdf->add_info('Title','Tugasan Harian - '.$tarikh_smkan);
+                //$dpdf->stream("Tugasan-Harian-$tarikh_smkan",array('Attachment'=>0));
+                $tugasan_harian_output = $dpdf->output();
+
+                # PHP MAILER
+                # ------------------------
+
+                $mail = new PHPMailer;
+                $mail->IsSMTP();
+                $mail->SMTPDebug = 0;
+                $mail->SMTPAuth = true;
+                $mail->SMTPSecure = 'tls';
+                $mail->Host = 'smtp.gmail.com';
+                $mail->Port = 587;
+                $mail->Username = "$kod_jabatan@1bestarinet.yes.my";
+                $mail->Password = $pwd_1bestarinet;
+                $mail->From = "$kod_jabatan@1bestarinet.yes.my";
+                $mail->FromName = "$nama_sekolah";
+
+                $mail->addAddress("$kod_jabatan@1bestarinet.yes.my");
+                $mail->addAddress("$kod_jabatan@moe.edu.my");
+                $mail->addAddress($emel_kj);
+                $mail->isHTML(true);
+                $mail->Subject = "LOG TUGASAN & SENARAI SEMAK HARIAN ($tarikh_smkan)";
+                $mail->Body = "Assalamualaikum & Salam Sejahtera. Salam Perak Excellent. Salam ICT Excellent.<br><br>\n\nBerikut adalah maklumat Log Tugasan & Senarai Semak Harian Juruteknik Komputer di sekolah <b>$nama_sekolah</b> pada <b>$tarikh_smkan</b>.<br><br>\n\nSila rujuk lampiran berformat PDF di bawah untuk rujukan tuan/puan.<br><br>\n\nSekian, Terima Kasih.<br><br>\n\n<small>E-mel ini dihantar secara automatik melalui Portal Juruteknik Komputer Negeri Perak (JTKPK).</small>";
+
+                $mail->AddStringAttachment($tugasan_harian_output,"Tugasan-Harian-$tarikh_smkan.pdf");
+
+                if (!$mail->send()) {
+                    echo "SweetAlert('error','Ops !','Terdapat ralat semasa penghantaran e-mel !<br><br><b>Nota :<br></b> Sila pastikan kata laluan anda yang betul serta semak <a target=\'_blank\' href=\'https://www.google.com/settings/security/lesssecureapps\'><b>https://www.google.com/settings/security/lesssecureapps</b></a> dan Pilih <b>\'Turn on\'</b> dan cuba semula.');";
+                } else {
+                    echo "SweetAlert('success','Berjaya !','Rekod tugasan harian telah berjaya diemelkan !');";
+                }
             }
             else
             {
@@ -1490,13 +1771,17 @@ class JTKController extends Controller
         }        
         $kategori_kerosakan = json_encode($kategori_kerosakan);
 
+        // 0000-00-00
         if ($r->_id == '0') {
             $tarikh_aduan = $r->_tarikh_aduan;
             $db_tarikh_aduan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_aduan)->format('Y-m-d');
             $nosiriaduan = $r->_no_siri_aduan;
         } else {
+            // Dapatkan tarikh aduan dari database
             $dbta = DB::table('aduan_kerosakan')->where('id',$r->_id)->first();
-            $db_tarikh_aduan = $dbta->tarikh_aduan;
+            //$db_tarikh_aduan = $dbta->tarikh_aduan;
+            $tarikh_aduan = $r->_tarikh_aduan;
+            $db_tarikh_aduan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_aduan)->format('Y-m-d');
             $nosiriaduan = $dbta->no_siri_aduan;
         }
 
@@ -1528,6 +1813,7 @@ class JTKController extends Controller
                 $akp = AKP::find($r->_id);
                 $akp->kod_ppd = Auth::user()->kod_ppd;
                 $akp->kod_jpn = Auth::user()->kod_jpn;
+                $akp->tarikh_aduan = $db_tarikh_aduan;
                 $akp->nama = $r->_nama;
                 $akp->email = $r->_email;
                 $akp->jawatan = $r->_jawatan;
@@ -1599,7 +1885,7 @@ class JTKController extends Controller
         echo "$('#AKPDialog').modal('show');\n";
 
         echo "$('#_tarikh_aduan').val('".$akp->tarikh_aduan_formatted."');";
-        echo "$('#_tarikh_aduan').prop('disabled','disabled');";
+        //echo "$('#_tarikh_aduan').prop('disabled','disabled');";
         echo "$('#_no_siri_aduan').val('".$akp->no_siri_aduan."');";
         echo "$('#_no_siri_aduan').prop('disabled','disabled');";
         echo "$('#_nama').val('".$akp->nama."');";

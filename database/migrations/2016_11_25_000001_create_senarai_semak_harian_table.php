@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSenaraiSemakanTable extends Migration
+class CreateSenaraiSemakHarianTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSenaraiSemakanTable extends Migration
      */
     public function up()
     {
-        Schema::create('senarai_semakan', function (Blueprint $table)
+        Schema::create('senarai_semak_harian', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -32,6 +32,6 @@ class CreateSenaraiSemakanTable extends Migration
      */
     public function down()
     {
-        Schema::drop('senarai_semakan');
+        Schema::drop('senarai_semak_harian');
     }
 }

@@ -557,9 +557,9 @@ function ClearAKP() {
                             </thead>
                             <tbody>
                                 <?php $i = 0; ?>
-                                <?php $i++; ?>                                
                                 @if (Auth::user()->hasRole('jpn'))
                                     @foreach (\App\AKP::where('kod_jpn',Auth::user()->kod_jpn)->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',ltrim($mon,'0'))->orderBy('id','desc')->get() as $akpd)
+                                    <?php $i++; ?>
                                     <tr>
                                         <td class="text-center">{{ $i }}.</td>
                                         <td class="text-center">
@@ -586,6 +586,7 @@ function ClearAKP() {
                                     @endforeach
                                 @else
                                     @foreach (\App\AKP::where('kod_ppd',Auth::user()->kod_ppd)->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',ltrim($mon,'0'))->orderBy('id','desc')->get() as $akpd)
+                                    <?php $i++; ?>
                                     <tr>
                                         <td class="text-center">{{ $i }}.</td>
                                         <td class="text-center">

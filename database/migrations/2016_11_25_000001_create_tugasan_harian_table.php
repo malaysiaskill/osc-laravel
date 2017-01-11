@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSemakanHarianTable extends Migration
+class CreateTugasanHarianTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateSemakanHarianTable extends Migration
      */
     public function up()
     {
-        Schema::create('semakan_harian', function (Blueprint $table)
+        Schema::create('tugasan_harian', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -24,6 +24,7 @@ class CreateSemakanHarianTable extends Migration
             $table->integer('ppd_semak')->default(0);
             $table->date('tarikh_ppd_semak')->nullable();
             $table->integer('id_penyemak')->default(0);
+            $table->text('tugasan_harian')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
@@ -37,6 +38,6 @@ class CreateSemakanHarianTable extends Migration
      */
     public function down()
     {
-        Schema::drop('semakan_harian');
+        Schema::drop('tugasan_harian');
     }
 }

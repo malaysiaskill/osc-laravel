@@ -59,9 +59,9 @@ class User extends Authenticatable
         return $this->hasOne('App\Sekolah', 'kod_sekolah', 'kod_jabatan');
     }
 
-    public function ssh()
+    public function TugasanHarian()
     {
-        return $this->hasMany('App\SenaraiSemakHarian', 'user_id', 'id');
+        return $this->hasMany('App\TugasanHarian', 'user_id', 'id');
     }
 
     public function getDevteamAttribute()
@@ -91,9 +91,39 @@ class User extends Authenticatable
         return $dppd->ppd . " (".$this->kod_ppd.")";
     }
 
+    public function getWebPpdAttribute()
+    {
+        $dppd = \App\PPD::where('kod_ppd',$this->kod_ppd)->first();
+        return $dppd->website;
+    }
+
     public function getNamaJpnAttribute()
     {
         $djpn = \App\JPN::where('kod_jpn',$this->kod_jpn)->first();
         return $djpn->jpn . " (".$this->kod_jpn.")";
+    }
+
+    public function getNamaKjAttribute()
+    {
+        $jab = \App\Sekolah::where('kod_sekolah',$this->kod_jabatan)->first();
+        return $jab->nama_kj;
+    }
+
+    public function getJawatanKjAttribute()
+    {
+        $jab = \App\Sekolah::where('kod_sekolah',$this->kod_jabatan)->first();
+        return $jab->jawatan_kj;
+    }
+
+    public function getEmelKjAttribute()
+    {
+        $jab = \App\Sekolah::where('kod_sekolah',$this->kod_jabatan)->first();
+        return $jab->emel_kj;
+    }
+    
+    public function getPwdBNAttribute()
+    {
+        $jab = \App\Sekolah::where('kod_sekolah',$this->kod_jabatan)->first();
+        return $jab->pwd_1bestarinet;
     }
 }

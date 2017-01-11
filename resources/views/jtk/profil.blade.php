@@ -213,6 +213,83 @@
                     </div>
                 </div>
 
+                @if (!Auth::user()->hasRole('jpn') && !Auth::user()->hasRole('ppd'))
+                <div class="block block-themed block-rounded">
+                    <div class="block-header bg-primary-dark">
+                        <ul class="block-options">
+                            <li>
+                                <button type="button" data-toggle="block-option" data-action="content_toggle">
+                                    <i class="si si-arrow-up"></i>
+                                </button>
+                            </li>
+                        </ul>
+                        <h3 class="block-title">
+                            <i class="fa fa-users push-10-r"></i>Maklumat Perjawatan
+                        </h3>
+                    </div>
+                    <div class="block-content block-content-full block-content-mini border-b">
+                        <span class="text-primary font-w600 h5">KETUA JABATAN</span>
+                    </div>
+                    <div class="block-content">
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label" for="nama_kj">Nama Ketua Jabatan :</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="nama_kj" name="nama_kj" placeholder="Nama ketua jabatan anda" value="{{ Auth::user()->nama_kj }}">
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label" for="nama_jaw">Nama Jawatan :</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="nama_jaw" name="nama_jaw" placeholder="Nama jawatan" value="{{ Auth::user()->jawatan_kj }}">
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label" for="emel_kj">Alamat E-mel Rasmi :</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="emel_kj" name="emel_kj" placeholder="Alamat e-mel rasmi ketua jabatan" value="{{ Auth::user()->emel_kj }}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block block-themed block-rounded">
+                    <div class="block-header bg-primary-dark">
+                        <ul class="block-options">
+                            <li>
+                                <button type="button" data-toggle="block-option" data-action="content_toggle">
+                                    <i class="si si-arrow-up"></i>
+                                </button>
+                            </li>
+                        </ul>
+                        <h3 class="block-title">
+                            <i class="fa fa-lock push-10-r"></i>Kata Laluan E-mel (1BestariNet)
+                        </h3>
+                    </div>
+                    <div class="block-content block-content-full block-content-mini border-b">
+                        <span class="text-danger"><b>Nota Penting :</b><br>Untuk memastikan fungsi penghantaran e-mel log tugasan & senarai semak harian berjalan dengan lancar, sila ikuti langkah berikut :-
+                        <ul class="push-10-t">
+                            <li>Sila masukkan kata laluan e-mel 1BestariNet anda yang betul.</li>
+                            <li>Layari <a href="https://www.google.com/settings/security/lesssecureapps" target="_blank"><b>https://www.google.com/settings/security/lesssecureapps</b></a>, Login akaun 1BestariNet Sekolah dan Pilih <b>'Turn on'</b>.</li>
+                        </ul>
+                        </span>
+                    </div>
+                    <div class="block-content">
+                        <div class="form-group clearfix items-push border-b">
+                            <label class="col-sm-3 control-label" for="pwd">E-mel 1BestariNet : </label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="text" id="emel1bn" name="emel1bn" value="{{ Auth::user()->kod_jabatan }}@1bestarinet.yes.my" readonly="readonly" disabled="disabled">
+                            </div>
+                        </div>
+                        <div class="form-group clearfix">
+                            <label class="col-sm-3 control-label" for="pwd_1bestarinet">Kata Laluan</label>
+                            <div class="col-sm-9">
+                                <input class="form-control" type="password" id="pwd_1bestarinet" name="pwd_1bestarinet" placeholder="Sahkan kata laluan 1BestariNet anda">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                 <div class="block block-themed block-rounded">
                     <div class="block-header bg-primary-dark">
                         <ul class="block-options">

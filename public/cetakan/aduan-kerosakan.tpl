@@ -241,4 +241,4 @@ body,td,th {
     </table></td>
   </tr>
 </table>
-<p class="font-8">Laporan ini dijana melalui Portal Bersepadu JTKPK.</p>
+<!--<p class="font-8">Laporan ini dijana melalui Portal Bersepadu JTKPK.</p>//-->

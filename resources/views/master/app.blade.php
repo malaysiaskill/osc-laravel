@@ -157,8 +157,8 @@
                                 -->
                                 @if (!Auth::user()->hasRole('jpn'))
                                 <li>
-                                    <a class="{{ (Request::path()=='senarai-semak-harian') ? 'active':'' }}" href="{{ url('/senarai-semak-harian') }}">
-                                        <i class="fa fa-book"></i><span class="sidebar-mini-hide">Senarai Semak Harian</span>
+                                    <a class="{{ (Request::path()=='senarai-semak-harian') ? 'active':'' }}" href="{{ url('/tugasan-harian') }}">
+                                        <i class="fa fa-book"></i><span class="sidebar-mini-hide">Tugasan Harian</span>
                                     </a>
                                 </li>
                                 @endif

@@ -77,15 +77,15 @@
                             </div>
                         @endif
 
-                        <!-- Senarai Semak Harian -->
+                        <!-- Tugasan Harian -->
                         @if (!Auth::user()->hasRole('jpn'))
                         <div class="col-sm-6 col-md-3">
-                            <a class="block block-bordered block-rounded block-link-hover3" href="{{ url('/senarai-semak-harian') }}">
+                            <a class="block block-bordered block-rounded block-link-hover3" href="{{ url('/tugasan-harian') }}">
                                 <div class="block-content block-content-full text-center">
                                     <div>
                                         <i class="fa fa-check-square-o fa-3x"></i>
                                     </div>
-                                    <div class="text-uppercase h5 font-w500 push-15-t push-5">Senarai Semak Harian</div>
+                                    <div class="text-uppercase h5 font-w500 push-15-t push-5">Tugasan Harian</div>
                                 </div>
                             </a>
                         </div>

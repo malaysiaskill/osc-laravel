@@ -472,7 +472,8 @@ function PadamAktivitiAdhoc(id) {
     });
 }
 
-/* Senarai Semakan */
+/* Tugasan Harian */
+
 function ClearSenaraiSemakan() {
     $('#_perkara').val('');
     $('#_cara_pengujian').val('');
@@ -489,7 +490,7 @@ function TambahSemakanDialog(flag) {
 }
 function EditSenaraiSemakan(id) {
     var ajax = new sack();
-    ajax.requestFile = "/edit-senarai-semakan/" + id;
+    ajax.requestFile = "/edit-senarai-semak-harian/" + id;
     Ajx(ajax);
 }
 function DeleteSenaraiSemakan(id) {
@@ -508,7 +509,7 @@ function DeleteSenaraiSemakan(id) {
     function()
     {
         var ajax = new sack();
-        ajax.requestFile = "/delete-senarai-semakan/" + id;
+        ajax.requestFile = "/delete-senarai-semak-harian/" + id;
         Ajx(ajax);
     });
 }
@@ -518,28 +519,77 @@ function Semakan() {
         $('#_speedtest_a').focus();
     },500);
 }
-function EditSemakan(id) {
+function EditTugasanHarian(id) {
     ClearSemakan();
     var ajax = new sack();
-    ajax.requestFile = "/edit-senarai-semak-harian";
+    ajax.requestFile = "/edit-tugasan-harian";
     ajax.setVar('id',id);
     Ajx(ajax);
 }
-function CetakSSH() {
-    var id = $('#_id_ssh').val();
+function CetakTH() {
+    var id = $('#_id_th').val();
     if (id == '0') {
         SweetAlert('error','Ops !',"Sila pastikan rekod anda telah disimpan dalam pangkalan data.");
     }
     else
     {        
-        OpenWindow("/cetak-senarai-semak-harian/"+id,'CetakSSH','top=10,left=10,width=650,height=500');
+        OpenWindow("/cetak-tugasan-harian/"+id,'CetakTH','top=10,left=10,width=700,height=500');
     }
 }
-function Cetak_SSH(id) {
-    OpenWindow("/cetak-senarai-semak-harian/"+id,'Cetak_SSH','top=10,left=10,width=650,height=500');
+function Cetak_TH(id) {
+    OpenWindow("/cetak-tugasan-harian/"+id,'Cetak_TH','top=10,left=10,width=700,height=500');
 }
-function ViewSSH(mon,year) {
-    window.location.href = "/senarai-semak-harian/"+mon+"/"+year;
+function ViewTH(mon,year) {
+    window.location.href = "/tugasan-harian/"+mon+"/"+year;
+}
+function PPDSemakTH(monyear) {
+    swal({
+        title: "Buat Semakan ?",
+        text: "Anda pasti untuk membuat semakan ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/ppd-semak-th";
+        ajax.setVar('monyear',monyear);
+        Ajx(ajax);
+    });
+}
+function EmelTH() {
+    var id = $('#_id_th').val();
+    if (id == '0') {
+        SweetAlert('error','Ops !',"Sila pastikan rekod anda telah disimpan dalam pangkalan data.");
+    }
+    else
+    {        
+        swal({
+            title: "Hantar ?",
+            text: "Anda pasti untuk menghantar e-mel tugasan harian ?",
+            type: "warning",
+            html: true,
+            showCancelButton: true,
+            confirmButtonColor: "#DD6B55",
+            confirmButtonText: "Ya",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false,
+            showLoaderOnConfirm: true
+        },
+        function()
+        {
+            var ajax = new sack();
+            ajax.requestFile = "/emel-th";
+            ajax.setVar('id',id);
+            Ajx(ajax);
+        });
+    }
 }
 
 /* Aduan Kerosakan */
@@ -587,25 +637,4 @@ function CetakAKP(id) {
 }
 function ViewAKP(mon,year) {
     window.location.href = "/aduan-kerosakan/"+mon+"/"+year;
-}
-function PPDSemakSSH(monyear) {
-    swal({
-        title: "Buat Semakan ?",
-        text: "Anda pasti untuk membuat semakan ?",
-        type: "warning",
-        html: true,
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Ya",
-        cancelButtonText: "Batal",
-        closeOnConfirm: false,
-        showLoaderOnConfirm: true
-    },
-    function()
-    {
-        var ajax = new sack();
-        ajax.requestFile = "/ppd-semak-ssh";
-        ajax.setVar('monyear',monyear);
-        Ajx(ajax);
-    });
 }

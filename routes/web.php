@@ -108,20 +108,21 @@ Route::get('/smart-team/aktiviti-adhoc-detail/{xtvtid}', 'JTKController@DetailAk
 
 /**
 
-	SENARAI SEMAK HARIAN
+	TUGASAN HARIAN
 
 */
 
+Route::get('/tugasan-harian', 'JTKController@TugasanHarian'); // Senarai Tugasan Harian
+Route::get('/tugasan-harian/{mon}/{year}', 'JTKController@TugasanHarian'); // Senarai Tugasan Harian
 Route::get('/senarai-semak-harian', 'JTKController@SenaraiSemakHarian'); // Senarai Semak Harian
-Route::get('/senarai-semak-harian/{mon}/{year}', 'JTKController@SenaraiSemakHarian'); // Senarai Semak Harian
-Route::get('/senarai-semakan', 'JTKController@SenaraiSemakan'); // Senarai Semakan
-Route::post('/senarai-semakan', 'JTKController@SaveSenaraiSemakan'); // Save Senarai Semakan
-Route::post('/edit-senarai-semakan/{id}', 'JTKController@EditSenaraiSemakan'); // Edit Senarai Semakan
-Route::post('/delete-senarai-semakan/{id}', 'JTKController@PadamSenaraiSemakan'); // Padam Senarai Semakan
-Route::post('/save-senarai-semakan', 'JTKController@SaveSenaraiSemak'); // Save Senarai Semak Harian
-Route::post('/edit-senarai-semak-harian', 'JTKController@EditSenaraiSemakHarian'); // Edit Senarai Semak Harian
-Route::get('/cetak-senarai-semak-harian/{id}', 'JTKController@CetakSenaraiSemakHarian'); // Cetak Senarai Semak Harian
-Route::post('/ppd-semak-ssh', 'JTKController@PPDSemakSSH'); // PPD Semak SSH
+Route::post('/senarai-semak-harian', 'JTKController@SaveSenaraiSemakHarian'); // Save Senarai Semak Harian
+Route::post('/edit-senarai-semak-harian/{id}', 'JTKController@EditSenaraiSemakHarian'); // Edit Senarai Semakan Harian
+Route::post('/delete-senarai-semak-harian/{id}', 'JTKController@PadamSenaraiSemakHarian'); // Padam Senarai Semakan Harian
+Route::post('/save-tugasan-harian', 'JTKController@SaveTugasanHarian'); // Save Tugasan Harian
+Route::post('/edit-tugasan-harian', 'JTKController@EditTugasanHarian'); // Edit Tugasan Harian
+Route::get('/cetak-tugasan-harian/{id}', 'JTKController@CetakTugasanHarian'); // Cetak Tugasan Harian
+Route::post('/ppd-semak-th', 'JTKController@PPDSemakTH'); // PPD Semak Tugasan Harian
+Route::post('/emel-th', 'JTKController@EmelTH'); // Hantar E-mel Tugasan Harian
 
 /**
 

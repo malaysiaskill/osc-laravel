@@ -13,7 +13,8 @@
         "google/recaptcha": "^1.1",
         "emojione/emojione": "^2.2",
         "cloudinary/cloudinary_php": "^1.4",
-        "devdojo/chatter": "0.1.*"
+        "devdojo/chatter": "0.1.*",
+        "phpmailer/phpmailer": "^5.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
