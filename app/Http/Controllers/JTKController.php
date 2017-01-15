@@ -1029,9 +1029,9 @@ class JTKController extends Controller
     */
     public function PPDSemakTH(Request $r)
     {
-        $monyear = explode('-', $r->monyear);
+        $monyear = explode('-', $r->monyear); // MM-YYYY
 
-        $ssh = TugasanHarian::whereYear('tarikh_semakan',$monyear[1])->whereMonth('tarikh_semakan',$monyear[0])->update([
+        $ssh = TugasanHarian::whereYear('tarikh_semakan',$monyear[1])->whereMonth('tarikh_semakan',$monyear[0])->where('ppd_semak','0')->update([
             'ppd_semak' => 1,
             'tarikh_ppd_semak' => Carbon::now(),
             'id_penyemak' => Auth::user()->id
@@ -1684,7 +1684,7 @@ class JTKController extends Controller
                 # ------------------------
 
                 $mail = new PHPMailer;
-                $mail->IsSMTP();
+                $mail->IsSendmail();
                 $mail->SMTPDebug = 0;
                 $mail->SMTPAuth = true;
                 $mail->SMTPSecure = 'tls';
@@ -1826,6 +1826,7 @@ class JTKController extends Controller
                 $akp->laporan_tindakan = $r->_laporan_tindakan;
                 $akp->tarikh_pemeriksaan = $tarikh_pemeriksaan;
                 $akp->status_aduan = $r->_status_aduan;
+                $akp->status_peralatan = $r->_status_peralatan;
                 $akp->tarikh_selesai = $tarikh_selesai;
                 $akp->hakmilik_peralatan = $r->_hakmilik;
                 $akp->save();
@@ -1852,6 +1853,7 @@ class JTKController extends Controller
             $akp->laporan_tindakan = $r->_laporan_tindakan;
             $akp->tarikh_pemeriksaan = $tarikh_pemeriksaan;
             $akp->status_aduan = $r->_status_aduan;
+            $akp->status_peralatan = $r->_status_peralatan;
             $akp->tarikh_selesai = $tarikh_selesai;
             $akp->hakmilik_peralatan = $r->_hakmilik;
             $akp->created_at = Carbon::now();
@@ -1901,6 +1903,7 @@ class JTKController extends Controller
         
         echo "$('input[name=\"_hakmilik\"]').filter('[value=\"".$akp->hakmilik_peralatan."\"]').prop('checked', true);";
         echo "$('input[name=\"_status_aduan\"]').filter('[value=\"".$akp->status_aduan."\"]').prop('checked', true);";
+        echo "$('input[name=\"_status_peralatan\"]').filter('[value=\"".$akp->status_peralatan."\"]').prop('checked', true);";
         echo "$('input[name=\"_kategori_aduan\"]').filter('[value=\"".$akp->kategori_aduan."\"]').prop('checked', true);";
         
         if (count($kk) > 0)
@@ -2027,6 +2030,7 @@ class JTKController extends Controller
                 $bgckas = '#F1F1F1';
             }
 
+            # Status Aduan
             if (strtoupper($akp->status_aduan) == 'SELESAI') {
                 $bgc_sa_s = '#666666';
                 $bgc_sa_ts = '#F1F1F1';
@@ -2043,6 +2047,25 @@ class JTKController extends Controller
                 $bgc_sa_s = '#F1F1F1';
                 $bgc_sa_ts = '#F1F1F1';
                 $bgc_sa_hkp = '#F1F1F1';
+            }
+
+            # Status Peralatan
+            if (strtoupper($akp->status_peralatan) == 'OK') {
+                $bgc_sp_ok = '#666666';
+                $bgc_sp_ko = '#F1F1F1';
+                $bgc_sp_lupus = '#F1F1F1';
+            } else if (strtoupper($akp->status_peralatan) == 'ROSAK') {
+                $bgc_sp_ok = '#F1F1F1';
+                $bgc_sp_ko = '#666666';
+                $bgc_sp_lupus = '#F1F1F1';
+            } else if (strtoupper($akp->status_peralatan) == 'LUPUS') {
+                $bgc_sp_ok = '#F1F1F1';
+                $bgc_sp_ko = '#F1F1F1';
+                $bgc_sp_lupus = '#666666';
+            } else {
+                $bgc_sp_ok = '#F1F1F1';
+                $bgc_sp_ko = '#F1F1F1';
+                $bgc_sp_lupus = '#F1F1F1';
             }
 
             $ds = DIRECTORY_SEPARATOR;
@@ -2072,6 +2095,9 @@ class JTKController extends Controller
             $t->Replace('bgc_sa_s', $bgc_sa_s);
             $t->Replace('bgc_sa_ts', $bgc_sa_ts);
             $t->Replace('bgc_sa_hkp', $bgc_sa_hkp);
+            $t->Replace('bgc_sp_ok', $bgc_sp_ok);
+            $t->Replace('bgc_sp_ko', $bgc_sp_ko);
+            $t->Replace('bgc_sp_lupus', $bgc_sp_lupus);
             $t->Replace('TARIKH_PEMERIKSAAN', $akp->tarikh_pemeriksaan_formatted);
             $t->Replace('TARIKH_SELESAI', $akp->tarikh_selesai_formatted);
 
@@ -2092,5 +2118,62 @@ class JTKController extends Controller
             echo "<center><h1>Akses Disekat !</h1></center>";
         }
     }
-    
+    public function CetakLaporanBulananAKP($month=null, $year=null)
+    {
+        $usr = User::find(Auth::user()->id);
+        $nama_sekolah = $usr->jabatan->nama_sekolah_detail_cetakan;
+        $jawatan = $usr->greds->gred_title_cetakan;
+        $kod_jabatan = $usr->kod_jabatan;
+
+        $_data = '';
+        foreach (KategoriKerosakan::where('parent_id','0')->get() as $_kk)
+        {
+            $_data .= '<tr><td colspan="7" bgcolor="#DDDDDD"><b>'.strtoupper($_kk->kategori).'</b></td></tr>';
+
+            foreach (KategoriKerosakan::where('parent_id',$_kk->id)->get() as $_skk)
+            {
+                $kategori_selesai = AKP::where('user_id',Auth::user()->id)->where('status_aduan','SELESAI')->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',$month)->where('kategori_kerosakan','LIKE','%{"_id":'.$_skk->id.',"_kerosakan":"'.$_skk->id.'"}%')->count();
+                $kategori_tidak_selesai = AKP::where('user_id',Auth::user()->id)->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',$month)->where('kategori_kerosakan','LIKE','%{"_id":'.$_skk->id.',"_kerosakan":"'.$_skk->id.'"}%')->whereRaw("(status_aduan <> 'SELESAI' OR status_aduan IS NULL)")->count();
+
+                $status_peralatan_ok = AKP::where('user_id',Auth::user()->id)->where('status_peralatan','OK')->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',$month)->where('kategori_kerosakan','LIKE','%{"_id":'.$_skk->id.',"_kerosakan":"'.$_skk->id.'"}%')->count();
+                $status_peralatan_ko = AKP::where('user_id',Auth::user()->id)->where('status_peralatan','ROSAK')->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',$month)->where('kategori_kerosakan','LIKE','%{"_id":'.$_skk->id.',"_kerosakan":"'.$_skk->id.'"}%')->count();
+                $status_peralatan_lupus = AKP::where('user_id',Auth::user()->id)->where('status_peralatan','LUPUS')->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',$month)->where('kategori_kerosakan','LIKE','%{"_id":'.$_skk->id.',"_kerosakan":"'.$_skk->id.'"}%')->count();
+
+                $_data .= '<tr>
+                    <td align="left" bgcolor="#FFFFFF">'.strtoupper($_skk->kategori).'</td>
+                    <td align="center" bgcolor="#FFFFFF" class="font11">'.$kategori_selesai.'</td>
+                    <td align="center" bgcolor="#FFFFFF" class="font11">'.$kategori_tidak_selesai.'</td>
+                    <td align="center" bgcolor="#FFFFFF" class="font11">&nbsp;</td>
+                    <td align="center" bgcolor="#FFFFFF" class="font11">'.$status_peralatan_ok.'</td>
+                    <td align="center" bgcolor="#FFFFFF" class="font11">'.$status_peralatan_ko.'</td>
+                    <td align="center" bgcolor="#FFFFFF" class="font11">'.$status_peralatan_lupus.'</td>
+                  </tr>';
+            }
+        }
+
+        # Jumlah AKP
+        $jumlah_akp = AKP::where('user_id',Auth::user()->id)->whereYear('tarikh_aduan',$year)->whereMonth('tarikh_aduan',$month)->count();
+
+        $ds = DIRECTORY_SEPARATOR;
+        $t = new Template;
+        $t->Load(public_path().$ds."cetakan".$ds."laporan-bulanan-akp.tpl");
+        $t->Replace('NAMA_SEKOLAH', $nama_sekolah);
+        $t->Replace('JAWATAN', $jawatan);
+        $t->Replace('NAMA_JURUTEKNIK', strtoupper($usr->name));
+        $t->Replace('BULAN', $this->replaceMonth($month));
+        $t->Replace('TAHUN', $year);
+        $t->Replace('DATA', $_data);
+        $t->Replace('JUMLAH_AKP', number_format($jumlah_akp,0,'.',','));
+        $_output = $t->Evaluate();
+
+        $options = new Options();
+        $options->set('defaultFont', 'Century Gothic');
+        $dpdf = new Dompdf($options);
+        $dpdf->loadHtml($_output);
+        $dpdf->setPaper('A4', 'landscape');
+        $dpdf->render();
+        $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
+        $dpdf->add_info('Title','Laporan Bulanan AKP - '.$month.'-'.$year);
+        $dpdf->stream("Laporan-Bulanan-AKP_$month-$year",array('Attachment'=>0));
+    }
 }

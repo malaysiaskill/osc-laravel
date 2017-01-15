@@ -482,6 +482,9 @@ function ClearAKP() {
                     </a>
                 </div>
                 <div class="col-md-6 text-right">
+                    <button type="button" class="btn btn-primary" onclick="javascript:LaporanBulananAKP();return false;">
+                        <i class="fa fa-area-chart"></i> Laporan Bulanan
+                    </button>
                     <button type="button" class="btn btn-primary" onclick="javascript:AddAKP();return false;">
                         <i class="fa fa-plus"></i> Tambah Aduan
                     </button>
@@ -677,6 +680,72 @@ function ClearAKP() {
 <!-- END Page Content -->
 
 @if (!Auth::user()->hasRole('ppd') && !Auth::user()->hasRole('jpn'))
+<!-- Laporan Bulanan Dialog //-->
+<div id="LBDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-popout">
+        <div class="modal-content">
+            <div class="block block-themed block-transparent remove-margin-b">
+                <div class="block-header bg-primary-dark">
+                    <h3 class="block-title">
+                        <i class="fa fa-wrench push-10-r"></i>Laporan Bulanan
+                    </h3>
+                </div>
+                <div class="block-content">
+                    <div class="row push">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <span class="col-sm-12 push-5">Bulan :</span>
+                                <div class="col-sm-12">
+                                    <select name="lb_month" id="lb_month" data-placeholder="Bulan" class="form-control js-select2" style="width: 100%">
+                                        <option></option>
+                                        <?php
+                                            for ($i = 1; $i <= 12; $i++) { 
+                                        ?>
+                                        @if (str_pad($i,2,'0',STR_PAD_LEFT) == date('m'))
+                                            <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}" selected>{{ $jtkc->replaceMonth($i) }}</option>
+                                        @else
+                                            <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}">{{ $jtkc->replaceMonth($i) }}</option>
+                                        @endif
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <span class="col-sm-12 push-5">Tahun :</span>
+                                <div class="col-sm-12">
+                                    <select name="lb_year" id="lb_year" data-placeholder="Tahun" class="form-control js-select2">
+                                        <option></option>
+                                        <?php
+                                            for ($i = date('Y')-3; $i < date('Y')+10; $i++) { 
+                                        ?>
+                                        @if ($i == date('Y'))
+                                            <option value="{{ $i }}" selected>{{ $i }}</option>
+                                        @else
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endif
+
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn_cetak_laporan" data-dismiss="modal" class="btn btn-primary" type="button" onclick="javascript:CetakLBAKP($('#lb_month').val(),$('#lb_year').val());">
+                    <i class="fa fa-print push-5-r"></i>Cetak Laporan
+                </button>
+                <button id="btn_cancel_laporan" data-dismiss="modal" class="btn btn-danger" type="button">
+                    <i class="fa fa-times push-5-r"></i>Batal
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- AKP Dialog //-->
 <div id="AKPDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -854,7 +923,23 @@ function ClearAKP() {
                                                 </label>
                                             </div>
                                         </div>
-                                        
+
+                                        <!-- Added by Zul : 15/01/2017 //-->
+                                        <div class="form-group push">
+                                            <label class="col-sm-4 control-label">Status Peralatan :</label>
+                                            <div class="col-sm-8">
+                                                <label class="css-input css-radio css-radio-primary push-10-r">
+                                                    <input type="radio" value="OK" name="_status_peralatan"><span></span> Boleh Digunapakai
+                                                </label>
+                                                <label class="css-input css-radio css-radio-primary push-10-r">
+                                                    <input type="radio" value="ROSAK" name="_status_peralatan"><span></span> Rosak
+                                                </label>
+                                                <label class="css-input css-radio css-radio-primary">
+                                                    <input type="radio" value="LUPUS" name="_status_peralatan"><span></span> Lupus
+                                                </label>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 

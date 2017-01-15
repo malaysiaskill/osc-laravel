@@ -149,7 +149,7 @@ body,td,th {
         <tr>
           <td bgcolor="#FFFFFF"><table width="100%" border="0" cellspacing="0" cellpadding="3">
             <tr>
-              <td width="60%"><table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
+              <td width="60%" valign="top"><table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000000">
                 <tr>
                   <td colspan="2" bgcolor="#E8E8E8"><strong>Laporan Tindakan:</strong></td>
                   </tr>
@@ -173,7 +173,28 @@ body,td,th {
                       <td>Hantar ke Pembekal</td>
                     </tr>
                   </table></td>
+                </tr>
+
+                <!-- Added by Zul : 15/01/2017 //-->
+                <tr>
+                  <td colspan="2" bgcolor="#E8E8E8"><strong>Status Peralatan:</strong></td>
                   </tr>
+                <tr>
+                  <td colspan="2" bgcolor="#FFFFFF" style="padding:10px;"><table width="98%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td width="10" bgcolor="#bgc_sp_ok#">&nbsp;</td>
+                      <td width="10">&nbsp;</td>
+                      <td>Boleh Digunapakai</td>
+                      <td width="10" bgcolor="#bgc_sp_ko#">&nbsp;</td>
+                      <td width="10">&nbsp;</td>
+                      <td>Rosak</td>
+                      <td width="10" bgcolor="#bgc_sp_lupus#">&nbsp;</td>
+                      <td width="10">&nbsp;</td>
+                      <td>Lupus</td>
+                    </tr>
+                  </table></td>
+                </tr>
+
                 <tr>
                   <td width="100" bgcolor="#FFFFFF"><strong>Tarikh Pemeriksaan:</strong></td>
                   <td bgcolor="#FFFFFF">#TARIKH_PEMERIKSAAN#</td>

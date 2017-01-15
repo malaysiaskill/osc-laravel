@@ -258,10 +258,14 @@ function ClearSemakan() {
                                         }
                                     }
 
-                                    $rowday .= '<tr class="'.$tr_bgcolor.'">
-                                        <td class="text-center">'.$k.'/'.$mon.'/'.$year.' ('.$jtkc->replaceDay(date('l',strtotime("$year-$mon-$_k"))).')</td>
+                                    $hari = strtolower($jtkc->replaceDay(date('l',strtotime("$year-$mon-$_k"))));
+                                    if ($hari != 'sabtu' && $hari != 'ahad')
+                                    {
+                                        $rowday .= '<tr class="'.$tr_bgcolor.'">
+                                        <td class="text-center">'.$k.'/'.$mon.'/'.$year.' ('.ucwords($hari).')</td>
                                         <td class="border-l">'.$listjtk.'</td>
-                                    </tr>';
+                                        </tr>';
+                                    }
                                 }
                             ?>
                             <div class="row">
@@ -339,10 +343,14 @@ function ClearSemakan() {
                                         }
                                     }
 
-                                    $rowday .= '<tr class="'.$tr_bgcolor.'">                                        
-                                        <td class="text-center">'.$k.'/'.date('m').'/'.date('Y').' ('.$jtkc->replaceDay(date('l',strtotime(date('Y')."-".date('m')."-".$_k))).')</td>
+                                    $hari = strtolower($jtkc->replaceDay(date('l',strtotime(date('Y')."-".date('m')."-".$_k))));
+                                    if ($hari != 'sabtu' && $hari != 'ahad')
+                                    {
+                                        $rowday .= '<tr class="'.$tr_bgcolor.'">                                        
+                                        <td class="text-center">'.$k.'/'.date('m').'/'.date('Y').' ('.ucwords($hari).')</td>
                                         <td class="border-l">'.$listjtk.'</td>
-                                    </tr>';
+                                        </tr>';
+                                    }
                                 }
                             ?>
 

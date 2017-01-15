@@ -4,13 +4,13 @@
    margin-bottom: 1cm;
 }
 body,td,th {
-	font-family: "Helvetica";
-	font-size: 12px;
+  font-family: "Helvetica";
+  font-size: 12px;
 }
 .font14-white {
-	font-size: 14px;
-	color:#FFF;
-	font-weight:bold;
+  font-size: 14px;
+  color:#FFF;
+  font-weight:bold;
 }
 .header,
 .footer {
@@ -28,23 +28,27 @@ body,td,th {
   content: counter(page);
 }
 </style>
-<div class="footer">Tarikh : #TARIKH_SEMAKAN# &nbsp; &nbsp; Halaman #<span class="pagenum"></span></div>
+<div class="footer">Halaman #<span class="pagenum"></span></div>
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
   <tr>
     <td align="center" valign="top">
     <h2>
-    LOG TUGASAN & SENARAI SEMAK HARIAN JURUTEKNIK KOMPUTER<br />
+    LAPORAN BULANAN ADUAN KEROSAKAN PERALATAN ICT<br />
     #NAMA_SEKOLAH#</h2></td>
   </tr>
 </table>
 <table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr>
-    <td width="150">Nama Juruteknik:</td>
+    <td width="150">Nama Juruteknik :</td>
     <td><strong>#NAMA_JURUTEKNIK#</strong></td>
   </tr>
   <tr>
-    <td>Tarikh & Masa Semakan:</td>
-    <td><strong>#TARIKH_SEMAKAN#</strong></td>
+    <td>Bulan :</td>
+    <td><strong>#BULAN#, #TAHUN#</strong></td>
+  </tr>
+  <tr>
+    <td>Jumlah Aduan Kerosakan :</td>
+    <td><strong>#JUMLAH_AKP#</strong></td>
   </tr>
   <tr>
     <td colspan="2" height="2"></td>
@@ -52,26 +56,24 @@ body,td,th {
 </table>
 <table width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#333333">
   <tr class="font14-white">
-    <td align="left" bgcolor="#004070" colspan="5">SENARAI SEMAK HARIAN</td>
+    <td rowspan="2" align="center" bgcolor="#1d79d5">PERALATAN</td>
+    <td colspan="3" align="center" bgcolor="#1d79d5" class="font11">
+      PENYELENGGARAAN PEMULIHAN (CM)<br>
+      <small>(BERPANDUKAN BORANG ADUAN KEROSAKAN)</small>
+    </td>
+    <td colspan="3" align="center" bgcolor="#1d79d5">STATUS PERALATAN</td>
   </tr>
   <tr class="font14-white">
-    <td align="center" bgcolor="#1d79d5">BIL</td>
-    <td bgcolor="#1d79d5" class="font11">PERKARA</td>
-    <td bgcolor="#1d79d5">CARA PENGUJIAN</td>
-    <td align="center" bgcolor="#1d79d5">STATUS SEMAKAN</td>
-    <td align="center" bgcolor="#1d79d5">CATATAN</td>
+    <td align="center" bgcolor="#1d79d5" class="font11"><p>SELESAI</p>    </td>
+    <td align="center" bgcolor="#1d79d5" class="font11">TIDAK SELESAI</td>
+    <td align="center" bgcolor="#1d79d5" class="font11">CATATAN</td>
+    <td align="center" bgcolor="#1d79d5" class="font11">BIL BOLEH DIGUNAPAKAI</td>
+    <td align="center" bgcolor="#1d79d5" class="font11">BIL ROSAK</td>
+    <td align="center" bgcolor="#1d79d5" class="font11">BIL LUPUS</td>
   </tr>
   #DATA#
 </table>
 
-<table style="page-break-before: always;" width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#333333">
-  <tr class="font14-white">
-    <td align="left" bgcolor="#004070" colspan="5">TUGASAN HARIAN</td>
-  </tr>
-  <tr>
-    <td bgcolor="#FFFFFF" align="left" colspan="5">#TUGASAN_HARIAN#</td>
-  </tr>
-</table>
 
 <table width="100%" border="0" cellspacing="0" cellpadding="3">
   <tr>
@@ -92,6 +94,5 @@ body,td,th {
               #NAMA_SEKOLAH# </strong></td>
       </tr>
     </table></td>
-    <td width="50%" align="left" valign="top">#DATA_SEMAK#</td>
   </tr>
 </table>

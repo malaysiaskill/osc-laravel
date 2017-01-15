@@ -34,6 +34,7 @@ class CreateAduanKerosakanTable extends Migration
             $table->text('laporan_tindakan')->nullable();
             $table->date('tarikh_pemeriksaan')->nullable();
             $table->string('status_aduan')->nullable();
+            $table->string('status_peralatan')->nullable();
             $table->date('tarikh_selesai')->nullable();
             $table->string('hakmilik_peralatan')->nullable();
             $table->timestamp('created_at')->nullable();

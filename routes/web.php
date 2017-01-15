@@ -137,3 +137,4 @@ Route::post('/get-latest-nosiriaduan', 'JTKController@getLatestNoSiriAduan'); //
 Route::post('/delete-aduan-kerosakan', 'JTKController@PadamAduanKerosakan'); // Padam Aduan Kerosakan
 Route::post('/edit-aduan-kerosakan', 'JTKController@EditAduanKerosakan'); // Edit Aduan Kerosakan
 Route::get('/cetak-aduan-kerosakan/{id}', 'JTKController@CetakAduanKerosakan'); // Cetak Aduan Kerosakan
+Route::get('/cetak-laporan-bulanan-akp/{month}/{year}', 'JTKController@CetakLaporanBulananAKP'); // Cetak Aduan Kerosakan

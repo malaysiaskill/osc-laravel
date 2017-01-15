@@ -571,7 +571,7 @@ function EmelTH() {
     else
     {        
         swal({
-            title: "Hantar ?",
+            title: "Hantar E-mel ?",
             text: "Anda pasti untuk menghantar e-mel tugasan harian ?",
             type: "warning",
             html: true,
@@ -633,8 +633,14 @@ function PadamAKP(id) {
     });
 }
 function CetakAKP(id) {
-    OpenWindow("/cetak-aduan-kerosakan/"+id,'CetakAKP','top=10,left=10,width=650,height=500');
+    OpenWindow("/cetak-aduan-kerosakan/"+id,'CetakAKP','top=10,left=10,width=700,height=500');
 }
 function ViewAKP(mon,year) {
     window.location.href = "/aduan-kerosakan/"+mon+"/"+year;
+}
+function LaporanBulananAKP() {
+    $('#LBDialog').modal();   
+}
+function CetakLBAKP(bulan,tahun) {
+    OpenWindow("/cetak-laporan-bulanan-akp/"+bulan+"/"+tahun,'CetakLBAKP','top=10,left=10,width=700,height=500');
 }
