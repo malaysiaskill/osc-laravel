@@ -19,7 +19,7 @@ class CreateSmartteamAktivitiTable extends Migration
             $table->increments('id');
             $table->integer('smart_team_id')->unsigned();
             $table->string('nama_aktiviti')->unique();
-            $table->string('sekolah_terlibat')->nullable();
+            $table->string('tempat')->nullable();
             $table->date('tarikh_dari')->nullable();
             $table->date('tarikh_hingga')->nullable();
             $table->string('jtk_terlibat')->nullable();

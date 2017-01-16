@@ -4,8 +4,8 @@
 @section('app.helper', ",'summernote', 'ckeditor'")
 
 @section('jquery')
-@if ($xtvt->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || Auth::user()->hasRole('ppd') || strlen($xtvt->jtk_terlibat) == 0)
-$('#btn-add-gambar').click(function(){ $('#upload-gambar').toggle(); });
+@if (App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
+$('#btn-add-gambar').click(function(){ $('#upload-gambar').toggle(); $("html, body").animate({scrollTop: $('#uploadgambarxtvt').offset().top },500); });
 Dropzone.autoDiscover = false;
 $('#upload-gambar').dropzone({
     url: '/smart-team/aktiviti/upload-gambar/{{ $xtvt->id }}',
@@ -86,12 +86,12 @@ $('#upload-gambar').dropzone({
                                 <div class="block-header bg-gray-lighter">
                                     
                                     <div class="block-options-simple">
-                                        @if ((Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd) || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
+                                        @if (Auth::user()->kod_ppd == $xtvt->kod_ppd || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
                                             <button class="btn btn-sm btn-primary" type="button" onclick="EditAktivitiAdhoc('{{ $xtvt->id }}');">
                                                 <i class="fa fa-pencil"></i> Edit
                                             </button>
                                         @endif
-                                        @if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd)
+                                        @if (Auth::user()->hasRole('ppd') || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
                                             <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktivitiAdhoc('{{ $xtvt->id }}');">
                                                 <i class="fa fa-trash-o"></i> Delete
                                             </button>
@@ -130,16 +130,27 @@ $('#upload-gambar').dropzone({
                                             </div>
                                         </div>
                                         <div class="col-xs-12">
-                                            <label class="h5 font-w300 push-5">Sekolah Terlibat :</label>
+                                            <label class="h5 font-w300 push-5">Tempat/Lokasi :</label>
                                             <div>
                                                 <div class="h6 panel panel-primary padding-10-all remove-margin-b">
-                                                    @if (strlen($xtvt->sekolah_terlibat) == 0)
+                                                    @if (strlen($xtvt->tempat) == 0)
                                                     -
                                                     @else
-                                                        @foreach (explode(',', trim($xtvt->sekolah_terlibat,',')) as $sek)
-                                                            <?php $_sek = App\Sekolah::where('kod_sekolah',$sek)->first(); ?>
+                                                        @foreach (explode(',', trim($xtvt->tempat,',')) as $tempat)
+                                                            <?php
+                                                                $_sek = App\Sekolah::where('kod_sekolah',$tempat)->first();
+                                                                $_pkg = App\PKG::where('kod_pkg',$tempat)->first();
+                                                                $_ppd = App\PPD::where('kod_ppd',$tempat)->first();
+                                                                if (count($_sek) > 0) {
+                                                                    $_nama_tempat = $_sek->nama_sekolah_detail;//AEE1026
+                                                                } else if (count($_pkg) > 0) {
+                                                                    $_nama_tempat = $_pkg->kod_pkg." - ".$_pkg->pkg;
+                                                                } else {
+                                                                    $_nama_tempat = $_ppd->kod_ppd." - ".$_ppd->ppd;
+                                                                }
+                                                            ?>
                                                             <span class="badge badge-success">
-                                                             {{ $_sek->nama_sekolah_detail }}
+                                                                {{ $_nama_tempat }}
                                                             </span>
                                                         @endforeach
                                                     @endif
@@ -199,6 +210,7 @@ $('#upload-gambar').dropzone({
                                                 @endif
                                             </div>
                                             <div id="upload-gambar" style="display:none;" class="push-10-t dropzone"></div>
+                                            <a id="uploadgambarxtvt" name="uploadgambarxtvt"></a>
                                         </div>
                                     </div>
                                 </div>
@@ -210,7 +222,8 @@ $('#upload-gambar').dropzone({
         </div>
     </div>
 </div>
-@if ((Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $xtvt->kod_ppd) || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
+
+@if (Auth::user()->kod_ppd == $xtvt->kod_ppd || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || Auth::user()->hasRole('ppd') || strlen($xtvt->jtk_terlibat) == 0)
 <!-- Aktiviti Dialog //-->
 <div id="AktivitiDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -235,12 +248,20 @@ $('#upload-gambar').dropzone({
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="col-sm-12 h5 font-w300 push-5">Sekolah Terlibat :</label>
+                                    <label class="col-sm-12 h5 font-w300 push-5">Tempat/Lokasi :</label>
                                     <div class="col-sm-12">
-                                        <select multiple id="_sekolah_terlibat" name="_sekolah_terlibat[]" data-placeholder="Sekolah.." class="form-control js-select2" style="width:100%;" required>
+                                        <select multiple id="_tempat_lokasi" name="_tempat_lokasi[]" data-placeholder="Tempat/Lokasi.." class="form-control js-select2" style="width:100%;" required>
+                                            
+                                            <option value="{{ Auth::user()->kod_ppd }}">{{ Auth::user()->kod_ppd }} - {{ Auth::user()->nama_ppd_list }}</option>
+
+                                            @foreach (App\PKG::where('kod_ppd',Auth::user()->kod_ppd)->get() as $pkg)
+                                                <option value="{{ $pkg->kod_pkg }}">{{ $pkg->kod_pkg }} - {{ $pkg->pkg }}</option>
+                                            @endforeach
+
                                             @foreach (App\Sekolah::where('kod_ppd',Auth::user()->kod_ppd)->get() as $sekolah)
                                                 <option value="{{ $sekolah->kod_sekolah }}">{{ $sekolah->kod_sekolah }} - {{ $sekolah->nama_sekolah }}</option>
                                             @endforeach
+
                                         </select>
                                     </div>
                                 </div>

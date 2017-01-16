@@ -91,6 +91,12 @@ class User extends Authenticatable
         return $dppd->ppd . " (".$this->kod_ppd.")";
     }
 
+    public function getNamaPpdListAttribute()
+    {
+        $dppd = \App\PPD::where('kod_ppd',$this->kod_ppd)->first();
+        return $dppd->ppd;
+    }
+
     public function getWebPpdAttribute()
     {
         $dppd = \App\PPD::where('kod_ppd',$this->kod_ppd)->first();

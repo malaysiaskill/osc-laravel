@@ -5,7 +5,7 @@
 
 @section('jquery')
 @if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
-$('#btn-add-gambar').click(function(){ $('#upload-gambar').toggle(); });
+$('#btn-add-gambar').click(function(){ $('#upload-gambar').toggle(); $("html, body").animate({scrollTop: $('#uploadgambarxtvt').offset().top },500); });
 Dropzone.autoDiscover = false;
 $('#upload-gambar').dropzone({
     url: '/smart-team/aktiviti/upload-gambar/{{ $xtvt->id }}',
@@ -126,16 +126,27 @@ $('#upload-gambar').dropzone({
                                             </div>
                                         </div>
                                         <div class="col-xs-12">
-                                            <label class="h5 font-w300 push-5">Sekolah Terlibat :</label>
+                                            <label class="h5 font-w300 push-5">Tempat/Lokasi :</label>
                                             <div>
                                                 <div class="h6 panel panel-primary padding-10-all remove-margin-b">
-                                                    @if (strlen($xtvt->sekolah_terlibat) == 0)
+                                                    @if (strlen($xtvt->tempat) == 0)
                                                     -
                                                     @else
-                                                        @foreach (explode(',', trim($xtvt->sekolah_terlibat,',')) as $sek)
-                                                            <?php $_sek = App\Sekolah::where('kod_sekolah',$sek)->first(); ?>
+                                                        @foreach (explode(',', trim($xtvt->tempat,',')) as $tempat)
+                                                            <?php
+                                                                $_sek = App\Sekolah::where('kod_sekolah',$tempat)->first();
+                                                                $_pkg = App\PKG::where('kod_pkg',$tempat)->first();
+                                                                $_ppd = App\PPD::where('kod_ppd',$tempat)->first();
+                                                                if (count($_sek) > 0) {
+                                                                    $_nama_tempat = $_sek->nama_sekolah_detail;//AEE1026
+                                                                } else if (count($_pkg) > 0) {
+                                                                    $_nama_tempat = $_pkg->kod_pkg." - ".$_pkg->pkg;
+                                                                } else {
+                                                                    $_nama_tempat = $_ppd->kod_ppd." - ".$_ppd->ppd;
+                                                                }
+                                                            ?>
                                                             <span class="badge badge-success">
-                                                             {{ $_sek->nama_sekolah_detail }}
+                                                                {{ $_nama_tempat }}
                                                             </span>
                                                         @endforeach
                                                     @endif
@@ -195,6 +206,7 @@ $('#upload-gambar').dropzone({
                                                 @endif
                                             </div>
                                             <div id="upload-gambar" style="display:none;" class="push-10-t dropzone"></div>
+                                            <a id="uploadgambarxtvt" name="uploadgambarxtvt"></a>
                                         </div>
                                     </div>
                                 </div>
@@ -206,7 +218,8 @@ $('#upload-gambar').dropzone({
         </div>
     </div>
 </div>
-@if (Auth::user()->hasRole('leader') || Auth::user()->id == App\SmartTeam::find($xtvt->smart_team_id)->ketua_kumpulan)
+
+@if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
 <!-- Aktiviti Dialog //-->
 <div id="AktivitiDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -231,12 +244,20 @@ $('#upload-gambar').dropzone({
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="col-sm-12 h5 font-w300 push-5">Sekolah Terlibat :</label>
+                                    <label class="col-sm-12 h5 font-w300 push-5">Tempat/Lokasi :</label>
                                     <div class="col-sm-12">
-                                        <select multiple id="_sekolah_terlibat" name="_sekolah_terlibat[]" data-placeholder="Sekolah.." class="form-control js-select2" style="width:100%;" required>
+                                        <select multiple id="_tempat_lokasi" name="_tempat_lokasi[]" data-placeholder="Tempat/Lokasi.." class="form-control js-select2" style="width:100%;" required>
+                                            
+                                            <option value="{{ Auth::user()->kod_ppd }}">{{ Auth::user()->kod_ppd }} - {{ Auth::user()->nama_ppd_list }}</option>
+
+                                            @foreach (App\PKG::where('kod_ppd',Auth::user()->kod_ppd)->get() as $pkg)
+                                                <option value="{{ $pkg->kod_pkg }}">{{ $pkg->kod_pkg }} - {{ $pkg->pkg }}</option>
+                                            @endforeach
+
                                             @foreach (App\Sekolah::where('kod_ppd',Auth::user()->kod_ppd)->get() as $sekolah)
                                                 <option value="{{ $sekolah->kod_sekolah }}">{{ $sekolah->kod_sekolah }} - {{ $sekolah->nama_sekolah }}</option>
                                             @endforeach
+
                                         </select>
                                     </div>
                                 </div>

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateXtvtadhocTable extends Migration
+class CreatePkgTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,21 +13,17 @@ class CreateXtvtadhocTable extends Migration
      */
     public function up()
     {
-        Schema::create('aktiviti_adhoc', function (Blueprint $table)
+        Schema::create('pkg', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
+            $table->string('kod_jpn');
             $table->string('kod_ppd');
-            $table->string('nama_aktiviti')->unique();
-            $table->string('tempat')->nullable();
-            $table->date('tarikh_dari')->nullable();
-            $table->date('tarikh_hingga')->nullable();
-            $table->string('jtk_terlibat')->nullable();
-            $table->text('objektif')->nullable();
-            $table->text('detail')->nullable();
+            $table->string('kod_pkg')->unique();
+            $table->string('pkg');
+            $table->string('website')->nullable();
             $table->timestamp('created_at')->nullable();
             $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP'));
-            $table->foreign('kod_ppd')->references('kod_ppd')->on('ppd')->onDelete('cascade');
         });
     }
 
@@ -38,6 +34,6 @@ class CreateXtvtadhocTable extends Migration
      */
     public function down()
     {
-        Schema::drop('aktiviti_adhoc');
+        Schema::drop('pkg');
     }
 }

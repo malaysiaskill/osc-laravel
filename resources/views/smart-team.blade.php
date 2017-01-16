@@ -62,6 +62,83 @@ $('#XtvtAdhoc').DataTable();
                 <div class="block-content">
                     @if (strlen($kod_ppd) != 0)
                         @foreach (App\PPD::where('kod_ppd',$kod_ppd)->get() as $ppd)
+                            <div class="block block-rounded block-bordered block-themed">
+                                <div class="block-header bg-primary">
+                                    <ul class="block-options">
+                                        <li>
+                                            <button type="button" data-toggle="block-option" data-action="content_toggle"></button>
+                                        </li>
+                                    </ul>
+                                    <h3 class="block-title">AKTIVITI LAIN (AD-HOC)</h3>
+                                </div>
+                                
+                                @if (!Auth::user()->hasRole('jpn'))
+                                <div class="block-content remove-margin-b">
+                                    <button type="button" class="btn btn-primary" onclick="javascript:AddAktivitiAdhocDialog();">
+                                        <i class="fa fa-plus push-5-r"></i>Tambah Aktiviti
+                                    </button>
+                                </div>
+                                @endif
+                                
+                                <div class="block-content">
+                                    <table id="XtvtAdhoc" class="table table-striped table-bordered responsive h6">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center">Bil</th>
+                                                <th class="text-center">Nama Aktiviti</th>
+                                                <th class="text-center">Tarikh Aktiviti</th>
+                                                <th class="text-center">Juruteknik Terlibat</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (App\AktivitiAdhoc::where('kod_ppd',$kod_ppd)->get()->count() > 0)
+                                                <?php $i=0; ?>
+                                                @foreach (App\AktivitiAdhoc::where('kod_ppd',$kod_ppd)->get() as $xtvt)
+                                                <?php $i++; ?>
+                                                <tr>
+                                                    <td class="text-center">{{ $i }}.</td>
+                                                    <td class="h5 font-w300">
+                                                        <a href="/smart-team/aktiviti-adhoc-detail/{{ $xtvt->id }}">
+                                                            {{ $xtvt->nama_aktiviti }}
+                                                        </a>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        {{ $xtvt->tarikh_dari_formatted }}
+                                                        @if (strlen($xtvt->tarikh_hingga) != 0 && ($xtvt->tarikh_dari != $xtvt->tarikh_hingga))
+                                                            - {{ $xtvt->tarikh_hingga_formatted }}
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">
+                                                        @if (strlen($xtvt->jtk_terlibat) != 0)
+                                                            {{ count(explode(',',trim($xtvt->jtk_terlibat,','))) }} Orang
+                                                        @else
+                                                            Semua
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <a href="/smart-team/aktiviti-adhoc-detail/{{ $xtvt->id }}" class="btn btn-sm btn-primary">
+                                                            Lihat Aktiviti
+                                                        </a>
+                                                        @if (Auth::user()->kod_ppd == $kod_ppd)
+                                                        <button type="button" class="btn btn-sm btn-primary" onclick="javascript:EditAktivitiAdhoc('{{ $xtvt->id }}');">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </button>
+                                                        @endif
+                                                        @if (Auth::user()->hasRole('ppd') || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
+                                                        <button type="button" class="btn btn-sm btn-danger" onclick="javascript:PadamAktivitiAdhoc('{{ $xtvt->id }}');">
+                                                            <i class="fa fa-trash-o"></i>
+                                                        </button>
+                                                        @endif
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
                             <div class="block block-rounded block-bordered">
                                 <div class="block-header bg-gray-lighter">
                                     <ul class="block-options">
@@ -118,81 +195,6 @@ $('#XtvtAdhoc').DataTable();
                                             @endforeach
                                         </div>
                                     @endif
-                                </div>
-                            </div>
-
-                            <div class="block block-rounded block-bordered block-themed">
-                                <div class="block-header bg-primary">
-                                    <ul class="block-options">
-                                        <li>
-                                            <button type="button" data-toggle="block-option" data-action="content_toggle"></button>
-                                        </li>
-                                    </ul>
-                                    <h3 class="block-title">AKTIVITI LAIN (AD-HOC)</h3>
-                                </div>
-                                @if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $kod_ppd)
-                                <div class="block-content remove-margin-b">
-                                    <button type="button" class="btn btn-primary" onclick="javascript:AddAktivitiAdhocDialog();">
-                                        <i class="fa fa-plus push-5-r"></i>Tambah Aktiviti
-                                    </button>
-                                </div>
-                                @endif
-                                <div class="block-content">
-                                    <table id="XtvtAdhoc" class="table table-striped table-bordered responsive h6">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center">Bil</th>
-                                                <th class="text-center">Nama Aktiviti</th>
-                                                <th class="text-center">Tarikh Aktiviti</th>
-                                                <th class="text-center">Juruteknik Terlibat</th>
-                                                <th class="text-center">Sekolah Terlibat</th>
-                                                <th></th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @if (App\AktivitiAdhoc::where('kod_ppd',$kod_ppd)->get()->count() > 0)
-                                                <?php $i=0; ?>
-                                                @foreach (App\AktivitiAdhoc::where('kod_ppd',$kod_ppd)->get() as $xtvt)
-                                                <?php $i++; ?>
-                                                <tr>
-                                                    <td class="text-center">{{ $i }}.</td>
-                                                    <td class="h5 font-w300">
-                                                        <a href="/smart-team/aktiviti-adhoc-detail/{{ $xtvt->id }}">
-                                                            {{ $xtvt->nama_aktiviti }}
-                                                        </a>
-                                                    </td>
-                                                    <td class="text-center">
-                                                        {{ $xtvt->tarikh_dari_formatted }}
-                                                        @if (strlen($xtvt->tarikh_hingga) != 0 && ($xtvt->tarikh_dari != $xtvt->tarikh_hingga))
-                                                            - {{ $xtvt->tarikh_hingga_formatted }}
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">
-                                                        @if (strlen($xtvt->jtk_terlibat) != 0)
-                                                            {{ count(explode(',',trim($xtvt->jtk_terlibat,','))) }}
-                                                        @else
-                                                            Semua
-                                                        @endif
-                                                    </td>
-                                                    <td class="text-center">{{ count(explode(',',trim($xtvt->sekolah_terlibat,','))) }}</td>
-                                                    <td class="text-center">
-                                                        <a href="/smart-team/aktiviti-adhoc-detail/{{ $xtvt->id }}" class="btn btn-sm btn-primary">
-                                                            Lihat Aktiviti
-                                                        </a>
-                                                        @if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $kod_ppd)
-                                                        <button type="button" class="btn btn-sm btn-primary" onclick="javascript:EditAktivitiAdhoc('{{ $xtvt->id }}');">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-sm btn-danger" onclick="javascript:PadamAktivitiAdhoc('{{ $xtvt->id }}');">
-                                                            <i class="fa fa-trash-o"></i>
-                                                        </button>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            @endif
-                                        </tbody>
-                                    </table>
                                 </div>
                             </div>
                         @endforeach
@@ -324,7 +326,7 @@ $('#XtvtAdhoc').DataTable();
 </div>
 @endif
 
-@if (Auth::user()->hasRole('ppd') && Auth::user()->kod_ppd == $kod_ppd)
+@if (!Auth::user()->hasRole('jpn'))
 <!-- Aktiviti Adhoc Dialog //-->
 <div id="AktivitiDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-popout">
@@ -349,12 +351,20 @@ $('#XtvtAdhoc').DataTable();
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label class="col-sm-12 h5 font-w300 push-5">Sekolah Terlibat :</label>
+                                    <label class="col-sm-12 h5 font-w300 push-5">Tempat/Lokasi :</label>
                                     <div class="col-sm-12">
-                                        <select multiple id="_sekolah_terlibat" name="_sekolah_terlibat[]" data-placeholder="Sekolah.." class="form-control js-select2" style="width:100%;" required>
+                                        <select multiple id="_tempat_lokasi" name="_tempat_lokasi[]" data-placeholder="Tempat/Lokasi.." class="form-control js-select2" style="width:100%;" required>
+
+                                            <option value="{{ Auth::user()->kod_ppd }}">{{ Auth::user()->kod_ppd }} - {{ Auth::user()->nama_ppd_list }}</option>
+
+                                            @foreach (App\PKG::where('kod_ppd',Auth::user()->kod_ppd)->get() as $pkg)
+                                                <option value="{{ $pkg->kod_pkg }}">{{ $pkg->kod_pkg }} - {{ $pkg->pkg }}</option>
+                                            @endforeach
+
                                             @foreach (App\Sekolah::where('kod_ppd',Auth::user()->kod_ppd)->get() as $sekolah)
                                                 <option value="{{ $sekolah->kod_sekolah }}">{{ $sekolah->kod_sekolah }} - {{ $sekolah->nama_sekolah }}</option>
                                             @endforeach
+
                                         </select>
                                     </div>
                                 </div>
@@ -422,5 +432,6 @@ $('#XtvtAdhoc').DataTable();
     </div>
 </div>
 @endif
+
 <!-- END Page Content -->
 @endsection

@@ -764,7 +764,7 @@ class JTKController extends Controller
     {
         $smart_team_id = $r->input('_smart_team_id');
         $tajuk_xtvt = htmlentities($r->input('_tajuk_xtvt'),ENT_QUOTES);
-        $sekolah_terlibat = ','.implode(',', $r->input('_sekolah_terlibat')).',';
+        $tempat_lokasi = ','.implode(',', $r->input('_tempat_lokasi')).',';
         $tarikh_xtvt_dari = $r->input('_tarikh_xtvt_dari');
         $tarikh_xtvt_hingga = $r->input('_tarikh_xtvt_hingga');
         if ($r->jtk_terlibat_type == 1 || $r->jtk_terlibat_type == '1') {
@@ -780,7 +780,7 @@ class JTKController extends Controller
             # Update
             $xtvt = AktivitiSmartTeam::find($r->_xtvtid);
             $xtvt->nama_aktiviti = $tajuk_xtvt;
-            $xtvt->sekolah_terlibat = $sekolah_terlibat;
+            $xtvt->tempat = $tempat_lokasi;
             $xtvt->tarikh_dari = $tarikh_xtvt_dari;
             $xtvt->tarikh_hingga = $tarikh_xtvt_hingga;
             $xtvt->jtk_terlibat = $jtk_terlibat;
@@ -800,7 +800,7 @@ class JTKController extends Controller
                 $xtvt = new AktivitiSmartTeam;
                 $xtvt->smart_team_id = $smart_team_id;
                 $xtvt->nama_aktiviti = $tajuk_xtvt;
-                $xtvt->sekolah_terlibat = $sekolah_terlibat;
+                $xtvt->tempat = $tempat_lokasi;
                 $xtvt->tarikh_dari = $tarikh_xtvt_dari;
                 $xtvt->tarikh_hingga = $tarikh_xtvt_hingga;
                 $xtvt->jtk_terlibat = $jtk_terlibat;
@@ -826,7 +826,7 @@ class JTKController extends Controller
         
         $nama_aktiviti = addslashes(html_entity_decode($xtvt->nama_aktiviti,ENT_QUOTES));
         $nama_aktiviti = str_replace('<br />', '\n', nl2br($nama_aktiviti));
-        $sekolah_terlibat = '"' . str_replace(',', '","', trim($xtvt->sekolah_terlibat,',')) . '"';
+        $tempat_lokasi = '"' . str_replace(',', '","', trim($xtvt->tempat,',')) . '"';
         $tarikh_dari = \Carbon\Carbon::createFromFormat('Y-m-d', $xtvt->tarikh_dari)->format('d/m/Y');
         $tarikh_hingga = \Carbon\Carbon::createFromFormat('Y-m-d', $xtvt->tarikh_hingga)->format('d/m/Y');
         $jtk_terlibat = $xtvt->jtk_terlibat;
@@ -841,7 +841,7 @@ class JTKController extends Controller
         echo "$('#AktivitiDialog').modal('show');";
 
         echo "$('#_tajuk_xtvt').val('$nama_aktiviti');";
-        echo "$('#_sekolah_terlibat').val([$sekolah_terlibat]).trigger(\"change\");";
+        echo "$('#_tempat_lokasi').val([$tempat_lokasi]).trigger(\"change\");";
         echo "$('#_tarikh_xtvt_dari').val('$tarikh_dari');";
         echo "$('#_tarikh_xtvt_hingga').val('$tarikh_hingga');";
         if (strlen($jtk_terlibat) != 0) {
@@ -970,7 +970,7 @@ class JTKController extends Controller
     public function SaveAktivitiAdhoc(Request $r)
     {
         $tajuk_xtvt = htmlentities($r->input('_tajuk_xtvt'),ENT_QUOTES);
-        $sekolah_terlibat = ','.implode(',', $r->input('_sekolah_terlibat')).',';
+        $tempat_lokasi = ','.implode(',', $r->input('_tempat_lokasi')).',';
         $tarikh_xtvt_dari = $r->input('_tarikh_xtvt_dari');
         $tarikh_xtvt_hingga = $r->input('_tarikh_xtvt_hingga');
         if ($r->jtk_terlibat_type == 1 || $r->jtk_terlibat_type == '1') {
@@ -987,7 +987,7 @@ class JTKController extends Controller
             $xtvt = AktivitiAdhoc::find($r->_xtvtid);
             $xtvt->kod_ppd = Auth::user()->kod_ppd;
             $xtvt->nama_aktiviti = $tajuk_xtvt;
-            $xtvt->sekolah_terlibat = $sekolah_terlibat;
+            $xtvt->tempat = $tempat_lokasi;
             $xtvt->tarikh_dari = $tarikh_xtvt_dari;
             $xtvt->tarikh_hingga = $tarikh_xtvt_hingga;
             $xtvt->jtk_terlibat = $jtk_terlibat;
@@ -1009,7 +1009,7 @@ class JTKController extends Controller
                 $xtvt = new AktivitiAdhoc;
                 $xtvt->kod_ppd = Auth::user()->kod_ppd;
                 $xtvt->nama_aktiviti = $tajuk_xtvt;
-                $xtvt->sekolah_terlibat = $sekolah_terlibat;
+                $xtvt->tempat = $tempat_lokasi;
                 $xtvt->tarikh_dari = $tarikh_xtvt_dari;
                 $xtvt->tarikh_hingga = $tarikh_xtvt_hingga;
                 $xtvt->jtk_terlibat = $jtk_terlibat;
