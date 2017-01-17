@@ -516,3 +516,6 @@ blockquote span{display:block;font-size:70%;line-height:1.42857143;color:#777}
 .fc-sat, .fc-sun {
     background-color: #fbf3f2 !important;
 }
+/*.fc-day-grid-event .fc-content {
+    white-space: normal!important;
+}*/

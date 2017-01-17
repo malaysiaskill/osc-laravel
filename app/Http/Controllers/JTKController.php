@@ -107,6 +107,18 @@ class JTKController extends Controller
         return $ret;
     }
 
+    public function countDays($year, $month, $ignore) {
+        $count = 0;
+        $counter = mktime(0, 0, 0, $month, 1, $year);
+        while (date("n", $counter) == $month) {
+            if (in_array(date("w", $counter), $ignore) == false) {
+                $count++;
+            }
+            $counter = strtotime("+1 day", $counter);
+        }
+        return $count;
+    }
+
     /**
 
     PROFIL JURUTEKNIK KOMPUTER
@@ -1037,7 +1049,7 @@ class JTKController extends Controller
             'id_penyemak' => Auth::user()->id
         ]);
 
-        echo "SweetAlert('success','Berjaya !','Semua rekod tugasan harian juruteknik telah berjaya disemak !',\"window.location.href='/tugasan-harian';\");";
+        echo "SweetAlert('success','Berjaya !','Semua log tugasan juruteknik telah berjaya disemak !',\"window.location.href='/tugasan-harian';\");";
     }
     public function TugasanHarian($mon=null, $year=null)
     {

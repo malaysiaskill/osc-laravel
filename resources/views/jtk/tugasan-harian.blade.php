@@ -23,7 +23,7 @@
             eventRender: function(event, element, view) {
                 element.attr('title', event.tooltip);
                 if (view.name == 'month') {
-                    $(element).height(50);
+                    $(element).height(25);
                 }
                 element.find(".fc-content").addClass("text-center push-5-t");
                 if (event.icon) {
@@ -65,9 +65,44 @@
                     echo $events;
                 ?>
                 @endforeach
+
+                @foreach (\App\AktivitiAdhoc::where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->get() as $ev)
+                <?php
+                    $event_xtvt = array();
+                    $evid = $ev->id;
+                    $ev_title = $ev->nama_aktiviti;
+                    $tarikh_dari = $ev->tarikh_dari;
+                    $tarikh_hingga = $ev->tarikh_hingga;
+
+                    $evsdt = explode('-', $tarikh_dari);
+                    $evsYear = $evsdt[0];
+                    $evsMon = $evsdt[1]-1;
+                    $evsDay = $evsdt[2];
+
+                    $evedt = explode('-', $tarikh_hingga);
+                    $eveYear = $evedt[0];
+                    $eveMon = $evedt[1]-1;
+                    $eveDay = $evedt[2]+1;
+
+                    $event_xtvt[] = "{
+                        title: '$ev_title',
+                        start: new Date($evsYear, $evsMon, $evsDay, 0, 0),
+                        end: new Date($eveYear, $eveMon, $eveDay, 0, 0),
+                        allDay: true,
+                        xtvt_adhoc_id: '$evid',
+                        tooltip: '$ev_title'
+                    },";
+                    $events_xtvt = implode(',', $event_xtvt);
+                    echo $events_xtvt;
+                ?>
+                @endforeach
             ],
             eventClick: function(calEvent, jsEvent, view) {
-                EditTugasanHarian(calEvent.id);
+                if (calEvent.xtvt_adhoc_id) {
+                    window.location.href = '/smart-team/aktiviti-adhoc-detail/' + calEvent.xtvt_adhoc_id;
+                } else {
+                    EditTugasanHarian(calEvent.id);
+                }
             }
         });
     @endif
@@ -200,6 +235,66 @@ function ClearSemakan() {
     <div class="row">
         <div class="col-xs-12">
             <div class="block block-themed block-rounded">
+
+                <div class="row">
+                    <?php
+                        $jumjtk = \App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->count();
+                        $thhi = \App\TugasanHarian::where('tarikh_semakan',date('Y-m-d'))->orderBy('id','asc')->get();
+                    ?>
+                    <div class="col-md-8">
+                        <div class="block-content block-content-full block-content-mini border-b bg-primary-lighter">
+                            Juruteknik Yang Telah Membuat Log Tugasan Hari Ini - <b>{{ date('d/m/Y') }} - 
+                            (Buat: {{ count($thhi) }} orang &nbsp;  
+                            Tak Buat: {{ ($jumjtk-count($thhi)) }} orang )</b>
+                        </div>
+                        <div class="block-content block-content-full">
+                        
+                        @if (count($thhi) > 0)
+                            @foreach ($thhi as $_thhi)
+                                <img src="/avatar/{{ $_thhi->user_id }}" class="push-5 img-avatar img-avatar48 ok" data-toggle="tooltip" title="{{ $_thhi->user->name }}">
+                            @endforeach
+                        @else
+                            -
+                        @endif
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="block-content block-content-full block-content-mini border-b bg-primary-lighter">
+                            @if (strlen($mon) != 0 && strlen($year) != 0)
+                                Peratus Log Tugasan Dibuat - <b><?php echo $jtkc->replaceMonth($mon); ?>, {{ $year }}</b>
+                            @else
+                                Peratus Log Tugasan Dibuat - <b>{{ $jtkc->replaceMonth(date('n')) }}, {{ date('Y') }}</b>
+                            @endif
+                        </div>
+                        <div class="block-content block-content-full h1 font-w300">
+                            <?php
+                                if (strlen($mon) != 0 && strlen($year) != 0) {
+                                    if (Auth::user()->hasRole('ppd')) {
+                                        $total = ($jumjtk * $jtkc->countDays($year,$mon,array(0,6)));
+                                        $jumbuat = \App\TugasanHarian::whereMonth('tarikh_semakan',$mon)->whereYear('tarikh_semakan',$year)->count();
+                                    } else {
+                                        $total = $jtkc->countDays($year,$mon,array(0,6));
+                                        $jumbuat = \App\TugasanHarian::whereMonth('tarikh_semakan',$mon)->whereYear('tarikh_semakan',$year)->where('user_id',Auth::user()->id)->count();
+                                    }
+                                } else {
+                                    if (Auth::user()->hasRole('ppd')) {
+                                        $total = ($jumjtk * $jtkc->countDays(date('Y'),date('m'),array(0,6)));
+                                        $jumbuat = \App\TugasanHarian::whereMonth('tarikh_semakan',date('m'))->whereYear('tarikh_semakan',date('Y'))->count();
+                                    } else {
+                                        $total = $jtkc->countDays(date('Y'),date('m'),array(0,6));
+                                        $jumbuat = \App\TugasanHarian::whereMonth('tarikh_semakan',date('m'))->whereYear('tarikh_semakan',date('Y'))->where('user_id',Auth::user()->id)->count();
+                                    }
+                                }
+                                $peratus = (($jumbuat/$total) * 100);
+                                echo number_format($peratus,2,".",",")." %";
+                            ?>
+                        </div>
+                    </div>
+                </div>
+                
+
+                <div class="block-content block-content-full block-content-mini bg-gray-lighter"></div>
+
                 <div class="block-content block-content-full">
                     @if (Auth::user()->hasRole('ppd'))
                         <div class="row items-push border-b push">
