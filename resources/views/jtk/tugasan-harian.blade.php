@@ -166,9 +166,9 @@ function ClearSemakan() {
                     <a class="btn btn-default" href="{{ url('/') }}">
                         <i class="fa fa-home"></i>
                     </a>
-                    <a class="btn btn-primary" href="{{ url('/tugasan-harian') }}">
-                        <i class="fa fa-list-ul push-5-r"></i>Tugasan Harian
-                    </a>                    
+                    <a class="btn btn-primary" href="#" onclick="javascript:LIDialog();return false;">
+                        <i class="fa fa-bar-chart push-5-r"></i>Laporan Individu
+                    </a>
                 </div>
                 <div class="col-md-5 pull-right">
                     <div class="row">
@@ -216,6 +216,9 @@ function ClearSemakan() {
                     </a>
                 </div>
                 <div class="col-md-6 text-right">
+                    <a class="btn btn-primary" href="#" onclick="javascript:LIDialog();return false;">
+                        <i class="fa fa-bar-chart push-5-r"></i>Laporan Bulanan
+                    </a>
                     <a class="btn btn-primary" href="{{ url('/senarai-semak-harian') }}">
                         <i class="fa fa-list-ul push-5-r"></i>Senarai Semak Harian
                     </a>
@@ -681,5 +684,90 @@ function ClearSemakan() {
     </div>
 </div>
 @endif
+
+<!-- Laporan Individu Dialog //-->
+<div id="LIDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-popout">
+        <div class="modal-content">
+            <div class="block block-themed block-transparent remove-margin-b">
+                <div class="block-header bg-primary-dark">
+                    <h3 class="block-title">
+                        <i class="fa fa-bar-chart push-10-r"></i>Laporan Log Tugasan
+                    </h3>
+                </div>
+                <div class="block-content">
+                    <div class="row push">
+                        @if (Auth::user()->hasRole('ppd'))
+                        <div class="col-sm-12 push-10">
+                            <div class="form-group">
+                                <span class="col-sm-12 push-5">Juruteknik :</span>
+                                <div class="col-sm-12">
+                                    <select name="lb_jtk" id="lb_jtk" data-placeholder="Juruteknik" class="form-control js-select2-avatar" style="width: 100%" required>
+                                        <option></option>
+                                        @foreach (\App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->orderBy('name','asc')->get() as $jtk)
+                                        <option value="{{ $jtk->id }}">{{ $jtk->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        @else
+                            <input type="hidden" name="lb_jtk" id="lb_jtk" value="{{ Auth::user()->id }}">
+                        @endif
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <span class="col-sm-12 push-5">Bulan :</span>
+                                <div class="col-sm-12">
+                                    <select name="lb_month" id="lb_month" data-placeholder="Bulan" class="form-control js-select2" style="width: 100%">
+                                        <option></option>
+                                        <!--<option value="0">Semua</option>//-->
+                                        <?php
+                                            for ($i = 1; $i <= 12; $i++) { 
+                                        ?>
+                                        @if (str_pad($i,2,'0',STR_PAD_LEFT) == date('m'))
+                                            <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}" selected>{{ $jtkc->replaceMonth($i) }}</option>
+                                        @else
+                                            <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}">{{ $jtkc->replaceMonth($i) }}</option>
+                                        @endif
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <span class="col-sm-12 push-5">Tahun :</span>
+                                <div class="col-sm-12">
+                                    <select name="lb_year" id="lb_year" data-placeholder="Tahun" class="form-control js-select2">
+                                        <option></option>
+                                        <?php
+                                            for ($i = date('Y')-3; $i < date('Y')+10; $i++) { 
+                                        ?>
+                                        @if ($i == date('Y'))
+                                            <option value="{{ $i }}" selected>{{ $i }}</option>
+                                        @else
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endif
+
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn_cetak_laporan" data-dismiss="modal" class="btn btn-primary" type="button" onclick="javascript:CetakLI($('#lb_jtk').val(),$('#lb_month').val(),$('#lb_year').val());">
+                    <i class="fa fa-print push-5-r"></i>Cetak Laporan
+                </button>
+                <button id="btn_cancel_laporan" data-dismiss="modal" class="btn btn-danger" type="button">
+                    <i class="fa fa-times push-5-r"></i>Batal
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @endsection

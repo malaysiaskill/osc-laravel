@@ -2188,4 +2188,138 @@ class JTKController extends Controller
         $dpdf->add_info('Title','Laporan Bulanan AKP - '.$month.'-'.$year);
         $dpdf->stream("Laporan-Bulanan-AKP_$month-$year",array('Attachment'=>0));
     }
+    public function CetakLaporanIndividu($user_id, $month=null, $year=null)
+    {
+        $usr = User::find($user_id);
+        $nama_sekolah = $usr->jabatan->nama_sekolah_detail_cetakan;
+        $jawatan = $usr->greds->gred_title_cetakan;
+        $kod_jabatan = $usr->kod_jabatan;
+        if ($month == '0') {
+            $bulan = '';
+            $bulan_tahun = $year;
+        } else {
+            $bulan = $this->replaceMonth($month);
+            $bulan_tahun = $this->replaceMonth($month).', '.$year;
+        }
+
+        $_data = '';
+        $tugasan_harian = '';
+        if ($month != '0')
+        {
+            $_data .= '<table width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#333333">
+            <tr class="font14-white">
+                <td align="center" bgcolor="#004070" colspan="3">'.strtoupper($bulan_tahun).'</td>
+            </tr>
+            <tr class="font14-white">
+                <td align="center" bgcolor="#1d79d5">TARIKH</td>
+                <td align="center" bgcolor="#1d79d5">SEMAKAN HARIAN</td>
+                <td align="center" bgcolor="#1d79d5">TUGASAN HARIAN</td>
+            </tr>';                    
+
+            $TotalDay = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+            for ($k=1; $k <= $TotalDay; $k++)
+            {
+                $mon = str_pad($month,2,'0',STR_PAD_LEFT);
+                $hari = strtolower($this->replaceDay(date('l',strtotime("$year-$mon-$k"))));
+                $k = str_pad($k,2,'0',STR_PAD_LEFT);
+                if ($hari != 'sabtu' && $hari != 'ahad')
+                {
+                    $rt = TugasanHarian::whereYear('tarikh_semakan',$year)->whereMonth('tarikh_semakan',$mon)->whereDay('tarikh_semakan',$k)->where('user_id',$user_id)->first();
+                    $_rekod_tugasan = count($rt) ? "<b>OK</b>":"-";
+                    if ($rt != NULL) {
+                        $tugasan_harian = $rt->tugasan_harian;
+                    } else {
+                        $tugasan_harian = '-';
+                    }
+                    $_data .= '<tr>
+                        <td width="100" bgcolor="#FFF" align="left" valign="top">'.$k.'/'.$mon.'/'.$year.' ('.ucwords($hari).')</td>
+                        <td width="100" bgcolor="#FFF" align="center" valign="top">'.$_rekod_tugasan.'</td>
+                        <td bgcolor="#FFF" align="left" valign="top">'.nl2br($tugasan_harian).'</td>
+                    </tr>';
+
+                }
+            }
+
+            $_data .= '</table>';
+        }
+
+        # Disemak
+        if ($month != '0')
+        {
+            $semakan = TugasanHarian::whereYear('tarikh_semakan',$year)->whereMonth('tarikh_semakan',$month)->where('user_id',$user_id)->where('ppd_semak',1)->orderBy('id','desc')->first();
+        }
+        if (count($semakan) > 0) {
+            $id_penyemak = $semakan->id_penyemak;
+            $usr_ppd = User::find($id_penyemak);
+
+            $disemak = '<table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="10"></td>
+              </tr>
+              <tr>
+                <td>Telah Disemak Oleh :</td>
+              </tr>
+              <tr>
+                <td align="left" valign="bottom">
+                    <strong>
+                        '.strtoupper($usr_ppd->name).'<br />
+                        '.$usr_ppd->greds->gred_title_cetakan.'<br />
+                        '.$usr_ppd->nama_ppd.'<br /><br />
+                    </strong>
+
+                    Tarikh Semakan : <strong>'.$semakan->tarikh_ppd_semak_formatted.'</strong>
+                </td>
+              </tr>
+            </table>';
+        } else {
+            $disemak = '';
+        }
+
+        # Disediakan Oleh
+        $_data .= '<table width="100%" border="0" cellspacing="0" cellpadding="3">
+          <tr>
+            <td width="50%" align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td height="10"></td>
+              </tr>
+              <tr>
+                <td>Di Sediakan Oleh :</td>
+              </tr>
+              <tr>
+                <td height="40" align="left" valign="bottom"><br />
+                  <br />
+                  <br />
+                  .................................................<br />
+                  <strong>'.strtoupper($usr->name).'<br />
+                    '.$jawatan.'</strong><strong><br />
+                    '.$nama_sekolah.'</strong></td>
+              </tr>
+            </table></td>
+            <td width="50%" align="left" valign="top">'.$disemak.'</td>
+          </tr>
+        </table>';
+
+        $ds = DIRECTORY_SEPARATOR;
+        $t = new Template;
+        $t->Load(public_path().$ds."cetakan".$ds."laporan-tugasan-individu.tpl");
+        $t->Replace('NAMA_SEKOLAH', $nama_sekolah);
+        $t->Replace('JAWATAN', $jawatan);
+        $t->Replace('NAMA_JURUTEKNIK', strtoupper($usr->name));
+        $t->Replace('TARIKH', date('d-m-Y'));
+        $t->Replace('BULAN', $bulan);
+        $t->Replace('TAHUN', $year);
+        $t->Replace('BULAN_TAHUN', strtoupper($bulan_tahun));
+        $t->Replace('DATA', $_data);
+        $_output = $t->Evaluate();
+
+        $options = new Options();
+        $options->set('defaultFont', 'Century Gothic');
+        $dpdf = new Dompdf($options);
+        $dpdf->loadHtml($_output);
+        $dpdf->setPaper('A4', 'landscape');
+        $dpdf->render();
+        $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
+        $dpdf->add_info('Title','Laporan Tugasan Harian ('.$bulan_tahun.') - '.strtoupper($usr->name));
+        $dpdf->stream("Laporan-Tugasan_".$bulan."-".$year."_".str_replace(' ', '_', strtoupper($usr->name)),array('Attachment'=>0));
+    }
 }

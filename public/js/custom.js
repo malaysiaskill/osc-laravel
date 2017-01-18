@@ -644,3 +644,9 @@ function LaporanBulananAKP() {
 function CetakLBAKP(bulan,tahun) {
     OpenWindow("/cetak-laporan-bulanan-akp/"+bulan+"/"+tahun,'CetakLBAKP','top=10,left=10,width=700,height=500');
 }
+function LIDialog() {
+    $('#LIDialog').modal();   
+}
+function CetakLI(jtk,bulan,tahun) {
+    OpenWindow("/cetak-laporan-individu/"+jtk+"/"+bulan+"/"+tahun,'CetakLI','top=10,left=10,width=700,height=500');
+}
