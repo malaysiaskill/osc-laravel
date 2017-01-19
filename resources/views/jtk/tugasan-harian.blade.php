@@ -123,6 +123,18 @@ function ClearSemakan() {
     $('#_speedtest_c1').val('');
     $('#_speedtest_d1').val('');
     $('#_speedtest_e1').val('');
+
+    $('#_ptg_speedtest_a').val('');
+    $('#_ptg_speedtest_b').val('');
+    $('#_ptg_speedtest_c').val('');
+    $('#_ptg_speedtest_d').val('');
+    $('#_ptg_speedtest_e').val('');
+    $('#_ptg_speedtest_a1').val('');
+    $('#_ptg_speedtest_b1').val('');
+    $('#_ptg_speedtest_c1').val('');
+    $('#_ptg_speedtest_d1').val('');
+    $('#_ptg_speedtest_e1').val('');
+
     @foreach ($ss_semua as $ss_h)
         $('#_catatan_{{ $ss_h->id }}').val('');
         $('input[name="_status_{{ $ss_h->id }}"]').filter(':checked').each(function(){
@@ -166,9 +178,25 @@ function ClearSemakan() {
                     <a class="btn btn-default" href="{{ url('/') }}">
                         <i class="fa fa-home"></i>
                     </a>
-                    <a class="btn btn-primary" href="#" onclick="javascript:LIDialog();return false;">
-                        <i class="fa fa-bar-chart push-5-r"></i>Laporan Individu
-                    </a>
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bar-chart push-5-r"></i> Laporan <span class="caret push-5-l"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a tabindex="-1" href="#" onclick="javascript:LIDialog();return false;">
+                                        <i class="fa fa-bar-chart push-5-r"></i>Laporan Bulanan Log Tugasan
+                                    </a>
+                                </li>
+                                <li>
+                                    <a tabindex="-1" href="#" onclick="javascript:LSpeedtestDialog();return false;">
+                                        <i class="si si-speedometer push-5-r"></i>Laporan Bulanan Speedtest
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-5 pull-right">
                     <div class="row">
@@ -214,11 +242,27 @@ function ClearSemakan() {
                     <a class="btn btn-default" href="{{ url('/') }}">
                         <i class="fa fa-home"></i>
                     </a>
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bar-chart push-5-r"></i> Laporan <span class="caret push-5-l"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a tabindex="-1" href="#" onclick="javascript:LIDialog();return false;">
+                                        <i class="fa fa-bar-chart push-5-r"></i>Laporan Bulanan Log Tugasan
+                                    </a>
+                                </li>
+                                <li>
+                                    <a tabindex="-1" href="#" onclick="javascript:LSpeedtestDialog();return false;">
+                                        <i class="si si-speedometer push-5-r"></i>Laporan Bulanan Speedtest
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6 text-right">
-                    <a class="btn btn-primary" href="#" onclick="javascript:LIDialog();return false;">
-                        <i class="fa fa-bar-chart push-5-r"></i>Laporan Bulanan
-                    </a>
                     <a class="btn btn-primary" href="{{ url('/senarai-semak-harian') }}">
                         <i class="fa fa-list-ul push-5-r"></i>Senarai Semak Harian
                     </a>
@@ -529,6 +573,182 @@ function ClearSemakan() {
                                     $cara_pengujian = str_replace('#KOD_SEKOLAH#', Auth::user()->kod_jabatan, $ss->cara_pengujian);
                                     $cara_pengujian = str_replace('#WEB_PPD#', Auth::user()->web_ppd, $cara_pengujian);
                                 ?>
+
+                                @if ($ss->id == 1)
+                                <tr>
+                                    <td class="text-center">{{ $i++ }}</td>
+                                    <td colspan="2">
+                                        <div class="push-5">{{ $ss->perkara }}</div>
+                                        <div class="h6">
+                                            <div class="font-w700"><u>Cara Pengujian</u></div>
+                                            {{ $cara_pengujian }}
+                                        </div>
+                                    </td>
+                                    <td width="200">
+                                        <textarea id="_catatan_{{ $ss->id }}" name="_catatan_{{ $ss->id }}" class="form-control input-sm"></textarea>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">&nbsp;</td>
+                                    <td colspan="3">
+                                        <table cellpadding="3" cellspacing="0" class="table table-bordered">
+                                            <tr>
+                                                <td width="200" class="text-center bg-success-light">PAGI (<i>Mbps</i>)</td>
+                                                <td width="200" class="text-center bg-primary-light">PETANG (<i>Mbps</i>)</td>
+                                            </tr>
+                                            <tr>
+                                                <td valign="top" class="text-left">
+                                                    <div class="row items-push">
+                                                        <div class="col-xs-12 push-5"><b>ZOOM-A</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_speedtest_a" name="_speedtest_a" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_speedtest_a1" name="_speedtest_a1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 push-5"><b>ZOOM-B</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_speedtest_b" name="_speedtest_b" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_speedtest_b1" name="_speedtest_b1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-xs-12 push-5"><b>ZOOM-C</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_speedtest_c" name="_speedtest_c" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_speedtest_c1" name="_speedtest_c1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 push-5"><b>SUPER ZOOM (A)</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_speedtest_d" name="_speedtest_d" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_speedtest_d1" name="_speedtest_d1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 push-5"><b>SUPER ZOOM (B)</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_speedtest_e" name="_speedtest_e" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_speedtest_e1" name="_speedtest_e1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td valign="top" class="text-left">
+                                                    <div class="row items-push">
+                                                        <div class="col-xs-12 push-5"><b>ZOOM-A</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_a" name="_ptg_speedtest_a" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_a1" name="_ptg_speedtest_a1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 push-5"><b>ZOOM-B</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_b" name="_ptg_speedtest_b" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_b1" name="_ptg_speedtest_b1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <div class="col-xs-12 push-5"><b>ZOOM-C</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_c" name="_ptg_speedtest_c" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_c1" name="_ptg_speedtest_c1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 push-5"><b>SUPER ZOOM (A)</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_d" name="_ptg_speedtest_d" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_d1" name="_ptg_speedtest_d1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="col-xs-12 push-5"><b>SUPER ZOOM (B)</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_e" name="_ptg_speedtest_e" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_e1" name="_ptg_speedtest_e1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                    <td class="text-center">&nbsp;</td>
+                                </tr>
+                                @else
                                 <tr>
                                     <td class="text-center">{{ $i++ }}</td>
                                     <td>
@@ -539,91 +759,18 @@ function ClearSemakan() {
                                         </div>
                                     </td>
                                     <td width="250">
-                                        @if ($ss->id == 1)
-                                            <div class="row items-push">
-                                                <div class="col-xs-12 push-5">ZOOM-A</div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
-                                                        <input type="text" id="_speedtest_a" name="_speedtest_a" class="form-control input-sm" placeholder="0.00" title="Download">
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
-                                                        <input type="text" id="_speedtest_a1" name="_speedtest_a1" class="form-control input-sm" placeholder="0.00" title="Upload">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xs-12 push-5">ZOOM-B</div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
-                                                        <input type="text" id="_speedtest_b" name="_speedtest_b" class="form-control input-sm" placeholder="0.00" title="Download">
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
-                                                        <input type="text" id="_speedtest_b1" name="_speedtest_b1" class="form-control input-sm" placeholder="0.00" title="Upload">
-                                                    </div>
-                                                </div>
-                                                
-                                                <div class="col-xs-12 push-5">ZOOM-C</div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
-                                                        <input type="text" id="_speedtest_c" name="_speedtest_c" class="form-control input-sm" placeholder="0.00" title="Download">
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
-                                                        <input type="text" id="_speedtest_c1" name="_speedtest_c1" class="form-control input-sm" placeholder="0.00" title="Upload">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xs-12 push-5">SUPER ZOOM (A)</div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
-                                                        <input type="text" id="_speedtest_d" name="_speedtest_d" class="form-control input-sm" placeholder="0.00" title="Download">
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
-                                                        <input type="text" id="_speedtest_d1" name="_speedtest_d1" class="form-control input-sm" placeholder="0.00" title="Upload">
-                                                    </div>
-                                                </div>
-
-                                                <div class="col-xs-12 push-5">SUPER ZOOM (B)</div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
-                                                        <input type="text" id="_speedtest_e" name="_speedtest_e" class="form-control input-sm" placeholder="0.00" title="Download">
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-6">
-                                                    <div class="input-group">
-                                                        <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
-                                                        <input type="text" id="_speedtest_e1" name="_speedtest_e1" class="form-control input-sm" placeholder="0.00" title="Upload">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        @else
-                                            <label class="css-input css-radio css-radio-success push-10-r">
-                                                <input type="radio" value="1" name="_status_{{ $ss->id }}" checked><span></span> <i class="fa fa-check text-success"></i>
-                                            </label>
-                                            <label class="css-input css-radio css-radio-danger">
-                                                <input type="radio" value="0" name="_status_{{ $ss->id }}"><span></span> <i class="fa fa-times text-danger"></i>
-                                            </label>
-                                        @endif
+                                        <label class="css-input css-radio css-radio-success push-10-r">
+                                            <input type="radio" value="1" name="_status_{{ $ss->id }}" checked><span></span> <i class="fa fa-check text-success"></i>
+                                        </label>
+                                        <label class="css-input css-radio css-radio-danger">
+                                            <input type="radio" value="0" name="_status_{{ $ss->id }}"><span></span> <i class="fa fa-times text-danger"></i>
+                                        </label>
                                     </td>
                                     <td>
                                         <textarea id="_catatan_{{ $ss->id }}" name="_catatan_{{ $ss->id }}" class="form-control input-sm"></textarea>
                                     </td>
                                 </tr>
+                                @endif
                                 @endforeach
 
                                 @foreach ($ss_user as $ssu)
@@ -763,6 +910,91 @@ function ClearSemakan() {
                     <i class="fa fa-print push-5-r"></i>Cetak Laporan
                 </button>
                 <button id="btn_cancel_laporan" data-dismiss="modal" class="btn btn-danger" type="button">
+                    <i class="fa fa-times push-5-r"></i>Batal
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Laporan Speedtest Dialog //-->
+<div id="LSpeedtestDialog" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-popout">
+        <div class="modal-content">
+            <div class="block block-themed block-transparent remove-margin-b">
+                <div class="block-header bg-primary-dark">
+                    <h3 class="block-title">
+                        <i class="fa fa-bar-chart push-10-r"></i>Laporan Speedtest
+                    </h3>
+                </div>
+                <div class="block-content">
+                    <div class="row push">
+                        @if (Auth::user()->hasRole('ppd'))
+                        <div class="col-sm-12 push-10">
+                            <div class="form-group">
+                                <span class="col-sm-12 push-5">Juruteknik :</span>
+                                <div class="col-sm-12">
+                                    <select name="lbs_jtk" id="lbs_jtk" data-placeholder="Juruteknik" class="form-control js-select2-avatar" style="width: 100%" required>
+                                        <option></option>
+                                        @foreach (\App\User::where('kod_ppd',Auth::user()->kod_ppd)->where('kod_jabatan','<>','')->orderBy('name','asc')->get() as $jtk)
+                                        <option value="{{ $jtk->id }}">{{ $jtk->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        @else
+                            <input type="hidden" name="lbs_jtk" id="lbs_jtk" value="{{ Auth::user()->id }}">
+                        @endif
+
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <span class="col-sm-12 push-5">Bulan :</span>
+                                <div class="col-sm-12">
+                                    <select name="lbs_month" id="lbs_month" data-placeholder="Bulan" class="form-control js-select2" style="width: 100%">
+                                        <option></option>
+                                        <!--<option value="0">Semua</option>//-->
+                                        <?php
+                                            for ($i = 1; $i <= 12; $i++) { 
+                                        ?>
+                                        @if (str_pad($i,2,'0',STR_PAD_LEFT) == date('m'))
+                                            <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}" selected>{{ $jtkc->replaceMonth($i) }}</option>
+                                        @else
+                                            <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}">{{ $jtkc->replaceMonth($i) }}</option>
+                                        @endif
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <span class="col-sm-12 push-5">Tahun :</span>
+                                <div class="col-sm-12">
+                                    <select name="lbs_year" id="lbs_year" data-placeholder="Tahun" class="form-control js-select2">
+                                        <option></option>
+                                        <?php
+                                            for ($i = date('Y')-3; $i < date('Y')+10; $i++) { 
+                                        ?>
+                                        @if ($i == date('Y'))
+                                            <option value="{{ $i }}" selected>{{ $i }}</option>
+                                        @else
+                                            <option value="{{ $i }}">{{ $i }}</option>
+                                        @endif
+
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn_cetak_laporan_speedtest" data-dismiss="modal" class="btn btn-primary" type="button" onclick="javascript:CetakLSpeedtest($('#lbs_jtk').val(),$('#lbs_month').val(),$('#lbs_year').val());">
+                    <i class="fa fa-print push-5-r"></i>Lihat Laporan
+                </button>
+                <button id="btn_cancel_laporan_speedtest" data-dismiss="modal" class="btn btn-danger" type="button">
                     <i class="fa fa-times push-5-r"></i>Batal
                 </button>
             </div>

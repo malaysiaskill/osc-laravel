@@ -516,7 +516,7 @@ function DeleteSenaraiSemakan(id) {
 function Semakan() {
     $('#SemakanDialog').modal();
     setTimeout(function(){
-        $('#_speedtest_a').focus();
+        $('#_speedtest_a').select();
     },500);
 }
 function EditTugasanHarian(id) {
@@ -649,4 +649,10 @@ function LIDialog() {
 }
 function CetakLI(jtk,bulan,tahun) {
     OpenWindow("/cetak-laporan-individu/"+jtk+"/"+bulan+"/"+tahun,'CetakLI','top=10,left=10,width=700,height=500');
+}
+function LSpeedtestDialog() {
+    $('#LSpeedtestDialog').modal();   
+}
+function CetakLSpeedtest(jtk,bulan,tahun) {
+    OpenWindow("/cetak-laporan-speedtest/"+jtk+"/"+bulan+"/"+tahun,'CetakLSpeedtest','top=10,left=10,width=700,height=500');
 }

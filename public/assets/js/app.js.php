@@ -1068,6 +1068,13 @@ var App = function() {
         jQuery('.js-masked-ssn').mask('999-99-9999');
         jQuery('.js-masked-pkey').mask('a*-999-a999');
         jQuery('.js-masked-time').mask('99:99');
+        jQuery('.js-masked-speedtest').keypress(function(event) {
+            if (event.which == 8 || event.keyCode == 9 || event.keyCode == 37 || event.keyCode == 39 || event.keyCode == 46) {
+                return true;
+            } else if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+                event.preventDefault();
+            }
+        });
     };
 
     /*

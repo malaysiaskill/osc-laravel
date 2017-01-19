@@ -124,6 +124,7 @@ Route::get('/cetak-tugasan-harian/{id}', 'JTKController@CetakTugasanHarian'); //
 Route::post('/ppd-semak-th', 'JTKController@PPDSemakTH'); // PPD Semak Tugasan Harian
 Route::post('/emel-th', 'JTKController@EmelTH'); // Hantar E-mel Tugasan Harian
 Route::get('/cetak-laporan-individu/{id}/{month}/{year}', 'JTKController@CetakLaporanIndividu'); // Cetak Laporan Individu
+Route::get('/cetak-laporan-speedtest/{id}/{month}/{year}', 'JTKController@CetakLaporanSpeedtest'); // Cetak Laporan Speedtest
 
 /**
 

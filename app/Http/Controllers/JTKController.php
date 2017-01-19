@@ -1142,6 +1142,18 @@ class JTKController extends Controller
                 eval("\$_speedtest_c1 = \$r->_speedtest_c1;");
                 eval("\$_speedtest_d1 = \$r->_speedtest_d1;");
                 eval("\$_speedtest_e1 = \$r->_speedtest_e1;");
+                
+                eval("\$_ptg_speedtest_a = \$r->_ptg_speedtest_a;");
+                eval("\$_ptg_speedtest_b = \$r->_ptg_speedtest_b;");
+                eval("\$_ptg_speedtest_c = \$r->_ptg_speedtest_c;");
+                eval("\$_ptg_speedtest_d = \$r->_ptg_speedtest_d;");
+                eval("\$_ptg_speedtest_e = \$r->_ptg_speedtest_e;");
+                eval("\$_ptg_speedtest_a1 = \$r->_ptg_speedtest_a1;");
+                eval("\$_ptg_speedtest_b1 = \$r->_ptg_speedtest_b1;");
+                eval("\$_ptg_speedtest_c1 = \$r->_ptg_speedtest_c1;");
+                eval("\$_ptg_speedtest_d1 = \$r->_ptg_speedtest_d1;");
+                eval("\$_ptg_speedtest_e1 = \$r->_ptg_speedtest_e1;");
+                
                 eval("\$catatan = \$r->_catatan_".$ss->id.";");
                 $record[] = array(
                     'id' => $ss->id,
@@ -1155,6 +1167,16 @@ class JTKController extends Controller
                     '_speedtest_c1' => $_speedtest_c1,
                     '_speedtest_d1' => $_speedtest_d1,
                     '_speedtest_e1' => $_speedtest_e1,
+                    '_ptg_speedtest_a' => $_ptg_speedtest_a,
+                    '_ptg_speedtest_b' => $_ptg_speedtest_b,
+                    '_ptg_speedtest_c' => $_ptg_speedtest_c,
+                    '_ptg_speedtest_d' => $_ptg_speedtest_d,
+                    '_ptg_speedtest_e' => $_ptg_speedtest_e,
+                    '_ptg_speedtest_a1' => $_ptg_speedtest_a1,
+                    '_ptg_speedtest_b1' => $_ptg_speedtest_b1,
+                    '_ptg_speedtest_c1' => $_ptg_speedtest_c1,
+                    '_ptg_speedtest_d1' => $_ptg_speedtest_d1,
+                    '_ptg_speedtest_e1' => $_ptg_speedtest_e1,
                     'catatan' => $catatan
                 );
             }
@@ -1251,6 +1273,17 @@ class JTKController extends Controller
                     echo "$('#_speedtest_d1').val('".$_val->_speedtest_d1."');";
                     echo "$('#_speedtest_e1').val('".$_val->_speedtest_e1."');";
 
+                    if (isset($_val->_ptg_speedtest_a)) echo "$('#_ptg_speedtest_a').val('".$_val->_ptg_speedtest_a."');";
+                    if (isset($_val->_ptg_speedtest_b)) echo "$('#_ptg_speedtest_b').val('".$_val->_ptg_speedtest_b."');";
+                    if (isset($_val->_ptg_speedtest_c)) echo "$('#_ptg_speedtest_c').val('".$_val->_ptg_speedtest_c."');";
+                    if (isset($_val->_ptg_speedtest_d)) echo "$('#_ptg_speedtest_d').val('".$_val->_ptg_speedtest_d."');";
+                    if (isset($_val->_ptg_speedtest_e)) echo "$('#_ptg_speedtest_e').val('".$_val->_ptg_speedtest_e."');";
+                    if (isset($_val->_ptg_speedtest_a1)) echo "$('#_ptg_speedtest_a1').val('".$_val->_ptg_speedtest_a1."');";
+                    if (isset($_val->_ptg_speedtest_b1)) echo "$('#_ptg_speedtest_b1').val('".$_val->_ptg_speedtest_b1."');";
+                    if (isset($_val->_ptg_speedtest_c1)) echo "$('#_ptg_speedtest_c1').val('".$_val->_ptg_speedtest_c1."');";
+                    if (isset($_val->_ptg_speedtest_d1)) echo "$('#_ptg_speedtest_d1').val('".$_val->_ptg_speedtest_d1."');";
+                    if (isset($_val->_ptg_speedtest_e1)) echo "$('#_ptg_speedtest_e1').val('".$_val->_ptg_speedtest_e1."');";
+
                     $catatan = addslashes(html_entity_decode($_val->catatan,ENT_QUOTES));
                     $catatan = str_replace('<br />', '\n', nl2br($catatan));
                     $catatan = trim(preg_replace('/\s\s+/', '', $catatan));
@@ -1343,46 +1376,72 @@ class JTKController extends Controller
                             $sshid = $_val->id;
                             if ($sshid == '1')
                             {
+                                $_ptg_speedtest_a = isset($_val->_ptg_speedtest_a) ? $_val->_ptg_speedtest_a:"";
+                                $_ptg_speedtest_b = isset($_val->_ptg_speedtest_b) ? $_val->_ptg_speedtest_b:"";
+                                $_ptg_speedtest_c = isset($_val->_ptg_speedtest_c) ? $_val->_ptg_speedtest_c:"";
+                                $_ptg_speedtest_d = isset($_val->_ptg_speedtest_d) ? $_val->_ptg_speedtest_d:"";
+                                $_ptg_speedtest_e = isset($_val->_ptg_speedtest_e) ? $_val->_ptg_speedtest_e:"";
+                                $_ptg_speedtest_a1 = isset($_val->_ptg_speedtest_a1) ? $_val->_ptg_speedtest_a1:"";
+                                $_ptg_speedtest_b1 = isset($_val->_ptg_speedtest_b1) ? $_val->_ptg_speedtest_b1:"";
+                                $_ptg_speedtest_c1 = isset($_val->_ptg_speedtest_c1) ? $_val->_ptg_speedtest_c1:"";
+                                $_ptg_speedtest_d1 = isset($_val->_ptg_speedtest_d1) ? $_val->_ptg_speedtest_d1:"";
+                                $_ptg_speedtest_e1 = isset($_val->_ptg_speedtest_e1) ? $_val->_ptg_speedtest_e1:"";
+
                                 $data .= '<tr>
-                                    <td width="20" align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
-                                    <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
-                                    <td valign="top" bgcolor="#FFFFFF">'.$cara_pengujian.'</td>
-                                    <td align="center" valign="top" bgcolor="#FFFFFF" width="180">
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="3">
-                                          <tr>
-                                            <td>&nbsp;</td>
-                                            <td>Down</td>
-                                            <td>Up</td>
-                                          </tr>
-                                          <tr>
-                                            <td>ZOOM-A</td>
-                                            <td>'.$_val->_speedtest_a.'</td>
-                                            <td>'.$_val->_speedtest_a1.'</td>
-                                          </tr>
-                                          <tr>
-                                            <td>ZOOM-B</td>
-                                            <td>'.$_val->_speedtest_b.'</td>
-                                            <td>'.$_val->_speedtest_b1.'</td>
-                                          </tr>
-                                          <tr>
-                                            <td>ZOOM-C</td>
-                                            <td>'.$_val->_speedtest_c.'</td>
-                                            <td>'.$_val->_speedtest_c1.'</td>
-                                          </tr>
-                                          <tr>
-                                            <td>SUPER ZOOM (A)</td>
-                                            <td>'.$_val->_speedtest_d.'</td>
-                                            <td>'.$_val->_speedtest_d1.'</td>
-                                          </tr>
-                                          <tr>
-                                            <td>SUPER ZOOM (B)</td>
-                                            <td>'.$_val->_speedtest_e.'</td>
-                                            <td>'.$_val->_speedtest_e1.'</td>
-                                          </tr>
-                                        </table>
-                                    </td>
-                                    <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
-                                </tr>';
+                                        <td width="20" align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
+                                        <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
+                                        <td valign="top" bgcolor="#FFFFFF" colspan="2">'.$cara_pengujian.'<br><br>
+                                            <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000">
+                                              <tr bgcolor="#FFFFFF">
+                                                <td rowspan="2">&nbsp;</td>
+                                                <td colspan="2" align="center" valign="middle">PAGI (<i>Mbps</i>)</td>
+                                                <td colspan="2" align="center" valign="middle">PETANG (<i>Mbps</i>)</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td align="center" valign="middle" width="50">Download</td>
+                                                <td align="center" valign="middle" width="50">Upload</td>
+                                                <td align="center" valign="middle" width="50">Download</td>
+                                                <td align="center" valign="middle" width="50">Upload</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>ZOOM-A</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_a.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_a1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_a.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_a1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>ZOOM-B</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_b.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_b1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_b.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_b1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>ZOOM-C</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_c.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_c1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_c.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_c1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>SUPER ZOOM (A)</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_d.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_d1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_d.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_d1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>SUPER ZOOM (B)</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_e.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_e1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_e.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_e1.'</td>
+                                              </tr>
+                                            </table>
+                                        </td>
+                                        <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
+                                    </tr>';
                             }
                         }
                     }
@@ -1546,46 +1605,72 @@ class JTKController extends Controller
                             $sshid = $_val->id;
                             if ($sshid == '1')
                             {
+                                $_ptg_speedtest_a = isset($_val->_ptg_speedtest_a) ? $_val->_ptg_speedtest_a:"";
+                                $_ptg_speedtest_b = isset($_val->_ptg_speedtest_b) ? $_val->_ptg_speedtest_b:"";
+                                $_ptg_speedtest_c = isset($_val->_ptg_speedtest_c) ? $_val->_ptg_speedtest_c:"";
+                                $_ptg_speedtest_d = isset($_val->_ptg_speedtest_d) ? $_val->_ptg_speedtest_d:"";
+                                $_ptg_speedtest_e = isset($_val->_ptg_speedtest_e) ? $_val->_ptg_speedtest_e:"";
+                                $_ptg_speedtest_a1 = isset($_val->_ptg_speedtest_a1) ? $_val->_ptg_speedtest_a1:"";
+                                $_ptg_speedtest_b1 = isset($_val->_ptg_speedtest_b1) ? $_val->_ptg_speedtest_b1:"";
+                                $_ptg_speedtest_c1 = isset($_val->_ptg_speedtest_c1) ? $_val->_ptg_speedtest_c1:"";
+                                $_ptg_speedtest_d1 = isset($_val->_ptg_speedtest_d1) ? $_val->_ptg_speedtest_d1:"";
+                                $_ptg_speedtest_e1 = isset($_val->_ptg_speedtest_e1) ? $_val->_ptg_speedtest_e1:"";
+
                                 $data .= '<tr>
-                                    <td width="20" align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
-                                    <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
-                                    <td valign="top" bgcolor="#FFFFFF">'.$cara_pengujian.'</td>
-                                    <td align="center" valign="top" bgcolor="#FFFFFF" width="180">
-                                        <table width="100%" border="0" cellspacing="0" cellpadding="3">
-                                          <tr>
-                                            <td>&nbsp;</td>
-                                            <td>Down</td>
-                                            <td>Up</td>
-                                          </tr>
-                                          <tr>
-                                            <td>ZOOM-A</td>
-                                            <td>'.$_val->_speedtest_a.'</td>
-                                            <td>'.$_val->_speedtest_a1.'</td>
-                                          </tr>
-                                          <tr>
-                                            <td>ZOOM-B</td>
-                                            <td>'.$_val->_speedtest_b.'</td>
-                                            <td>'.$_val->_speedtest_b1.'</td>
-                                          </tr>
-                                          <tr>
-                                            <td>ZOOM-C</td>
-                                            <td>'.$_val->_speedtest_c.'</td>
-                                            <td>'.$_val->_speedtest_c1.'</td>
-                                          </tr>
-                                          <tr>
-                                            <td>SUPER ZOOM (A)</td>
-                                            <td>'.$_val->_speedtest_d.'</td>
-                                            <td>'.$_val->_speedtest_d1.'</td>
-                                          </tr>
-                                          <tr>
-                                            <td>SUPER ZOOM (B)</td>
-                                            <td>'.$_val->_speedtest_e.'</td>
-                                            <td>'.$_val->_speedtest_e1.'</td>
-                                          </tr>
-                                        </table>
-                                    </td>
-                                    <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
-                                </tr>';
+                                        <td width="20" align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
+                                        <td valign="top" bgcolor="#FFFFFF">'.$sss->perkara.'</td>
+                                        <td valign="top" bgcolor="#FFFFFF" colspan="2">'.$cara_pengujian.'<br><br>
+                                            <table width="100%" border="0" cellspacing="1" cellpadding="3" bgcolor="#000">
+                                              <tr bgcolor="#FFFFFF">
+                                                <td rowspan="2">&nbsp;</td>
+                                                <td colspan="2" align="center" valign="middle">PAGI (<i>Mbps</i>)</td>
+                                                <td colspan="2" align="center" valign="middle">PETANG (<i>Mbps</i>)</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td align="center" valign="middle" width="50">Download</td>
+                                                <td align="center" valign="middle" width="50">Upload</td>
+                                                <td align="center" valign="middle" width="50">Download</td>
+                                                <td align="center" valign="middle" width="50">Upload</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>ZOOM-A</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_a.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_a1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_a.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_a1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>ZOOM-B</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_b.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_b1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_b.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_b1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>ZOOM-C</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_c.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_c1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_c.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_c1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>SUPER ZOOM (A)</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_d.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_d1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_d.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_d1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>SUPER ZOOM (B)</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_e.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_e1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_e.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_e1.'</td>
+                                              </tr>
+                                            </table>
+                                        </td>
+                                        <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
+                                    </tr>';
                             }
                         }
                     }
@@ -2321,5 +2406,27 @@ class JTKController extends Controller
         $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
         $dpdf->add_info('Title','Laporan Tugasan Harian ('.$bulan_tahun.') - '.strtoupper($usr->name));
         $dpdf->stream("Laporan-Tugasan_".$bulan."-".$year."_".str_replace(' ', '_', strtoupper($usr->name)),array('Attachment'=>0));
+    }
+    public function CetakLaporanSpeedtest($user_id, $month=null, $year=null)
+    {
+        $usr = User::find($user_id);
+        $nama_sekolah = $usr->jabatan->nama_sekolah_detail_cetakan;
+        $jawatan = $usr->greds->gred_title_cetakan;
+        $kod_jabatan = $usr->kod_jabatan;
+        if ($month == '0') {
+            $bulan = '';
+            $bulan_tahun = $year;
+        } else {
+            $bulan = $this->replaceMonth($month);
+            $bulan_tahun = $this->replaceMonth($month).', '.$year;
+        }
+
+        return view('jtk.laporan-speedtest',[
+            'nama_sekolah' => $nama_sekolah,
+            'bulan_tahun' => $bulan_tahun,
+            'month' => $month,
+            'year' => $year,
+            'user_id' => $user_id,
+        ]);
     }
 }
