@@ -519,3 +519,6 @@ blockquote span{display:block;font-size:70%;line-height:1.42857143;color:#777}
 /*.fc-day-grid-event .fc-content {
     white-space: normal!important;
 }*/
+.data-point-label {
+  font-size: 10px;
+}

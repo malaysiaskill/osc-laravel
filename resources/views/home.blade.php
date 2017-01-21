@@ -4,10 +4,11 @@
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
     <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated zoomIn">Dashboard</h1>
-        <h2 class="h5 text-white-op animated zoomIn font-w300">Hi, <b>{{ Auth::user()->name }}</b></h2>
+        <h4 class="h4 font-w300 text-white animated zoomIn">
+            <span class="font-w600">Dashboard : </span> Portal Juruteknik Komputer Negeri Perak (JTKPK)
+        </h4>
     </div>
 </div>
 <!-- END Page Header -->
@@ -16,10 +17,8 @@
 <div class="content padding-5-t bg-white border-b">
     <div class="push-15 push-10-t">
         <div class="row">
-            <div class="col-md-6">
-                <a class="btn btn-default" href="{{ url('/') }}">
-                    <i class="fa fa-home"></i>
-                </a>
+            <div class="col-md-6 font-w300">
+                <i class="fa fa-user push-10-r"></i><b>{{ Auth::user()->name }}</b>
             </div>
             <div class="col-md-6 text-right">
             </div>

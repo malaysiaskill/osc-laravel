@@ -198,7 +198,7 @@ function plotAccordingToChoices(Div,datasets) {
 
     if (data.length > 0)
     {
-        $.plot('#' + Div + '_DailyChart', data, {
+        var p = $.plot('#' + Div + '_DailyChart', data, {
             series: {
                 lines: {
                     show: false
@@ -269,6 +269,22 @@ function plotAccordingToChoices(Div,datasets) {
                 DataDaily = null;
             }
         });
+
+        for (z=0; z < data.length; z++)
+        {
+            $.each(p.getData()[z].data, function(i, el){
+                var o = p.pointOffset({x: el[0], y: el[1]});
+                if (el[1] != 0)
+                {
+                    $('<div class="data-point-label">' + el[1] + '</div>').css({
+                        position: 'absolute',
+                        left: o.left + 8,
+                        top: o.top - 12,
+                        display: 'none'
+                    }).appendTo(p.getPlaceholder()).show();
+                }
+            });
+        }
     }
 }
 
