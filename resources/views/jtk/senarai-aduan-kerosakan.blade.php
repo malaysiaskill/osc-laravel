@@ -410,9 +410,9 @@ function ClearAKP() {
 @endif
 
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
             <i class="fa fa-wrench push-15-r"></i> Aduan Kerosakan Peralatan ICT
         </h1>
     </div>
@@ -425,9 +425,6 @@ function ClearAKP() {
         <div class="row">
             @if (Auth::user()->hasRole('ppd') || Auth::user()->hasRole('jpn'))
                 <div class="col-md-7">
-                    <a class="btn btn-default" href="{{ url('/') }}">
-                        <i class="fa fa-home"></i>
-                    </a>
                     <a class="btn btn-primary" href="#" onclick="javascript:window.print();return false;">
                         <i class="fa fa-print"></i> Cetak
                     </a>
@@ -476,17 +473,26 @@ function ClearAKP() {
                     </div>
                 </div>
             @else
-                <div class="col-md-6">
-                    <a class="btn btn-default" href="{{ url('/') }}">
-                        <i class="fa fa-home"></i>
-                    </a>
+                <div class="col-xs-6">
+                    <div class="btn-group">
+                        <div class="btn-group">
+                            <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="fa fa-bar-chart push-5-r"></i> Laporan <span class="caret push-5-l"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a tabindex="-1" href="#" onclick="javascript:LaporanBulananAKP();return false;">
+                                        <i class="fa fa-bar-chart push-5-r"></i>Laporan Bulanan Aduan Kerosakan Peralatan ICT
+                                    </a>
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
                 </div>
-                <div class="col-md-6 text-right">
-                    <button type="button" class="btn btn-primary" onclick="javascript:LaporanBulananAKP();return false;">
-                        <i class="fa fa-area-chart"></i> Laporan Bulanan
-                    </button>
+                <div class="col-xs-6 text-right">
                     <button type="button" class="btn btn-primary" onclick="javascript:AddAKP();return false;">
-                        <i class="fa fa-plus"></i> Tambah Aduan
+                        <i class="fa fa-plus"></i> <span class="hidden-xs hidden-sm">Tambah Aduan</span>
                     </button>
                 </div>
             @endif

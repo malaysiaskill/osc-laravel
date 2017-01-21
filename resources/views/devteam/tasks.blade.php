@@ -16,40 +16,47 @@ setTimeout(function(){
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
             <i class="fa fa-th push-15-r"></i> Senarai Task Projek
         </h1>
     </div>
 </div>
 <!-- END Page Header -->
 
+<!-- Menu -->
+<div class="content padding-5-t bg-white border-b">
+    <div class="push-15 push-10-t">
+        <div class="row">
+            <div class="col-xs-6">
+                <a href="/dev-team/projek/{{ $devteam_id }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                    <i class="fa fa-arrow-circle-left"></i>
+                </a>
+            </div>
+            <div class="col-xs-6 pull-right text-right">
+                @if (Auth::user()->devteam == $devteam_id)
+                    <button type="button" class="btn btn-success" onclick="javascript:AddTaskDialog();" data-toggle="tooltip" title="Tambah Task">
+                        <i class="fa fa-plus push-5-r"></i>Tambah Task
+                    </button>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Menu -->
+
 <!-- Page Content -->
 <div class="content content-narrow">
     <div class="row">
         <div class="col-xs-12">
-            <div id="_users" class="block block-themed block-rounded push-5">
-                
-                <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
-                    <a href="/dev-team/projek/{{ $devteam_id }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
-                        <i class="fa fa-arrow-circle-left"></i>
-                    </a>
-                    <div class="pull-right">
-                        @if (Auth::user()->devteam == $devteam_id)
-                            <button type="button" class="btn btn-success" onclick="javascript:AddTaskDialog();" data-toggle="tooltip" title="Tambah Task">
-                                <i class="fa fa-plus push-5-r"></i>Tambah Task
-                            </button>
-                        @endif
-                    </div>
-                </div>
-                
+            <div class="block block-themed block-rounded push-5">
                 <div class="block-content block-content-full border-b clearfix">
                     <div class="pull-left">
                         <h5>
-                            <span class="font-w300">Projek : </span>
+                            <span class="font-w300">PROJEK : </span>
                         </h5>
-                        <h2 class="font-w300">{{ $nama_projek }}</h2>
+                        <h3 class="font-w300">{{ $nama_projek }}</h3>
                     </div>
                     <div class="pull-right text-right">
                         <h5>

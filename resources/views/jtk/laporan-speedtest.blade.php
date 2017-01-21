@@ -20,6 +20,7 @@ if (strlen($month) != 0 && strlen($year) != 0)
         $hari = strtolower($jtkc->replaceDay(date('l',strtotime("$year-$mon-$i"))));
         if ($hari != 'sabtu' && $hari != 'ahad')
         {
+            $i = intval(date('j',strtotime("$year-$mon-$i")));
             $tarikh = "$year-$mon-$i";
             $th = \App\TugasanHarian::whereYear('tarikh_semakan',$year)->whereMonth('tarikh_semakan',$mon)->whereDay('tarikh_semakan',$i)->where('user_id',$user_id)->first();
             if (count($th) == 0) {
@@ -115,6 +116,7 @@ $stats_daily_UPTG_SUPER_ZOOM_A = json_encode($daily_UPTG_SUPER_ZOOM_A);
 $stats_daily_UPTG_SUPER_ZOOM_B = json_encode($daily_UPTG_SUPER_ZOOM_B);
 
 ?>
+
 var DPG_StatDaily = [
     {label: "ZOOM-A", data: {{ $stats_daily_DPG_ZOOM_A }} },
     {label: "ZOOM-B", data: {{ $stats_daily_DPG_ZOOM_B }} },
@@ -146,295 +148,138 @@ var UPTG_StatDaily = [
 
 "use strict";
 
+var choiceContainer_DPG = $("#DPG_Toggle");
+var choiceContainer_DPTG = $("#DPTG_Toggle");
+var choiceContainer_UPG = $("#UPG_Toggle");
+var choiceContainer_UPTG = $("#UPTG_Toggle");
+var i = 0;
+
+$.each(DPG_StatDaily, function(key, val) {
+    val.color = i; i++;
+    //"&nbsp;<input type='checkbox' name='" + key + "' checked='checked' id='dpg_id_" + key + "'></input> <label for='dpg_id_" + key + "'>" + val.label + "</label> &nbsp;"
+    choiceContainer_DPG.append("&nbsp;<label class='css-input css-checkbox css-checkbox-sm css-checkbox-rounded css-checkbox-primary'><input type='checkbox' name='"+key+"' id='dpg_id_"+key+"' checked='checked'><span></span>"+val.label+"</label> &nbsp;");
+});
+i = 0; 
+$.each(DPTG_StatDaily, function(key, val) {
+    val.color = i; i++;
+    choiceContainer_DPTG.append("&nbsp;<label class='css-input css-checkbox css-checkbox-sm css-checkbox-rounded css-checkbox-primary'><input type='checkbox' name='"+key+"' id='dptg_id_"+key+"' checked='checked'><span></span>"+val.label+"</label> &nbsp;");
+});
+i = 0; 
+$.each(UPG_StatDaily, function(key, val) {
+    val.color = i; i++;
+    choiceContainer_UPG.append("&nbsp;<label class='css-input css-checkbox css-checkbox-sm css-checkbox-rounded css-checkbox-primary'><input type='checkbox' name='"+key+"' id='upg_id_"+key+"' checked='checked'><span></span>"+val.label+"</label> &nbsp;");
+});
+i = 0; 
+$.each(UPTG_StatDaily, function(key, val) {
+    val.color = i; i++;
+    choiceContainer_UPTG.append("&nbsp;<label class='css-input css-checkbox css-checkbox-sm css-checkbox-rounded css-checkbox-primary'><input type='checkbox' name='"+key+"' id='uptg_id_"+key+"' checked='checked'><span></span>"+val.label+"</label> &nbsp;");
+});
+
+plotAccordingToChoices('DPG',DPG_StatDaily);
+plotAccordingToChoices('DPTG',DPTG_StatDaily);
+plotAccordingToChoices('UPG',UPG_StatDaily);
+plotAccordingToChoices('UPTG',UPTG_StatDaily);
+
+choiceContainer_DPG.find("input").click(function(){ plotAccordingToChoices('DPG',DPG_StatDaily) });
+choiceContainer_DPTG.find("input").click(function(){ plotAccordingToChoices('DPTG',DPTG_StatDaily) });
+choiceContainer_UPG.find("input").click(function(){ plotAccordingToChoices('UPG',UPG_StatDaily) });
+choiceContainer_UPTG.find("input").click(function(){ plotAccordingToChoices('UPTG',UPTG_StatDaily) });
+
+function plotAccordingToChoices(Div,datasets) {
+    var data = [];
+
+    $('#'+Div+'_Toggle').find("input:checked").each(function()
+    {
+        var key = $(this).attr("name");
+        if (key && datasets[key]) {
+            data.push(datasets[key]);
+        }
+    });
+
+    if (data.length > 0)
+    {
+        $.plot('#' + Div + '_DailyChart', data, {
+            series: {
+                lines: {
+                    show: false
+                },
+                splines: {
+                    show: true,
+                    tension: 0.4,
+                    lineWidth: 1,
+                    fill: 0
+                },
+                shadowSize: 0
+            },
+            points: {
+                show: true,
+            },
+            legend: {
+                container: '#'+Div+'_DC_Legend',
+                noColumns: 5
+            },
+            grid: {
+                hoverable: true,
+                clickable: true,
+                borderColor: '#ddd',
+                borderWidth: 0,
+                labelMargin: 5,
+                backgroundColor: '#fff'
+            },
+            yaxis: {
+                min: 0,
+                color: '#eee'
+            },
+            xaxis: {
+                color: '#eee',
+                tickSize: 1,
+                tickDecimals: 0
+            },
+
+            axisLabels: {
+                show: true
+            },
+            xaxes: [{
+                axisLabel: 'HARIBULAN',
+            }],
+            yaxes: [{
+                position: 'left',
+                axisLabel: 'KELAJUAN INTERNET (Mbps)',
+                axisLabelPadding: 5,
+            }, {
+                position: 'right',
+                axisLabel: 'bleem'
+            }]
+        });
+
+        var DataDaily = null;
+        jQuery("#" + Div + "_DailyChart").bind("plothover",function(event,pos,item)
+        {
+            if (item)
+            {
+                if (DataDaily != item.dataIndex)
+                {
+                    DataDaily = item.dataIndex;           
+                    jQuery("#tooltip").remove();
+                    var x = item.datapoint[0],y = item.datapoint[1];
+                    showTooltip(item.pageX, item.pageY, y);
+                }
+            } else {
+                jQuery("#tooltip").remove();
+                DataDaily = null;
+            }
+        });
+    }
+}
+
 function showTooltip(x, y, contents) {
-    jQuery('<div id="tooltip" class="tooltipflot">' + contents + ' Mbps</div>').css({
+    jQuery('<div id="tooltip" class="tooltipflot"><span class="h5">' + contents + ' Mbps</span></div>').css({
         position: 'absolute',
         display: 'none',
         top: y + 5,
         left: x + 5
     }).appendTo("body").fadeIn(200);
 }
-/* STATISTICS DAILY */
-var DPG_PlotDaily = jQuery.plot(jQuery("#DPG_DailyChart"),DPG_StatDaily,
-{
-    series: {
-        lines: {
-            show: false
-        },
-        splines: {
-            show: true,
-            tension: 0.4,
-            lineWidth: 1,
-            fill: 0
-        },
-        shadowSize: 0
-    },
-    points: {
-        show: true,
-    },
-    legend: {
-        container: '#DPG_DC_Legend',
-        noColumns: 5
-    },
-    grid: {
-        hoverable: true,
-        clickable: true,
-        borderColor: '#ddd',
-        borderWidth: 0,
-        labelMargin: 5,
-        backgroundColor: '#fff'
-    },
-    yaxis: {
-        label: "test",
-        min: 0,
-        color: '#eee'
-    },
-    xaxis: {
-        color: '#eee',
-        tickSize: 1,
-        tickDecimals: 0
-    },
-
-    axisLabels: {
-        show: true
-    },
-    xaxes: [{
-        axisLabel: 'HARIBULAN',
-    }],
-    yaxes: [{
-        position: 'left',
-        axisLabel: 'KELAJUAN INTERNET (Mbps)',
-        axisLabelPadding: 5,
-    }, {
-        position: 'right',
-        axisLabel: 'bleem'
-    }]
-});
-var DPG_iDaily = null;
-jQuery("#DPG_DailyChart").bind("plothover",function(event,pos,item){
-    if (item) {
-        if (DPG_iDaily != item.dataIndex) {
-            DPG_iDaily = item.dataIndex;           
-            jQuery("#tooltip").remove();
-            var x = item.datapoint[0],y = item.datapoint[1];
-            showTooltip(item.pageX, item.pageY, y);
-        }
-    } else {
-        jQuery("#tooltip").remove();
-        DPG_iDaily = null;
-    }
-});
-
-var DPTG_PlotDaily = jQuery.plot(jQuery("#DPTG_DailyChart"),DPTG_StatDaily,
-{
-    series: {
-        lines: {
-            show: false
-        },
-        splines: {
-            show: true,
-            tension: 0.4,
-            lineWidth: 1,
-            fill: 0
-        },
-        shadowSize: 0
-    },
-    points: {
-        show: true,
-    },
-    legend: {
-        container: '#DPTG_DC_Legend',
-        noColumns: 5
-    },
-    grid: {
-        hoverable: true,
-        clickable: true,
-        borderColor: '#ddd',
-        borderWidth: 0,
-        labelMargin: 5,
-        backgroundColor: '#fff'
-    },
-    yaxis: {
-        label: "test",
-        min: 0,
-        color: '#eee'
-    },
-    xaxis: {
-        color: '#eee',
-        tickSize: 1,
-        tickDecimals: 0
-    },
-
-    axisLabels: {
-        show: true
-    },
-    xaxes: [{
-        axisLabel: 'HARIBULAN',
-    }],
-    yaxes: [{
-        position: 'left',
-        axisLabel: 'KELAJUAN INTERNET (Mbps)',
-        axisLabelPadding: 5,
-    }, {
-        position: 'right',
-        axisLabel: 'bleem'
-    }]
-});
-var DPTG_iDaily = null;
-jQuery("#DPTG_DailyChart").bind("plothover",function(event,pos,item){
-    if (item) {
-        if (DPTG_iDaily != item.dataIndex) {
-            DPTG_iDaily = item.dataIndex;           
-            jQuery("#tooltip").remove();
-            var x = item.datapoint[0],y = item.datapoint[1];
-            showTooltip(item.pageX, item.pageY, y);
-        }
-    } else {
-        jQuery("#tooltip").remove();
-        DPTG_iDaily = null;
-    }
-});
-
-/* UPLOAD */
-var UPG_PlotDaily = jQuery.plot(jQuery("#UPG_DailyChart"),UPG_StatDaily,
-{
-    series: {
-        lines: {
-            show: false
-        },
-        splines: {
-            show: true,
-            tension: 0.4,
-            lineWidth: 1,
-            fill: 0
-        },
-        shadowSize: 0
-    },
-    points: {
-        show: true,
-    },
-    legend: {
-        container: '#UPG_DC_Legend',
-        noColumns: 5
-    },
-    grid: {
-        hoverable: true,
-        clickable: true,
-        borderColor: '#ddd',
-        borderWidth: 0,
-        labelMargin: 5,
-        backgroundColor: '#fff'
-    },
-    yaxis: {
-        label: "test",
-        min: 0,
-        color: '#eee'
-    },
-    xaxis: {
-        color: '#eee',
-        tickSize: 1,
-        tickDecimals: 0
-    },
-
-    axisLabels: {
-        show: true
-    },
-    xaxes: [{
-        axisLabel: 'HARIBULAN',
-    }],
-    yaxes: [{
-        position: 'left',
-        axisLabel: 'KELAJUAN INTERNET (Mbps)',
-        axisLabelPadding: 5,
-    }, {
-        position: 'right',
-        axisLabel: 'bleem'
-    }]
-});
-var UPG_iDaily = null;
-jQuery("#UPG_DailyChart").bind("plothover",function(event,pos,item){
-    if (item) {
-        if (UPG_iDaily != item.dataIndex) {
-            UPG_iDaily = item.dataIndex;           
-            jQuery("#tooltip").remove();
-            var x = item.datapoint[0],y = item.datapoint[1];
-            showTooltip(item.pageX, item.pageY, y);
-        }
-    } else {
-        jQuery("#tooltip").remove();
-        UPG_iDaily = null;
-    }
-});
-
-var UPTG_PlotDaily = jQuery.plot(jQuery("#UPTG_DailyChart"),UPTG_StatDaily,
-{
-    series: {
-        lines: {
-            show: false
-        },
-        splines: {
-            show: true,
-            tension: 0.4,
-            lineWidth: 1,
-            fill: 0
-        },
-        shadowSize: 0
-    },
-    points: {
-        show: true,
-    },
-    legend: {
-        container: '#UPTG_DC_Legend',
-        noColumns: 5
-    },
-    grid: {
-        hoverable: true,
-        clickable: true,
-        borderColor: '#ddd',
-        borderWidth: 0,
-        labelMargin: 5,
-        backgroundColor: '#fff'
-    },
-    yaxis: {
-        label: "test",
-        min: 0,
-        color: '#eee'
-    },
-    xaxis: {
-        color: '#eee',
-        tickSize: 1,
-        tickDecimals: 0
-    },
-
-    axisLabels: {
-        show: true
-    },
-    xaxes: [{
-        axisLabel: 'HARIBULAN',
-    }],
-    yaxes: [{
-        position: 'left',
-        axisLabel: 'KELAJUAN INTERNET (Mbps)',
-        axisLabelPadding: 5,
-    }, {
-        position: 'right',
-        axisLabel: 'bleem'
-    }]
-});
-var UPTG_iDaily = null;
-jQuery("#UPTG_DailyChart").bind("plothover",function(event,pos,item){
-    if (item) {
-        if (UPTG_iDaily != item.dataIndex) {
-            UPTG_iDaily = item.dataIndex;           
-            jQuery("#tooltip").remove();
-            var x = item.datapoint[0],y = item.datapoint[1];
-            showTooltip(item.pageX, item.pageY, y);
-        }
-    } else {
-        jQuery("#tooltip").remove();
-        UPTG_iDaily = null;
-    }
-});
 @endsection
 
 @section('js')
@@ -453,7 +298,10 @@ jQuery("#UPTG_DailyChart").bind("plothover",function(event,pos,item){
 <!-- Menu -->
 <div class="content content-mini bg-white border-b">
     <div class="push-15 text-center">
-        <p>LAPORAN BULANAN KELAJUAN INTERNET 1BESTARINET BAGI BULAN <b>{{ strtoupper($bulan_tahun) }}</b><br><b>{{ $nama_sekolah }}</b></p>
+        <p>
+            LAPORAN BULANAN KELAJUAN INTERNET 1BESTARINET BAGI BULAN<br>
+            <b>{{ strtoupper($bulan_tahun) }}</b> - <b>{{ $nama_sekolah }}</b>
+        </p>
     </div>
 </div>
 <!-- END Menu -->
@@ -468,10 +316,12 @@ jQuery("#UPTG_DailyChart").bind("plothover",function(event,pos,item){
         <div class="col-xs-12">
             <div class="block block-bordered">
                 <div class="block-header bg-gray-lighter">
-                    <h3 class="block-title"><i class="fa fa-line-chart push-10-r"></i>Statistik Kelajuan Internet 1BestariNet</h3>
+                    <h3>
+                        <i class="fa fa-line-chart push-10-r"></i><b>DOWNLOAD - PAGI</b>
+                        <div id="DPG_Toggle" class="pull-right"></div>
+                    </h3>
                 </div>
                 <div class="block-content block-content-full">
-                    <h3 class="push-5"><b>DOWNLOAD - PAGI</b></h3>
                     <div id="DPG_DC_Legend" class="flotLegend"></div>
                     <div id="DPG_DailyChart" class="flotGraph"></div>
                 </div>
@@ -481,10 +331,12 @@ jQuery("#UPTG_DailyChart").bind("plothover",function(event,pos,item){
         <div class="col-xs-12">
             <div class="block block-bordered">
                 <div class="block-header bg-gray-lighter">
-                    <h3 class="block-title"><i class="fa fa-line-chart push-10-r"></i>Statistik Kelajuan Internet 1BestariNet</h3>
+                    <h3>
+                        <i class="fa fa-line-chart push-10-r"></i><b>DOWNLOAD - PETANG</b>
+                        <div id="DPTG_Toggle" class="pull-right"></div>
+                    </h3>
                 </div>
                 <div class="block-content block-content-full">
-                    <h3 class="push-5"><b>DOWNLOAD - PETANG</b></h3>
                     <div id="DPTG_DC_Legend" class="flotLegend"></div>
                     <div id="DPTG_DailyChart" class="flotGraph"></div>
                 </div>
@@ -494,10 +346,12 @@ jQuery("#UPTG_DailyChart").bind("plothover",function(event,pos,item){
         <div class="col-xs-12">
             <div class="block block-bordered">
                 <div class="block-header bg-gray-lighter">
-                    <h3 class="block-title"><i class="fa fa-line-chart push-10-r"></i>Statistik Kelajuan Internet 1BestariNet</h3>
+                    <h3>
+                        <i class="fa fa-line-chart push-10-r"></i><b>UPLOAD - PAGI</b>
+                        <div id="UPG_Toggle" class="pull-right"></div>
+                    </h3>
                 </div>
                 <div class="block-content block-content-full">
-                    <h3 class="push-5"><b>UPLOAD - PAGI</b></h3>
                     <div id="UPG_DC_Legend" class="flotLegend"></div>
                     <div id="UPG_DailyChart" class="flotGraph"></div>
                 </div>
@@ -507,10 +361,12 @@ jQuery("#UPTG_DailyChart").bind("plothover",function(event,pos,item){
         <div class="col-xs-12">
             <div class="block block-bordered">
                 <div class="block-header bg-gray-lighter">
-                    <h3 class="block-title"><i class="fa fa-line-chart push-10-r"></i>Statistik Kelajuan Internet 1BestariNet</h3>
+                    <h3>
+                        <i class="fa fa-line-chart push-10-r"></i><b>UPLOAD - PETANG</b>
+                        <div id="UPTG_Toggle" class="pull-right"></div>
+                    </h3>
                 </div>
                 <div class="block-content block-content-full">
-                    <h3 class="push-5"><b>UPLOAD - PETANG</b></h3>
                     <div id="UPTG_DC_Legend" class="flotLegend"></div>
                     <div id="UPTG_DailyChart" class="flotGraph"></div>
                 </div>

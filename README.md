@@ -1,39 +1,47 @@
-## Template Sistem (Web-Based) - Juruteknik Komputer Negeri Perak (JTKPK)
+## Portal Juruteknik Komputer Negeri Perak (JTKPK)
 
 ![Versi Template](http://img.shields.io/badge/Versi-v1.0-green.svg)
 
-Template Sistem (Web-Based) & Platform utama sistem bersepadu bagi Kumpulan DEV-TEAM JTKPK. :+1:
+Portal bersepadu Juruteknik Komputer (FT) & Platform utama bagi menguruskan pelbagai maklumat berkaitan dengan tugasan FT. :+1:
 
 [![Antaramuka Dashboard](https://s13.postimg.org/9gbnu98rr/Screen_Shot_2016_11_01_at_4_06_55_PM.png)](https://postimg.org/image/caet7paxv/)
 
 ### **Nota Ringkas:**
 
-#### Repository ini mengandungi projek sumber terbuka Framework Laravel (PHP) yang digunapakai dalam pembangunan sistem web-based bagi kumpulan DEV-TEAM JTKPK. Sistem ini telah diubahsuai mengikut keperluan dan kesesuaian bagi sistem yang akan dibangunkan.
+#### Repository ini mengandungi projek sumber terbuka *Framework Laravel (PHP)*. Sistem ini mengandungi modul-modul yang digunapakai dalam menguruskan semua maklumat berkaitan dengan tugasan FT. Sistem ini telah diubahsuai mengikut keperluan dari masa ke semasa.
 
-**Template sistem ini mengandungi :**
+**Modul-Modul :**
 
-* Modul Pendaftaran Pengguna bagi sistem (Full authentication).
+* Modul Pendaftaran Pengguna bagi sistem *(full authentication)*.
 * Maklumat JPN, PPD, dan Sekolah di dalam Negeri PERAK sahaja (buat masa ini).
-* Dimurnikan lagi dengan template Themes (Kredit [@putera](https://github.com/putera)) yang sangat cantik dan fluid untuk mobile.
-* Dibangunkan khusus untuk Juruteknik Negeri Perak.
-* Modul Development Team iaitu pengurusan projek dan kumpulan Development Team bagi JTKPK.
-* Modul SMART Team yakni pengurusan SMART Team serta aktiviti.
-* Aktiviti Ad-Hoc (Selain daripada SMART Team)
+* Dimurnikan lagi dengan Themes (Kredit [@putera](https://github.com/putera)) yang sangat cantik dan fluid untuk mobile.
+* Modul Development Team - Pengurusan kumpulan Development Team, projek.
+* Modul SMART Team - Pengurusan kumpulan SMART Team serta aktiviti.
+* Aktiviti Ad-Hoc (Aktiviti yang dijalankan yang tidak melibatkan kumpulan SMART Team)
 * Modul FORUM
-* Modul Senarai Semak Harian - 29/11/2016
-* Modul Aduan Kerosakan Peralatan ICT (AKP) - 01/12/2016
+* Modul Log Tugasan & Senarai Semak Harian - Menguruskan log tugasan & senarai semak harian
+* Modul Aduan Kerosakan Peralatan ICT (AKP) - Menguruskan aduan kerosakan peralatan ICT
 
-**Plug-ins yang telah dimasukkan antaranya ialah :**
+**Laporan :**
+
+* Laporan Bulanan Aduan Kerosakan Peralatan ICT (AKP)
+* Laporan Bulanan Log Tugasan & Senarai Semak Harian
+* Laporan Bulanan Kelajuan Talian Internet 1BestariNet *(Speedtest)*
+
+**Komponen yang telah dimasukkan antaranya ialah :**
 
 * Facebook Graph API
 * Twitter API
 * DOMPDF (Untuk generate fail PDF)
 * Google reCAPTCHA (Untuk mengelakkan SPAM dan ABUSE sistem)
+* Cloudinary API (Upload gambar secara PERCUMA)
 * dan akan ditambah dari masa ke semasa mengikut kepada keperluan.
 
-> Sila install perisian Git (https://git-scm.com) & Composer (https://getcomposer.org) untuk mendapatkan template ini dan ikuti langkah dibawah:
+## Cloning & Cara Pemasangan
 
-**Langkah 1 :** Muat turun soskod ini
+> Sila install perisian Git (https://git-scm.com) & Composer (https://getcomposer.org) untuk proses cloning dan ikuti langkah di bawah :
+
+**Langkah 1 :** Clone/Muatturun sos kod ini
 ```
 git clone https://github.com/putera/jtkpk.git
 ```
@@ -43,7 +51,10 @@ git clone https://github.com/putera/jtkpk.git
 composer update
 ```
 
-**Langkah 3 :** Setting fail .ENV (Sambungan ke Pangkalan Data anda) dan **config/app.php**
+**Langkah 3 :** Konfigurasi Database & Portal
+
+*.ENV*
+
 ```
 DB_CONNECTION=mysql
 DB_HOST=localhost
@@ -53,24 +64,24 @@ DB_USERNAME=<DATABASE_USER>
 DB_PASSWORD=<DATABASE_PASSWORD>
 ```
 
-config/app.php
+*config/app.php*
 
 ```
 'debug' => env('APP_DEBUG', false),
 'url' => env('APP_URL', 'URL_SEBENAR_WEB_ANDA'),
 ```
 
-**Langkah 4 :** Migrate Pangkalan Data
+**Langkah 4 :** Migrate Database (Wujudkan table-table dalam database)
 ```
 php artisan migrate
 ```
 
-**Langkah 5 :** Seed Pangkalan Data
+**Langkah 5 :** Seed Database (Masukkan maklumat data asas ke dalam database)
 ```
 php artisan db:seed
 ```
 
-**Untuk pengguna Mac OS
+** Untuk pengguna macOS/Ubuntu dan Linux, Buka *terminal* dan tukar *permission* untuk *write access* folder berkenaan
 ```
 sudo chmod -R 777 storage/
 sudo chmod -R 777 public/devteam/kertas-kerja/
@@ -88,10 +99,14 @@ Layari : http://localhost:8000
 
 Itu sahaja ! Mudah kan ?
 
-**Pengguna & Kata Laluan Administrator default adalah :**
+**Pengguna & Kata Laluan Administrator *default* adalah :**
 ```
 E-mel : admin@jtkpk.dev
 Kata Laluan : password
 ```
 
 Sebarang masalah boleh berhubung terus dengan saudara Zulkifli Mohamed [(@putera)](https://github.com/putera). Terima kasih.
+
+## Contribute & Penambahbaikan Portal JTKPK
+
+Untuk menjadi salah seorang daripada penyumbang atau contributor dalam penambahbaikan portal JTKPK ini, anda boleh *fork* repositori ini dan sila *Pull Request* sos kod anda untuk diuji sebelum dimerge kedalam master sistem. Terima kasih.

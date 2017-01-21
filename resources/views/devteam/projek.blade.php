@@ -67,45 +67,52 @@ var UploadKertasKerja = $('#btn-kertas-kerja').dropzone({
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
             <i class="fa fa-th push-15-r"></i> Senarai Projek
         </h1>
     </div>
 </div>
 <!-- END Page Header -->
 
+<!-- Menu -->
+<div class="content padding-5-t bg-white border-b">
+    <div class="push-15 push-10-t">
+        <div class="row">
+            <div class="col-xs-6">
+                <a href="/dev-team/{{ $kodppd }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                    <i class="fa fa-arrow-circle-left"></i>
+                </a>
+                @if (Auth::user()->hasRole('leader'))
+                    <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
+                        <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
+                    </button>
+                @endif
+            </div>
+            <div class="col-xs-6 pull-right">
+                <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
+                    <option></option>
+                    <option value="/dev-team">LIHAT SEMUA</option>
+                    @foreach (App\PPD::all() as $ppd)
+                        <option value="/dev-team/{{ $ppd->kod_ppd }}" {{ ($kodppd == $ppd->kod_ppd) ? 'selected':'' }}>{{ $ppd->ppd }}</option>
+                    @endforeach
+                </select>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Menu -->
+
 <!-- Page Content -->
 <div class="content content-narrow">
     <div class="row">
         <div class="col-xs-12">
-            <div id="_users" class="block block-themed block-rounded push-5">
-                
-                <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
-                    <a href="/dev-team/{{ $kodppd }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
-                        <i class="fa fa-arrow-circle-left"></i>
-                    </a>
-                    @if (Auth::user()->hasRole('leader'))
-                        <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
-                            <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
-                        </button>
-                    @endif
-                    <div class="pull-right">
-                        <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
-                            <option></option>
-                            <option value="/dev-team">LIHAT SEMUA</option>
-                            @foreach (App\PPD::all() as $ppd)
-                                <option value="/dev-team/{{ $ppd->kod_ppd }}" {{ ($kodppd == $ppd->kod_ppd) ? 'selected':'' }}>{{ $ppd->ppd }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-                
+            <div class="block block-themed block-rounded push-5">
                 <div class="block-content push-20">
                     <div class="pull-left">
                         <h5>
-                            <span class="font-w300">Kumpulan : </span>
+                            <span class="font-w300">KUMPULAN : </span>
                             <b>{{ $nama_kumpulan }}</b>
                         </h5>
                     </div>

@@ -16,40 +16,47 @@ setTimeout(function(){
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
             <i class="fa fa-tags push-15-r"></i> <span class="font-w300">Detail Tugasan :</span> {{ $task->tajuk_task }}
         </h1>
     </div>
 </div>
 <!-- END Page Header -->
 
+<!-- Menu -->
+<div class="content padding-5-t bg-white border-b">
+    <div class="push-15 push-10-t">
+        <div class="row">
+            <div class="col-xs-6">
+                <a href="/dev-team/projek/{{ $task->projek_id }}/tasks" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                    <i class="fa fa-arrow-circle-left"></i>
+                </a>
+            </div>
+            <div class="col-xs-6 pull-right text-right">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Menu -->
+
 <!-- Page Content -->
 <div class="content content-narrow">
     <div class="row">
         <div class="col-xs-12">
-            <div id="_users" class="block block-themed block-rounded push-5">
-                
-                <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
-                    <a href="/dev-team/projek/{{ $task->projek_id }}/tasks" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
-                        <i class="fa fa-arrow-circle-left"></i>
-                    </a>
-                    <div class="pull-right">
-                    </div>
-                </div>
-                
+            <div class="block block-themed block-rounded push-5">
                 <div class="block-content block-content-full border-b clearfix">
                     <div class="row">
                         <div class="col-md-8 text-left">
                             <h5>
-                                <span class="font-w300">Task Tugasan : </span>
+                                <span class="font-w300">TASK TUGASAN : </span>
                             </h5>
-                            <h2 class="font-w300">{{ $task->tajuk_task }}</h2>
+                            <h3 class="font-w300">{{ $task->tajuk_task }}</h3>
                         </div>
                         <div class="col-md-4 text-right">
                             <h5>
-                                <span class="font-w300">Peratus Siap (%) : </span>
+                                <span class="font-w300">PERATUS SIAP (%) : </span>
                             </h5>
                             <div class="push-5-t">
                                 <?php
@@ -70,7 +77,7 @@ setTimeout(function(){
                             </div>
                         </div>
                     </div>
-                    <h5 class="font-w300 push-5-t panel panel-primary padding-10-all remove-margin-b">
+                    <h5 class="font-w300 push-10-t panel panel-primary padding-10-all remove-margin-b">
                         <span class="font-w400">Detail Tugasan :</span><br>
                         <?php $detail = \Emojione\Emojione::toImage($task->detail_task); echo nl2br($detail); ?>
                     </h5>

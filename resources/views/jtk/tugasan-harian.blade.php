@@ -160,10 +160,10 @@ function ClearSemakan() {
 @endif
 
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
-            <i class="fa fa-check-square-o push-15-r"></i> Log Tugasan & Senarai Semak Harian
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
+            <i class="fa fa-book push-15-r"></i> Log Tugasan & Senarai Semak Harian
         </h1>
     </div>
 </div>
@@ -175,9 +175,6 @@ function ClearSemakan() {
         <div class="row">
             @if (Auth::user()->hasRole('ppd'))
                 <div class="col-md-7">
-                    <a class="btn btn-default" href="{{ url('/') }}">
-                        <i class="fa fa-home"></i>
-                    </a>
                     <div class="btn-group">
                         <div class="btn-group">
                             <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -238,10 +235,7 @@ function ClearSemakan() {
                     </div>
                 </div>
             @else
-                <div class="col-md-6">
-                    <a class="btn btn-default" href="{{ url('/') }}">
-                        <i class="fa fa-home"></i>
-                    </a>
+                <div class="col-xs-6">
                     <div class="btn-group">
                         <div class="btn-group">
                             <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
@@ -262,12 +256,12 @@ function ClearSemakan() {
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 text-right">
+                <div class="col-xs-6 text-right pull-right">
                     <a class="btn btn-primary" href="{{ url('/senarai-semak-harian') }}">
-                        <i class="fa fa-list-ul push-5-r"></i>Senarai Semak Harian
+                        <i class="fa fa-list-ul"></i><span class="push-5-l hidden-xs hidden-sm">Senarai Semak Harian</span>
                     </a>
                     <button type="button" class="btn btn-success" onclick="javascript:Semakan();">
-                        <i class="fa fa-check-square-o push-5-r"></i>Tugasan Harian
+                        <i class="fa fa-check-square-o"></i><span class="push-5-l hidden-xs hidden-sm">Tugasan Harian</span>
                     </button>
                 </div>
             @endif
@@ -290,9 +284,9 @@ function ClearSemakan() {
                     ?>
                     <div class="col-md-8">
                         <div class="block-content block-content-full block-content-mini border-b bg-primary-lighter">
-                            Juruteknik Yang Telah Membuat Log Tugasan Hari Ini - <b>{{ date('d/m/Y') }} - 
-                            (Buat: {{ count($thhi) }} orang &nbsp;  
-                            Tak Buat: {{ ($jumjtk-count($thhi)) }} orang )</b>
+                            Log Tugasan Hari Ini - <b>{{ date('d/m/Y') }}</b> 
+                            (Buat: <span class="text-success"><b>{{ count($thhi) }}</b> orang</span> &nbsp;  
+                            Tak Buat: <span class="text-danger"><b>{{ ($jumjtk-count($thhi)) }}</b> orang</span> )
                         </div>
                         <div class="block-content block-content-full">
                         
@@ -313,7 +307,7 @@ function ClearSemakan() {
                                 Peratus Log Tugasan Dibuat - <b>{{ $jtkc->replaceMonth(date('n')) }}, {{ date('Y') }}</b>
                             @endif
                         </div>
-                        <div class="block-content block-content-full h1 font-w300">
+                        <div class="block-content block-content-full font-s36 font-w300 text-center">
                             <?php
                                 if (strlen($mon) != 0 && strlen($year) != 0) {
                                     if (Auth::user()->hasRole('ppd')) {

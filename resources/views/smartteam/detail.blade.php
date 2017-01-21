@@ -8,34 +8,39 @@
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
-            <i class="fa fa-ambulance push-15-r"></i> <span class="font-w300">Detail :</span> {{ $st->nama_kumpulan }}
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
+            <i class="fa fa-ambulance push-15-r"></i> <span class="font-w600">Detail :</span> {{ $st->nama_kumpulan }}
         </h1>
     </div>
 </div>
 <!-- END Page Header -->
+
+<!-- Menu -->
+<div class="content padding-5-t bg-white border-b">
+    <div class="push-15 push-10-t">
+        <div class="row">
+            <div class="col-xs-6">
+                <a href="/smart-team/{{ $st->kod_ppd }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                    <i class="fa fa-arrow-circle-left"></i>
+                </a>
+                <button type="button" class="btn btn-success" onclick="javascript:AddAktivitiDialog();" data-toggle="tooltip" title="Tambah Aktiviti SMART Team">
+                    <i class="fa fa-plus push-5-r"></i><i class="fa fa-bicycle"></i>
+                </button>
+            </div>
+            <div class="col-xs-6 pull-right">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Menu -->
 
 <!-- Page Content -->
 <div class="content content-narrow">
     <div class="row">
         <div class="col-xs-12">
             <div class="block block-themed block-rounded push-5">
-                <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
-                    <a href="/smart-team/{{ $st->kod_ppd }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
-                        <i class="fa fa-arrow-circle-left"></i>
-                    </a>
-
-                    <button type="button" class="btn btn-success" onclick="javascript:AddAktivitiDialog();" data-toggle="tooltip" title="Tambah Aktiviti SMART Team">
-                        <i class="fa fa-plus push-5-r"></i><i class="fa fa-bicycle"></i>
-                    </button>
-
-                    <div class="pull-right">
-                        
-                    </div>
-                </div>
-                
                 <div class="block-content block-content-full">
                     <div class="row">
                         <div class="col-md-4">
@@ -77,25 +82,25 @@
                                 @foreach ($st->aktiviti as $xtvt)
                                 <div class="block block-bordered">
                                     <div class="block-header bg-gray-lighter">
-                                        <div class="block-options-simple">
-                                            <a href="{{ url('/smart-team/aktiviti-detail/'.$xtvt->id.'') }}" class="btn btn-sm btn-primary">
-                                                <i class="fa fa-list-ul"></i> Lihat Detail
-                                            </a>
-                                            @if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
-                                            <button class="btn btn-sm btn-primary" type="button" onclick="EditAktiviti('{{ $xtvt->id }}');">
-                                                <i class="fa fa-pencil"></i> Edit
-                                            </button>
-                                            <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktiviti('{{ $xtvt->id }}');">
-                                                <i class="fa fa-trash-o"></i> Delete
-                                            </button>
-                                            @endif
-                                        </div>
-                                        <h3 class="block-title">
+                                        <h4>
                                             <i class="fa fa-bicycle push-5-r"></i>
-                                            <a class="h5 font-w600 text-primary" href="{{ url('/smart-team/aktiviti-detail/'.$xtvt->id.'') }}">
+                                            <a class="font-w600 text-primary" href="{{ url('/smart-team/aktiviti-detail/'.$xtvt->id.'') }}">
                                                 {{ $xtvt->nama_aktiviti }}
                                             </a>
-                                        </h3>
+                                        </h4>
+                                    </div>
+                                    <div class="block-content block-content-full block-content-mini bg-gray-lighter text-right">
+                                        <a href="{{ url('/smart-team/aktiviti-detail/'.$xtvt->id.'') }}" class="btn btn-sm btn-primary">
+                                            <i class="fa fa-list-ul"></i> Lihat Detail
+                                        </a>
+                                        @if (App\SmartTeam::where('id',$xtvt->smart_team_id)->where('senarai_jtk','LIKE','%,'.Auth::user()->id.',%')->count() == 1)
+                                        <button class="btn btn-sm btn-primary" type="button" onclick="EditAktiviti('{{ $xtvt->id }}');">
+                                            <i class="fa fa-pencil"></i> Edit
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktiviti('{{ $xtvt->id }}');">
+                                            <i class="fa fa-trash-o"></i> Delete
+                                        </button>
+                                        @endif
                                     </div>
                                     <div class="block-content">
                                         <div class="row items-push">

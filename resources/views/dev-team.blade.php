@@ -67,10 +67,10 @@
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
-            <i class="fa fa-users push-15-r"></i> Kumpulan Development Team
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
+            <i class="fa fa-users push-15-r"></i> Development Team
         </h1>
     </div>
 </div>
@@ -80,12 +80,32 @@
 <div class="content padding-5-t bg-white border-b">
     <div class="push-15 push-10-t">
         <div class="row">
-            <div class="col-md-6">
-                <a class="btn btn-default" href="{{ url('/') }}">
-                    <i class="fa fa-home"></i>
-                </a>
+            <div class="col-xs-6">
+                @if ($id != null)
+                    <a href="/dev-team" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                        <i class="fa fa-arrow-circle-left"></i>
+                    </a>
+                @endif
+                @if (Auth::user()->hasRole('leader'))
+                    <button type="button" class="btn btn-success" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
+                        <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
+                    </button>
+                @endif
+                @if (Request::is('dev-team/*'))
+                    @if (Auth::user()->IsKetuaKumpulan)
+                        <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
+                            <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
+                        </button>
+                    @endif
+                @endif
+                
+                @if (Auth::user()->hasRole('jpn') || Auth::user()->hasRole('ppd'))
+                    <a href="/dev-team/senarai-projek/semua" class="btn btn-primary" data-toggle="tooltip" title="Senarai Semua Projek">
+                        <i class="fa fa-list-ul push-5-r"></i> Senarai Projek
+                    </a>
+                @endif
             </div>
-            <div class="col-md-6 pull-right">
+            <div class="col-xs-6 pull-right">
                 <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
                     <option></option>
                     <option value="/dev-team">LIHAT SEMUA</option>
@@ -103,33 +123,7 @@
 <div class="content content-narrow">
     <div class="row">
         <div class="col-xs-12">
-            <div id="_users" class="block block-themed block-rounded push-5">
-                <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
-                    @if ($id != null)
-                        <a href="/dev-team" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
-                            <i class="fa fa-arrow-circle-left"></i>
-                        </a>
-                    @endif
-                    @if (Auth::user()->hasRole('leader'))
-                        <button type="button" class="btn btn-success" onclick="javascript:AddGroupDialog();" data-toggle="tooltip" title="Tambah Kumpulan DevTeam">
-                            <i class="fa fa-plus push-5-r"></i><i class="fa fa-users"></i>
-                        </button>
-                    @endif
-                    @if (Request::is('dev-team/*'))
-                        @if (Auth::user()->IsKetuaKumpulan)
-                            <button type="button" class="btn btn-success" onclick="javascript:AddProjekDialog();" data-toggle="tooltip" title="Tambah Projek Kumpulan DevTeam">
-                                <i class="fa fa-plus push-5-r"></i><i class="fa fa-th-large"></i>
-                            </button>
-                        @endif
-                    @endif
-                    
-                    @if (Auth::user()->hasRole('jpn') || Auth::user()->hasRole('ppd'))
-                        <a href="/dev-team/senarai-projek/semua" class="btn btn-primary" data-toggle="tooltip" title="Senarai Semua Projek">
-                            <i class="fa fa-list-ul push-5-r"></i> Senarai Projek
-                        </a>
-                    @endif
-                </div>
-                
+            <div class="block block-themed block-rounded push-5">
                 <div class="block-content">
                     @if ($id != null)
                         <center><h3 class="font-w300"><b>({{ $ppd->kod_ppd }})</b> {{ $ppd->ppd }}</h2></center>
@@ -140,9 +134,10 @@
                                     <p>- Tiada Rekod -</p>
                                 </center>
                             @else
+                            
                             @foreach (App\DevTeam::where('kod_ppd',$id)->get() as $devteam)
-                            <div class="block block-rounded block-bordered">
-                                <div class="block-header bg-gray-lighter">
+                            <div class="block block-rounded block-bordered block-themed">
+                                <div class="block-header bg-primary-dark">
                                     <a name="{{ $devteam->id }}" id="{{ $devteam->id }}"></a>
                                     <div class="block-options-simple">
                                         @if (count($devteam->projek) > 0)
@@ -160,7 +155,7 @@
                                             </a>
                                         @endif
                                     </div>
-                                    <h3 class="h3 font-w300 text-left">{{ $devteam->nama_kumpulan }}</h3>
+                                    <h3 class="h3 text-white font-w300 text-left">{{ $devteam->nama_kumpulan }}</h3>
                                 </div>
                                 <div class="block-content">
                                     <div class="table-responsive">
@@ -211,6 +206,7 @@
                                 </div>
                             </div>
                             @endforeach
+
                             @endif
                         </div>
                     @else

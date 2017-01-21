@@ -9,10 +9,10 @@ $('#XtvtAdhoc').DataTable();
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
-            <i class="fa fa-ambulance push-15-r"></i> Kumpulan SMART Team
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
+            <i class="fa fa-ambulance push-15-r"></i> SMART Team
         </h1>
     </div>
 </div>
@@ -22,12 +22,19 @@ $('#XtvtAdhoc').DataTable();
 <div class="content padding-5-t bg-white border-b">
     <div class="push-15 push-10-t">
         <div class="row">
-            <div class="col-md-6">
-                <a class="btn btn-default" href="{{ url('/') }}">
-                    <i class="fa fa-home"></i>
-                </a>
+            <div class="col-xs-6">
+                @if (strlen($kod_ppd) != 0)
+                    <a href="/smart-team" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                        <i class="fa fa-arrow-circle-left"></i>
+                    </a>
+                @endif
+                @if (Auth::user()->hasRole('leader'))
+                    <button type="button" class="btn btn-success" onclick="javascript:AddSTDialog();" data-toggle="tooltip" title="Tambah Kumpulan SMART Team">
+                        <i class="fa fa-plus push-5-r"></i><i class="fa fa-ambulance"></i>
+                    </button>
+                @endif
             </div>
-            <div class="col-md-6 pull-right">
+            <div class="col-xs-6 pull-right">
                 <select name="_ppdsel" id="_ppdsel" data-placeholder="Sila pilih PPD" class="form-control js-select2" onchange="jump('parent',this,1)">
                     <option></option>
                     <option value="/smart-team">LIHAT SEMUA</option>
@@ -46,24 +53,11 @@ $('#XtvtAdhoc').DataTable();
     <div class="row">
         <div class="col-xs-12">
             <div class="block block-themed block-rounded push-5">
-                <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
-                    @if (strlen($kod_ppd) != 0)
-                        <a href="/smart-team" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
-                            <i class="fa fa-arrow-circle-left"></i>
-                        </a>
-                    @endif
-                    @if (Auth::user()->hasRole('leader'))
-                        <button type="button" class="btn btn-success" onclick="javascript:AddSTDialog();" data-toggle="tooltip" title="Tambah Kumpulan SMART Team">
-                            <i class="fa fa-plus push-5-r"></i><i class="fa fa-ambulance"></i>
-                        </button>
-                    @endif
-                </div>
-                
                 <div class="block-content">
                     @if (strlen($kod_ppd) != 0)
                         @foreach (App\PPD::where('kod_ppd',$kod_ppd)->get() as $ppd)
                             <div class="block block-rounded block-bordered block-themed">
-                                <div class="block-header bg-primary">
+                                <div class="block-header bg-primary-dark">
                                     <ul class="block-options">
                                         <li>
                                             <button type="button" data-toggle="block-option" data-action="content_toggle"></button>
@@ -73,7 +67,7 @@ $('#XtvtAdhoc').DataTable();
                                 </div>
                                 
                                 @if (!Auth::user()->hasRole('jpn'))
-                                <div class="block-content remove-margin-b">
+                                <div class="block-content block-content-full block-content-mini bg-gray-lighter remove-margin-b border-b text-right">
                                     <button type="button" class="btn btn-primary" onclick="javascript:AddAktivitiAdhocDialog();">
                                         <i class="fa fa-plus push-5-r"></i>Tambah Aktiviti
                                     </button>
@@ -139,8 +133,8 @@ $('#XtvtAdhoc').DataTable();
                                 </div>
                             </div>
 
-                            <div class="block block-rounded block-bordered">
-                                <div class="block-header bg-gray-lighter">
+                            <div class="block block-rounded block-bordered block-themed">
+                                <div class="block-header bg-primary-dark">
                                     <ul class="block-options">
                                         <li>
                                             <button type="button" data-toggle="block-option" data-action="content_toggle"></button>

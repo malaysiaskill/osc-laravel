@@ -57,49 +57,57 @@ $('#upload-gambar').dropzone({
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
-            <i class="fa fa-ambulance push-15-r"></i> <span class="font-w300">Aktiviti Detail :</span> {{ $xtvt->nama_aktiviti }}
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
+            <i class="fa fa-ambulance push-15-r"></i> <span class="font-w600">Aktiviti Detail :</span> {{ $xtvt->nama_aktiviti }}
         </h1>
     </div>
 </div>
 <!-- END Page Header -->
+
+<!-- Menu -->
+<div class="content padding-5-t bg-white border-b">
+    <div class="push-15 push-10-t">
+        <div class="row">
+            <div class="col-xs-6">
+                <a href="{{ url('/smart-team/'.$xtvt->kod_ppd.'') }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
+                    <i class="fa fa-arrow-circle-left"></i>
+                </a>
+            </div>
+            <div class="col-xs-6 pull-right text-right">
+                @if (Auth::user()->kod_ppd == $xtvt->kod_ppd || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
+                    <button class="btn btn-sm btn-primary" type="button" onclick="EditAktivitiAdhoc('{{ $xtvt->id }}');">
+                        <i class="fa fa-pencil"></i> Edit
+                    </button>
+                @endif
+                @if (Auth::user()->hasRole('ppd') || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
+                    <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktivitiAdhoc('{{ $xtvt->id }}');">
+                        <i class="fa fa-trash-o"></i> Delete
+                    </button>
+                @endif
+                @if (App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
+                    <button id="btn-add-gambar" type="button" class="btn btn-sm btn-success">
+                        <i class="fa fa-picture-o push-5-r"></i>Upload Gambar Aktiviti
+                    </button>
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+<!-- END Menu -->
 
 <!-- Page Content -->
 <div class="content content-narrow">
     <div class="row">
         <div class="col-xs-12">
             <div class="block block-themed block-rounded push-5">
-                <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter clearfix">
-                    <a href="{{ url('/smart-team/'.$xtvt->kod_ppd.'') }}" class="btn btn-primary" data-toggle="tooltip" title="Kembali">
-                        <i class="fa fa-arrow-circle-left"></i>
-                    </a>
-                    <div class="pull-right">
-                    </div>
-                </div>
-                
                 <div class="block-content">
                     <div class="row">
                         <div class="col-xs-12">
                             <div class="block block-bordered">
                                 <div class="block-header bg-gray-lighter">
-                                    
-                                    <div class="block-options-simple">
-                                        @if (Auth::user()->kod_ppd == $xtvt->kod_ppd || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
-                                            <button class="btn btn-sm btn-primary" type="button" onclick="EditAktivitiAdhoc('{{ $xtvt->id }}');">
-                                                <i class="fa fa-pencil"></i> Edit
-                                            </button>
-                                        @endif
-                                        @if (Auth::user()->hasRole('ppd') || App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
-                                            <button class="btn btn-sm btn-danger" type="button" onclick="PadamAktivitiAdhoc('{{ $xtvt->id }}');">
-                                                <i class="fa fa-trash-o"></i> Delete
-                                            </button>
-                                        @endif
-                                    </div>
-                                    <h2 class="font-w300">
-                                        {{ $xtvt->nama_aktiviti }}
-                                    </h2>
+                                    <h2 class="font-w300">{{ $xtvt->nama_aktiviti }}</h2>
                                 </div>
                                 <div class="block-content">
                                     <div class="row items-push">
@@ -175,14 +183,7 @@ $('#upload-gambar').dropzone({
                                         </div>
                                     </div>
                                     <div class="row items-push">
-                                        <label class="col-md-6 h5 font-w300 push-5">Gambar Aktiviti :</label>
-                                        @if (App\AktivitiAdhoc::where('id',$xtvt->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($xtvt->jtk_terlibat) == 0)
-                                        <div class="col-md-6 text-right">
-                                            <button id="btn-add-gambar" type="button" class="btn btn-success">
-                                                <i class="fa fa-picture-o push-5-r"></i>Upload Gambar Aktiviti
-                                            </button>
-                                        </div>
-                                        @endif
+                                        <label class="col-xs-12 h5 font-w300 push-5">Gambar Aktiviti :</label>
                                         <div class="col-sm-12">
                                             <div id="v_gambar" class="h6 panel bg-gray-lighter panel-primary padding-10-all remove-margin-b">
                                                 @if (App\GambarAktivitiSmartTeam::where('xtvt_id',$xtvt->id)->where('JenisAktiviti','ADHOC')->count() == 0)
