@@ -8,9 +8,9 @@ $('#Users').DataTable({ responsive: true });
 
 @section('content')
 <!-- Page Header -->
-<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo3@2x.jpg');">
-    <div class="push-50-t push-15">
-        <h1 class="h2 text-white animated fadeInUp">
+<div class="content bg-image overflow-hidden" style="background-image: url('/assets/img/photos/photo12@2x.jpg');">
+    <div class="push-100-t push-15">
+        <h1 class="h2 font-w300 text-white animated fadeInUp">
             <i class="fa fa-users push-15-r"></i> Senarai Pengguna
         </h1>
     </div>
@@ -22,9 +22,9 @@ $('#Users').DataTable({ responsive: true });
     <div class="push-15 push-10-t">
         <div class="row">
             <div class="col-md-6">
-                <a class="btn btn-default" href="{{ url('/') }}">
-                    <i class="fa fa-home"></i>
-                </a>
+                <button type="button" class="btn btn-primary" onclick="javascript:AddUserDialog();" data-toggle="tooltip" title="Tambah Pengguna">
+                    <i class="fa fa-plus push-5-r"></i><i class="fa fa-user"></i>
+                </button>
             </div>
             <div class="col-md-6 text-right">
             </div>
@@ -38,13 +38,6 @@ $('#Users').DataTable({ responsive: true });
     <div class="row">
         <div class="col-xs-12">
             <div id="_users" class="block block-themed block-rounded push-5">
-                
-                <div class="block-content block-content-full block-content-mini border-b bg-gray-lighter">
-                    <button type="button" class="btn btn-primary" onclick="javascript:AddUserDialog();" data-toggle="tooltip" title="Tambah Pengguna">
-                        <i class="fa fa-plus push-5-r"></i><i class="fa fa-user"></i>
-                    </button>
-                </div>
-                
                 <div class="block-content">
                     <table id="Users" class="table table-striped table-bordered responsive h6">
                         <thead>
