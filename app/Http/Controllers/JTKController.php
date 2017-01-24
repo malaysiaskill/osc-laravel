@@ -27,6 +27,7 @@ use App\GambarAktivitiSmartTeam;
 use App\AktivitiAdhoc;
 use App\TugasanHarian;
 use App\SenaraiSemakHarian;
+use App\SenaraiTugasKhas;
 use App\AKP;
 use App\KategoriKerosakan;
 
@@ -1072,6 +1073,83 @@ class JTKController extends Controller
             'ss_semua' => $ss_semua,
             'ss_user' => $ss_user
         ]);
+    }
+    public function SenaraiTugasKhas(Request $r, $mon=null, $year=null)
+    {
+        if ($mon != null && $year != null) {
+            $monyear = "$mon-$year";
+            $stk_user = SenaraiTugasKhas::where('user_id',Auth::user()->id)->where('bulan_tugasan',$monyear)->get();
+        } else {
+            $stk_user = SenaraiTugasKhas::where('user_id',Auth::user()->id)->where('bulan_tugasan',date('m')."-".date('Y'))->get();
+        }
+        return view('jtk.senarai-tugas-khas',[
+            'stk_user' => $stk_user,
+            'mon' => $mon,
+            'year' => $year
+        ]);
+    }
+    public function SaveSenaraiTugasKhas(Request $r)
+    {
+        $tugasan = htmlentities($r->input('_tugasan'),ENT_QUOTES);
+        $keterangan_tugasan = htmlentities($r->input('_keterangan_tugasan'),ENT_QUOTES);
+        $status_laporan = htmlentities($r->input('_status_laporan'),ENT_QUOTES);
+        $month = $r->input('_month');
+        $year = $r->input('_year');
+        $bulan_tugasan = "$month-$year";
+
+        if ($r->_id != 0 || $r->_id != '0')
+        {
+            # Update
+            $stk = SenaraiTugasKhas::find($r->_id);
+            $stk->tugasan = $tugasan;
+            $stk->keterangan_tugasan = $keterangan_tugasan;
+            $stk->status_laporan = $status_laporan;
+            $stk->bulan_tugasan = $bulan_tugasan;
+            $stk->save();
+        }
+        else
+        {
+            # Insert
+            $stk = new SenaraiTugasKhas;
+            $stk->user_id = Auth::user()->id;
+            $stk->tarikh_tugasan = Carbon::now();
+            $stk->tugasan = $tugasan;
+            $stk->keterangan_tugasan = $keterangan_tugasan;
+            $stk->status_laporan = $status_laporan;
+            $stk->bulan_tugasan = $bulan_tugasan;
+            $stk->save();
+        }
+
+        return redirect('/senarai-tugas-khas/'.$month.'/'.$year);
+    }
+    public function EditTugasKhas(Request $r, $id)
+    {
+        $stk = SenaraiTugasKhas::find($id);
+        
+        $keterangan_tugasan = addslashes(html_entity_decode($stk->keterangan_tugasan,ENT_QUOTES));
+        $keterangan_tugasan = str_replace('<br />', '\n', nl2br($keterangan_tugasan));
+        $keterangan_tugasan = trim(preg_replace('/\s\s+/', '', $keterangan_tugasan));
+
+        $status_laporan = addslashes(html_entity_decode($stk->status_laporan,ENT_QUOTES));
+        $status_laporan = str_replace('<br />', '\n', nl2br($status_laporan));
+        $status_laporan = trim(preg_replace('/\s\s+/', '', $status_laporan));
+
+        $bulan_tugasan = explode('-',$stk->bulan_tugasan);
+
+
+        echo "$('#_id').val('$id');";
+        echo "$('#TugasKhasDialog').modal('show');";
+
+        echo "$('#_tugasan').val(\"".$stk->tugasan."\");";
+        echo "$('#_month').val(\"".$bulan_tugasan[0]."\").trigger(\"change\");";
+        echo "$('#_year').val(\"".$bulan_tugasan[1]."\").trigger(\"change\");";
+        echo "$('#_keterangan_tugasan').val(\"$keterangan_tugasan\");";
+        echo "$('#_status_laporan').val(\"$status_laporan\");";
+    }
+    public function PadamTugasKhas(Request $r, $id)
+    {
+        $stk = SenaraiTugasKhas::destroy($id);
+        echo "SweetAlert('success','Berjaya Dipadam !','Rekod semakan ini telah berjaya dipadam !',\"window.location.href='/senarai-tugas-khas';\");";
     }
     public function SaveSenaraiSemakHarian(Request $r)
     {
@@ -2327,6 +2405,35 @@ class JTKController extends Controller
 
             $_data .= '</table>';
         }
+
+        # Laporan Tugasan Khas
+        $_data .= '<br><table width="100%" border="0" cellspacing="1" cellpadding="5" bgcolor="#333333">
+            <tr class="font14-white">
+                <td align="center" bgcolor="#004070" colspan="4">TUGASAN KHAS</td>
+            </tr>
+            <tr class="font14-white">
+                <td width="20" align="center" bgcolor="#1d79d5">#</td>
+                <td align="center" bgcolor="#1d79d5">TUGASAN</td>
+                <td align="center" bgcolor="#1d79d5">KETERANGAN TUGASAN</td>
+                <td align="center" bgcolor="#1d79d5">STATUS / LAPORAN</td>
+            </tr>';
+
+        $stk = SenaraiTugasKhas::where('user_id',Auth::user()->id)->where('bulan_tugasan',"$mon-$year")->get();
+        if (count($stk) == 0) {
+            $_data .= '<tr><td colspan="4" bgcolor="#FFF">- Tiada tugasan khas bagi bulan ini - </td></tr>';
+        } else {
+            $stk_i = 1;
+            foreach ($stk as $_stk)
+            {
+                $_data .= '<tr>
+                    <td align="center" valign="top" bgcolor="#FFF">'.$stk_i++.'.</td>
+                    <td align="left" valign="top" bgcolor="#FFF">'.$_stk->tugasan.'</td>
+                    <td align="left" valign="top" bgcolor="#FFF">'.nl2br($_stk->keterangan_tugasan).'</td>
+                    <td align="left" valign="top" bgcolor="#FFF">'.nl2br($_stk->status_laporan).'</td>
+                </tr>';
+            }
+        }
+        $_data .= '</table>';
 
         # Disemak
         if ($month != '0')

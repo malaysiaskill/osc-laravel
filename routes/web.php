@@ -125,6 +125,11 @@ Route::post('/ppd-semak-th', 'JTKController@PPDSemakTH'); // PPD Semak Tugasan H
 Route::post('/emel-th', 'JTKController@EmelTH'); // Hantar E-mel Tugasan Harian
 Route::get('/cetak-laporan-individu/{id}/{month}/{year}', 'JTKController@CetakLaporanIndividu'); // Cetak Laporan Individu
 Route::get('/cetak-laporan-speedtest/{id}/{month}/{year}', 'JTKController@CetakLaporanSpeedtest'); // Cetak Laporan Speedtest
+Route::get('/senarai-tugas-khas', 'JTKController@SenaraiTugasKhas'); // Senarai Tugas Khas
+Route::get('/senarai-tugas-khas/{mon}/{year}', 'JTKController@SenaraiTugasKhas'); // Senarai Tugas Khas
+Route::post('/senarai-tugas-khas', 'JTKController@SaveSenaraiTugasKhas'); // Save Senarai Tugas Khas
+Route::post('/edit-tugas-khas/{id}', 'JTKController@EditTugasKhas'); // Edit Tugas Khas
+Route::post('/delete-tugas-khas/{id}', 'JTKController@PadamTugasKhas'); // Padam Tugas Khas
 
 /**
 

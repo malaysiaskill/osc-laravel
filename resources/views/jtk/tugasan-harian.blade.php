@@ -257,6 +257,9 @@ function ClearSemakan() {
                     </div>
                 </div>
                 <div class="col-xs-6 text-right pull-right">
+                    <a class="btn btn-primary" href="{{ url('/senarai-tugas-khas') }}">
+                        <i class="fa fa-briefcase"></i><span class="push-5-l hidden-xs hidden-sm">Senarai Tugas Khas</span>
+                    </a>
                     <a class="btn btn-primary" href="{{ url('/senarai-semak-harian') }}">
                         <i class="fa fa-list-ul"></i><span class="push-5-l hidden-xs hidden-sm">Senarai Semak Harian</span>
                     </a>

@@ -474,6 +474,44 @@ function PadamAktivitiAdhoc(id) {
 
 /* Tugasan Harian */
 
+function ClearSenaraiTugasKhas() {
+    $('#_tugasan').val('');
+    $('#_keterangan_tugasan').val('');
+    $('#_status_laporan').val('');
+    $('#_id').val('0');
+}
+function TugasKhasDialog() {
+    ClearSenaraiSemakan();
+    $('#TugasKhasDialog').modal();
+    setTimeout(function(){
+        $('#_tugasan').focus();
+    },500);
+}
+function EditTugasKhas(id) {
+    var ajax = new sack();
+    ajax.requestFile = "/edit-tugas-khas/" + id;
+    Ajx(ajax);
+}
+function DeleteTugasKhas(id) {
+    swal({
+        title: "Padam ?",
+        text: "Anda pasti untuk memadam rekod ini ?",
+        type: "warning",
+        html: true,
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Ya",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false,
+        showLoaderOnConfirm: true
+    },
+    function()
+    {
+        var ajax = new sack();
+        ajax.requestFile = "/delete-tugas-khas/" + id;
+        Ajx(ajax);
+    });
+}
 function ClearSenaraiSemakan() {
     $('#_perkara').val('');
     $('#_cara_pengujian').val('');
@@ -541,6 +579,9 @@ function Cetak_TH(id) {
 }
 function ViewTH(mon,year) {
     window.location.href = "/tugasan-harian/"+mon+"/"+year;
+}
+function ViewTK(mon,year) {
+    window.location.href = "/senarai-tugas-khas/"+mon+"/"+year;
 }
 function PPDSemakTH(monyear) {
     swal({

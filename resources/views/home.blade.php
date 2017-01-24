@@ -14,19 +14,19 @@
 <!-- END Page Header -->
 
 <!-- Menu -->
+<!--
 <div class="content padding-5-t bg-white border-b">
     <div class="push-15 push-10-t">
         <div class="row">
             <div class="col-md-6 font-w300">
-                <i class="fa fa-user push-10-r"></i><b>{{ Auth::user()->name }}</b>
             </div>
             <div class="col-md-6 text-right">
             </div>
         </div>
     </div>
 </div>
+//-->
 <!-- END Menu -->
-
 
 <!-- Page Content -->
 <div class="content">
