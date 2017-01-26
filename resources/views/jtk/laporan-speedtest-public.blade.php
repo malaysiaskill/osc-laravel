@@ -1,4 +1,4 @@
-@inject('jtkc', '\App\Http\Controllers\JTKController')
+@inject('jtkc', '\App\Http\Controllers\PublicController')
 
 @extends('master.single')
 @section('title', 'Laporan Speedtest')
@@ -314,10 +314,10 @@ function showTooltip(x, y, contents) {
 <!-- Menu -->
 <div class="content content-mini bg-white border-b">
     <div class="push-15 text-center">
-        <p>
-            LAPORAN BULANAN KELAJUAN INTERNET 1BESTARINET BAGI BULAN<br>
-            <b>{{ strtoupper($bulan_tahun) }}</b> - <b>{{ $nama_sekolah }}</b>
-        </p>
+        <span class="h3 font-w300">
+            LAPORAN BULANAN STATISTIK BACAAN KELAJUAN INTERNET 1BESTARINET BAGI BULAN<br>
+            <b>{{ strtoupper($bulan_tahun) }}</b> - <b>{{ $nama_sekolah }} ({{ strtoupper($kod_sekolah) }})</b>
+        </span>
     </div>
 </div>
 <!-- END Menu -->
@@ -325,9 +325,66 @@ function showTooltip(x, y, contents) {
 <div class="content content-mini">
     <div class="row">
         <div class="col-xs-12 push">
-            <button type="button" class="btn btn-primary" onclick="javascript:window.print();">
-                <i class="fa fa-print push-5-r"></i> Cetak
-            </button>
+            <div class="row">
+                <div class="col-xs-5">
+                    <button type="button" class="btn btn-primary" onclick="javascript:window.print();">
+                        <i class="fa fa-print push-5-r"></i> Cetak
+                    </button>
+                </div>
+                <div class="col-xs-7">
+                    <div class="pull-right">
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='/laporan-speedtest/'+$('#_kod_sekolah').val()+'/'+$('#_month').val()+'/'+$('#_year').val();">
+                            <i class="fa fa-eye push-5-r"></i>Lihat
+                        </button>
+                    </div>
+                    <div class="pull-right push-5-r">
+                        <select id="_year" data-placeholder="Tahun" class="form-control js-select2 pull-left">
+                            <option></option>
+                            <?php
+                                for ($i = date('Y'); $i < date('Y')+10; $i++) { 
+                            ?>
+                            @if ($i == date('Y'))
+                                <option value="{{ $i }}" selected>{{ $i }}</option>
+                            @else
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endif
+
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="pull-right push-5-r">
+                        <select id="_month" data-placeholder="Bulan" class="form-control js-select2 pull-left">
+                            <option></option>
+                            <?php
+                                for ($i = 1; $i <= 12; $i++) { 
+                            ?>
+                            @if (str_pad($i,2,'0',STR_PAD_LEFT) == date('m'))
+                                <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}" selected>{{ $jtkc->replaceMonth($i) }}</option>
+                            @else
+                                <option value="{{ str_pad($i,2,'0',STR_PAD_LEFT) }}">{{ $jtkc->replaceMonth($i) }}</option>
+                            @endif
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="pull-right push-5-r">
+                        <select id="_kod_sekolah" class="form-control js-select2" data-placeholder="Nama Sekolah">
+                            <option></option>
+                            @foreach (\App\Sekolah::where('kod_ppd','A020')->get() as $sek)
+                                <?php
+                                    $usr = \App\User::where('kod_jabatan',$sek->kod_sekolah)->first();
+                                    if (count($usr) > 0) {
+                                ?>
+                                @if ($kod_sekolah == $sek->kod_sekolah)
+                                    <option value="{{ $sek->kod_sekolah }}" selected>{{ $sek->kod_sekolah }} - {{ $sek->nama_sekolah }}</option>
+                                @else
+                                    <option value="{{ $sek->kod_sekolah }}">{{ $sek->kod_sekolah }} - {{ $sek->nama_sekolah }}</option>
+                                @endif
+                                <?php } ?>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="col-xs-12">
             <div class="block block-bordered">

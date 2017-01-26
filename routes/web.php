@@ -131,6 +131,9 @@ Route::post('/senarai-tugas-khas', 'JTKController@SaveSenaraiTugasKhas'); // Sav
 Route::post('/edit-tugas-khas/{id}', 'JTKController@EditTugasKhas'); // Edit Tugas Khas
 Route::post('/delete-tugas-khas/{id}', 'JTKController@PadamTugasKhas'); // Padam Tugas Khas
 
+// Public
+Route::get('/laporan-speedtest/{kod_sekolah}/{month}/{year}', 'PublicController@LaporanSpeedtest');
+
 /**
 
 	ADUAN KEROSAKAN
