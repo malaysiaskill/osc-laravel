@@ -2387,6 +2387,37 @@ class JTKController extends Controller
                 $k = str_pad($k,2,'0',STR_PAD_LEFT);
                 if ($hari != 'sabtu' && $hari != 'ahad')
                 {
+                    // Aktiviti Adhoc | added on 24/03/2017
+                    $aktiviti_adhoc = '';
+                    $raa = AktivitiAdhoc::whereRaw("DATE('$year-$mon-$k') BETWEEN tarikh_dari AND tarikh_hingga")->get();
+                    if (count($raa) > 0)
+                    {
+                        if (AktivitiAdhoc::where('id',$raa->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($raa->jtk_terlibat) == 0)
+                        {
+                            $aktiviti_adhoc .= '<u><b>Aktiviti Lain (Ad-Hoc) :</b></u><br>';
+                            foreach ($raa as $_raa) {
+                                $_tempat = '';
+                                foreach (explode(',', trim($_raa->tempat,',')) as $tempat)
+                                {
+                                    $_sek = Sekolah::where('kod_sekolah',$tempat)->first();
+                                    $_pkg = PKG::where('kod_pkg',$tempat)->first();
+                                    $_ppd = PPD::where('kod_ppd',$tempat)->first();
+                                    if (count($_sek) > 0) {
+                                        $_tempat .= $_sek->nama_sekolah_detail." ";//AEE1026
+                                    } else if (count($_pkg) > 0) {
+                                        $_tempat .= $_pkg->kod_pkg." - ".$_pkg->pkg." ";
+                                    } else {
+                                        $_tempat .= $_ppd->kod_ppd." - ".$_ppd->ppd." ";
+                                    }
+                                }
+
+                                $aktiviti_adhoc .= "- ".$_raa->nama_aktiviti." (Tempat: ".$_tempat.")<br>";
+                            }
+                            $aktiviti_adhoc .= "<br>";
+                        }
+                    }
+
+                    // Tugasan Harian
                     $rt = TugasanHarian::whereYear('tarikh_semakan',$year)->whereMonth('tarikh_semakan',$mon)->whereDay('tarikh_semakan',$k)->where('user_id',$user_id)->first();
                     $_rekod_tugasan = count($rt) ? "<b>OK</b>":"-";
                     if ($rt != NULL) {
@@ -2397,7 +2428,7 @@ class JTKController extends Controller
                     $_data .= '<tr>
                         <td width="100" bgcolor="#FFF" align="left" valign="top">'.$k.'/'.$mon.'/'.$year.' ('.ucwords($hari).')</td>
                         <td width="100" bgcolor="#FFF" align="center" valign="top">'.$_rekod_tugasan.'</td>
-                        <td bgcolor="#FFF" align="left" valign="top">'.nl2br($tugasan_harian).'</td>
+                        <td bgcolor="#FFF" align="left" valign="top">'.nl2br($aktiviti_adhoc).nl2br($tugasan_harian).'</td>
                     </tr>';
 
                 }
@@ -2512,7 +2543,7 @@ class JTKController extends Controller
         $dpdf->render();
         $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
         $dpdf->add_info('Title',strtoupper($kod_jabatan).' - Laporan Tugasan Harian ('.$bulan_tahun.') - '.strtoupper($usr->name));
-        $dpdf->stream(strtoupper($kod_jabatan)."_Laporan-Tugasan_".$bulan."-".$year."_".str_replace(' ', '_', strtoupper($usr->name)),array('Attachment'=>0));
+        $dpdf->stream(strtoupper($kod_jabatan)."_Laporan-Tugasan_".$month."-".$year,array('Attachment'=>0));
     }
     public function CetakLaporanSpeedtest($user_id, $month=null, $year=null)
     {
