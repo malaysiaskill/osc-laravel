@@ -2389,32 +2389,30 @@ class JTKController extends Controller
                 {
                     // Aktiviti Adhoc | added on 24/03/2017
                     $aktiviti_adhoc = '';
-                    $raa = AktivitiAdhoc::whereRaw("DATE('$year-$mon-$k') BETWEEN tarikh_dari AND tarikh_hingga")->get();
+                    $raa = AktivitiAdhoc::whereRaw("DATE('$year-$mon-$k') BETWEEN tarikh_dari AND tarikh_hingga")->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->get();
                     if (count($raa) > 0)
                     {
-                        if (AktivitiAdhoc::where('id',$raa->id)->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->count() == 1 || strlen($raa->jtk_terlibat) == 0)
+                        foreach ($raa as $_raa)
                         {
                             $aktiviti_adhoc .= '<u><b>Aktiviti Lain (Ad-Hoc) :</b></u><br>';
-                            foreach ($raa as $_raa) {
-                                $_tempat = '';
-                                foreach (explode(',', trim($_raa->tempat,',')) as $tempat)
-                                {
-                                    $_sek = Sekolah::where('kod_sekolah',$tempat)->first();
-                                    $_pkg = PKG::where('kod_pkg',$tempat)->first();
-                                    $_ppd = PPD::where('kod_ppd',$tempat)->first();
-                                    if (count($_sek) > 0) {
-                                        $_tempat .= $_sek->nama_sekolah_detail." ";//AEE1026
-                                    } else if (count($_pkg) > 0) {
-                                        $_tempat .= $_pkg->kod_pkg." - ".$_pkg->pkg." ";
-                                    } else {
-                                        $_tempat .= $_ppd->kod_ppd." - ".$_ppd->ppd." ";
-                                    }
+                            $_tempat = '';
+                            foreach (explode(',', trim($_raa->tempat,',')) as $tempat)
+                            {
+                                $_sek = Sekolah::where('kod_sekolah',$tempat)->first();
+                                $_pkg = PKG::where('kod_pkg',$tempat)->first();
+                                $_ppd = PPD::where('kod_ppd',$tempat)->first();
+                                if (count($_sek) > 0) {
+                                    $_tempat .= $_sek->nama_sekolah_detail." ";//AEE1026
+                                } else if (count($_pkg) > 0) {
+                                    $_tempat .= $_pkg->kod_pkg." - ".$_pkg->pkg." ";
+                                } else {
+                                    $_tempat .= $_ppd->kod_ppd." - ".$_ppd->ppd." ";
                                 }
-
-                                $aktiviti_adhoc .= "- ".$_raa->nama_aktiviti." (Tempat: ".$_tempat.")<br>";
                             }
-                            $aktiviti_adhoc .= "<br>";
+
+                            $aktiviti_adhoc .= "- ".$_raa->nama_aktiviti." (Tempat: ".$_tempat.")<br>";
                         }
+                        $aktiviti_adhoc .= "<br>";
                     }
 
                     // Tugasan Harian
