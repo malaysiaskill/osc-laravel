@@ -2390,13 +2390,13 @@ class JTKController extends Controller
                     // Aktiviti Adhoc | added on 24/03/2017
                     $aktiviti_adhoc = '';
                     $aktiviti_adhoc_data = '';
-                    foreach (AktivitiAdhoc::whereRaw("DATE('$year-$mon-$k') BETWEEN tarikh_dari AND tarikh_hingga")->where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->get() as $_raa)
+                    foreach (AktivitiAdhoc::where('jtk_terlibat','LIKE','%,'.Auth::user()->id.',%')->whereRaw("DATE('$year-$mon-$k') BETWEEN tarikh_dari AND tarikh_hingga")->get() as $_raa)
                     {
-                        $aktiviti_adhoc_data .= "- ".$_raa->nama_aktiviti." (Tempat: ".$_tempat.")<br>";
+                        $aktiviti_adhoc_data .= "- ".$_raa->nama_aktiviti."<br>";
                     }
                     if (strlen($aktiviti_adhoc_data) != 0)
                     {
-                        $aktiviti_adhoc = '<u><b>Aktiviti Lain (Ad-Hoc) :</b></u><br>';
+                        $aktiviti_adhoc .= '<u><b>Aktiviti Lain (Ad-Hoc) :</b></u><br>';
                         $aktiviti_adhoc .= $aktiviti_adhoc_data."<br>";
                     }
                     
