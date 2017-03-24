@@ -1877,7 +1877,7 @@ class JTKController extends Controller
                 $mail->Subject = "LOG TUGASAN & SENARAI SEMAK HARIAN ($tarikh_smkan)";
                 $mail->Body = "Assalamualaikum & Salam Sejahtera. Salam Perak Excellent. Salam ICT Excellent.<br><br>\n\nBerikut adalah maklumat Log Tugasan & Senarai Semak Harian Juruteknik Komputer di sekolah <b>$nama_sekolah</b> pada <b>$tarikh_smkan</b>.<br><br>\n\nSila rujuk lampiran berformat PDF di bawah untuk rujukan tuan/puan.<br><br>\n\nSekian, Terima Kasih.<br><br>\n\n<small>E-mel ini dihantar secara automatik melalui Portal Juruteknik Komputer Negeri Perak (JTKPK).</small>";
 
-                $mail->AddStringAttachment($tugasan_harian_output,"Tugasan-Harian-$tarikh_smkan.pdf");
+                $mail->AddStringAttachment($tugasan_harian_output,"$kod_jabatan_Tugasan-Harian-$tarikh_smkan.pdf");
 
                 if (!$mail->send()) {
                     echo "SweetAlert('error','Ops !','Terdapat ralat semasa penghantaran e-mel !<br><br><b>Nota :<br></b> Sila pastikan kata laluan anda yang betul serta semak <a target=\'_blank\' href=\'https://www.google.com/settings/security/lesssecureapps\'><b>https://www.google.com/settings/security/lesssecureapps</b></a> dan Pilih <b>\'Turn on\'</b> dan cuba semula.');";
@@ -2348,8 +2348,8 @@ class JTKController extends Controller
         $dpdf->setPaper('A4', 'landscape');
         $dpdf->render();
         $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
-        $dpdf->add_info('Title','Laporan Bulanan AKP - '.$month.'-'.$year);
-        $dpdf->stream("Laporan-Bulanan-AKP_$month-$year",array('Attachment'=>0));
+        $dpdf->add_info('Title',strtoupper($kod_jabatan) . ' - Laporan Bulanan AKP - '.$month.'-'.$year);
+        $dpdf->stream(strtoupper($kod_jabatan) . "_Laporan-Bulanan-AKP_$month-$year",array('Attachment'=>0));
     }
     public function CetakLaporanIndividu($user_id, $month=null, $year=null)
     {
@@ -2511,8 +2511,8 @@ class JTKController extends Controller
         $dpdf->setPaper('A4', 'landscape');
         $dpdf->render();
         $dpdf->add_info('Author',"Juruteknik Komputer Negeri Perak (JTKPK)");
-        $dpdf->add_info('Title','Laporan Tugasan Harian ('.$bulan_tahun.') - '.strtoupper($usr->name));
-        $dpdf->stream("Laporan-Tugasan_".$bulan."-".$year."_".str_replace(' ', '_', strtoupper($usr->name)),array('Attachment'=>0));
+        $dpdf->add_info('Title',strtoupper($kod_jabatan).' - Laporan Tugasan Harian ('.$bulan_tahun.') - '.strtoupper($usr->name));
+        $dpdf->stream(strtoupper($kod_jabatan)."_Laporan-Tugasan_".$bulan."-".$year."_".str_replace(' ', '_', strtoupper($usr->name)),array('Attachment'=>0));
     }
     public function CetakLaporanSpeedtest($user_id, $month=null, $year=null)
     {
