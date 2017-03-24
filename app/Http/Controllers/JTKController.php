@@ -16,6 +16,7 @@ use App\User;
 use App\Gred;
 use App\JPN;
 use App\PPD;
+use App\PKG;
 use App\Sekolah;
 use App\DevTeam;
 use App\Projek;
@@ -2406,7 +2407,7 @@ class JTKController extends Controller
                                 $_tempat .= $_ppd->kod_ppd." - ".$_ppd->ppd." ";
                             }
                         }
-                            
+
                         $aktiviti_adhoc_data .= "- ".$_raa->nama_aktiviti." (Tempat: ".$_tempat.")<br>";
                     }
                     if (strlen($aktiviti_adhoc_data) != 0)
