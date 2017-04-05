@@ -92,9 +92,16 @@ body,td,th {
               #NAMA_SEKOLAH# </strong></td>
       </tr>
     </table></td>
-    <td width="50%" align="left" valign="top">Disemak Oleh :</td>
+    <td width="50%" align="left" valign="top"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td height="10"></td>
+      </tr>
+      <tr>
+        <td>Disemak Oleh :</td>
+      </tr>
+    </table></td>
   </tr>
   <tr>
-    <td width="100%" align="left" valign="top"><br><br>#DATA_SEMAK#</td>
+    <td width="100%" align="left" valign="top">#DATA_SEMAK#</td>
   </tr>
 </table>
