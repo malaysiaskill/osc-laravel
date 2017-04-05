@@ -1483,7 +1483,7 @@ class JTKController extends Controller
                                                 <td align="center" valign="middle" width="50">Upload</td>
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
-                                                <td>ZOOM-A</td>
+                                                <td>ZOOM-A / DIRECT FEED</td>
                                                 <td align="center" valign="middle">'.$_val->_speedtest_a.'</td>
                                                 <td align="center" valign="middle">'.$_val->_speedtest_a1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_a.'</td>
@@ -1577,7 +1577,7 @@ class JTKController extends Controller
                         <td height="10"></td>
                       </tr>
                       <tr>
-                        <td>Telah Disemak Oleh :</td>
+                        <td>Telah Disemak Oleh (PPD) :</td>
                       </tr>
                       <tr>
                         <td align="left" valign="bottom">
@@ -1600,7 +1600,7 @@ class JTKController extends Controller
                 $data_tugasan_harian = $th->tugasan_harian;
                 $data_tugasan_harian = nl2br($data_tugasan_harian);
                 if (strlen($data_tugasan_harian) == 0) {
-                    $data_tugasan_harian = '-';
+                    $data_tugasan_harian = '- Tiada Rekod -';
                 }
                 //$data_tugasan_harian = addslashes(\Emojione\Emojione::shortnameToUnicode($data_tugasan_harian));
 
@@ -1712,7 +1712,7 @@ class JTKController extends Controller
                                                 <td align="center" valign="middle" width="50">Upload</td>
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
-                                                <td>ZOOM-A</td>
+                                                <td>ZOOM-A / DIRECT FEED</td>
                                                 <td align="center" valign="middle">'.$_val->_speedtest_a.'</td>
                                                 <td align="center" valign="middle">'.$_val->_speedtest_a1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_a.'</td>
@@ -2422,7 +2422,11 @@ class JTKController extends Controller
                     if ($rt != NULL) {
                         $tugasan_harian = $rt->tugasan_harian;
                     } else {
-                        $tugasan_harian = '-';
+                        if (strlen($aktiviti_adhoc) == 0) {
+                            $tugasan_harian = '- Tiada Rekod -';
+                        } else {
+                            $tugasan_harian = '';
+                        }
                     }
                     $_data .= '<tr>
                         <td width="100" bgcolor="#FFF" align="left" valign="top">'.$k.'/'.$mon.'/'.$year.' ('.ucwords($hari).')</td>
@@ -2479,7 +2483,7 @@ class JTKController extends Controller
                 <td height="10"></td>
               </tr>
               <tr>
-                <td>Telah Disemak Oleh :</td>
+                <td>Telah Disemak Oleh (PPD) :</td>
               </tr>
               <tr>
                 <td align="left" valign="bottom">
@@ -2505,7 +2509,7 @@ class JTKController extends Controller
                 <td height="10"></td>
               </tr>
               <tr>
-                <td>Di Sediakan Oleh :</td>
+                <td>Disediakan Oleh :</td>
               </tr>
               <tr>
                 <td height="40" align="left" valign="bottom"><br />
@@ -2517,7 +2521,10 @@ class JTKController extends Controller
                     '.$nama_sekolah.'</strong></td>
               </tr>
             </table></td>
-            <td width="50%" align="left" valign="top">'.$disemak.'</td>
+            <td width="50%" align="left" valign="top">Disemak Oleh :</td>
+          </tr>
+          <tr>
+            <td width="100%" align="left" valign="top">'.$disemak.'</td>
           </tr>
         </table>';
 

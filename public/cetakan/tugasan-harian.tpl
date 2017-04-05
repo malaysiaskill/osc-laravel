@@ -80,7 +80,7 @@ body,td,th {
         <td height="10"></td>
       </tr>
       <tr>
-        <td>Di Sediakan Oleh :</td>
+        <td>Disediakan Oleh :</td>
       </tr>
       <tr>
         <td height="40" align="left" valign="bottom"><br />
@@ -92,6 +92,9 @@ body,td,th {
               #NAMA_SEKOLAH# </strong></td>
       </tr>
     </table></td>
-    <td width="50%" align="left" valign="top">#DATA_SEMAK#</td>
+    <td width="50%" align="left" valign="top">Disemak Oleh :</td>
+  </tr>
+  <tr>
+    <td width="100%" align="left" valign="top"><br><br>#DATA_SEMAK#</td>
   </tr>
 </table>
