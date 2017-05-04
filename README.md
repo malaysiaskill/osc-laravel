@@ -4,7 +4,9 @@
 
 Portal bersepadu Juruteknik Komputer (FT) & Platform utama bagi menguruskan pelbagai maklumat berkaitan dengan tugasan FT. :+1:
 
-[![Antaramuka Dashboard](https://s13.postimg.org/9gbnu98rr/Screen_Shot_2016_11_01_at_4_06_55_PM.png)](https://postimg.org/image/caet7paxv/)
+[![Antaramuka Dashboard](https://image.ibb.co/hdra0k/jtkpk_1.jpg)](https://image.ibb.co/hdra0k/jtkpk_1.jpg)
+[![Antaramuka Dashboard](https://image.ibb.co/d11KRQ/jtkpk_2.jpg)](https://image.ibb.co/d11KRQ/jtkpk_2.jpg)
+[![Antaramuka Dashboard](https://image.ibb.co/hJ3cD5/jtkpk_3.jpg)](https://image.ibb.co/hJ3cD5/jtkpk_3.jpg)
 
 ### **Nota Ringkas:**
 

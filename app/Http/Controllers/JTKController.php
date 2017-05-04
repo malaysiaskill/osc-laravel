@@ -1277,6 +1277,49 @@ class JTKController extends Controller
 
         $record = json_encode($record);
 
+        $tarikh_semakan = $r->_tarikh_semakan;
+        $db_tarikh_semakan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_semakan)->format('Y-m-d');
+        $masa_semakan = $r->_masa_semakan;
+
+        // Search
+        if ($r->_id_th == '0')
+        {
+            // new
+            if (TugasanHarian::where('user_id',Auth::user()->id)->where('tarikh_semakan',$db_tarikh_semakan)->count() == 1)
+            {
+                return redirect('/tugasan-harian/?error=already_exists');
+            }
+            else
+            {
+                // Insert
+                $ssh = new TugasanHarian;
+                $ssh->user_id = Auth::user()->id;
+                $ssh->tarikh_semakan = $db_tarikh_semakan;
+                $ssh->masa_semakan = $masa_semakan;
+                $ssh->status_semakan = $record;
+                $ssh->tugasan_harian = $r->_tugasan_harian;
+                $ssh->save();
+            }
+        }
+        else
+        {
+            // edit
+            if (TugasanHarian::where('user_id',Auth::user()->id)->where('tarikh_semakan',$db_tarikh_semakan)->where('id','<>',$r->_id_th)->count() == 1)
+            {
+                return redirect('/tugasan-harian/?error=already_exists');
+            }
+            else
+            {
+                // update record
+                $ssh = TugasanHarian::find($r->_id_th);
+                $ssh->tarikh_semakan = $db_tarikh_semakan;
+                $ssh->masa_semakan = $masa_semakan;
+                $ssh->status_semakan = $record;
+                $ssh->tugasan_harian = $r->_tugasan_harian;
+                $ssh->save();
+            }
+        }
+        /*
         if ($r->_id_th == '0') {
             $tarikh_semakan = $r->_tarikh_semakan;
             $db_tarikh_semakan = \Carbon\Carbon::createFromFormat('d/m/Y', $tarikh_semakan)->format('Y-m-d');
@@ -1313,7 +1356,7 @@ class JTKController extends Controller
             $ssh->status_semakan = $record;
             $ssh->tugasan_harian = $r->_tugasan_harian;
             $ssh->save();
-        }
+        }*/
 
         return redirect('/tugasan-harian');
     }
@@ -1384,7 +1427,7 @@ class JTKController extends Controller
             }
 
             echo "$('#_tarikh_semakan').val('".$th->tarikh_semakan_formatted."');";
-            echo "$('#_tarikh_semakan').prop('disabled','disabled');";
+            //echo "$('#_tarikh_semakan').prop('disabled','disabled');";
 
             if (strlen($th->masa_semakan) > 0) {
                 $ms = explode(':', $th->masa_semakan);
