@@ -57,6 +57,32 @@ if (strlen($month) != 0 && strlen($year) != 0)
                     {
                         if ($v->id == '1')
                         {
+                            $_speedtest_a = isset($v->_speedtest_a) ? $v->_speedtest_a:"";
+                            $_speedtest_b = isset($v->_speedtest_b) ? $v->_speedtest_b:"";
+                            $_speedtest_c = isset($v->_speedtest_c) ? $v->_speedtest_c:"";
+                            $_speedtest_d = isset($v->_speedtest_d) ? $v->_speedtest_d:"";
+                            $_speedtest_e = isset($v->_speedtest_e) ? $v->_speedtest_e:"";
+                            $_speedtest_f = isset($v->_speedtest_f) ? $v->_speedtest_f:"";
+                            $_speedtest_a1 = isset($v->_speedtest_a1) ? $v->_speedtest_a1:"";
+                            $_speedtest_b1 = isset($v->_speedtest_b1) ? $v->_speedtest_b1:"";
+                            $_speedtest_c1 = isset($v->_speedtest_c1) ? $v->_speedtest_c1:"";
+                            $_speedtest_d1 = isset($v->_speedtest_d1) ? $v->_speedtest_d1:"";
+                            $_speedtest_e1 = isset($v->_speedtest_e1) ? $v->_speedtest_e1:"";
+                            $_speedtest_f1 = isset($v->_speedtest_f1) ? $v->_speedtest_f1:"";
+
+                            $daily_DPG_DIRECT_FEED[] = array($i, floatval($_speedtest_f));
+                            $daily_DPG_ZOOM_A[] = array($i, floatval($_speedtest_a));
+                            $daily_DPG_ZOOM_B[] = array($i, floatval($_speedtest_b));
+                            $daily_DPG_ZOOM_C[] = array($i, floatval($_speedtest_c));
+                            $daily_DPG_SUPER_ZOOM_A[] = array($i, floatval($_speedtest_d));
+                            $daily_DPG_SUPER_ZOOM_B[] = array($i, floatval($_speedtest_e));
+                            $daily_UPG_DIRECT_FEED[] = array($i, floatval($_speedtest_f1));
+                            $daily_UPG_ZOOM_A[] = array($i, floatval($_speedtest_a1));
+                            $daily_UPG_ZOOM_B[] = array($i, floatval($_speedtest_b1));
+                            $daily_UPG_ZOOM_C[] = array($i, floatval($_speedtest_c1));
+                            $daily_UPG_SUPER_ZOOM_A[] = array($i, floatval($_speedtest_d1));
+                            $daily_UPG_SUPER_ZOOM_B[] = array($i, floatval($_speedtest_e1));
+
                             $_ptg_speedtest_a = isset($v->_ptg_speedtest_a) ? $v->_ptg_speedtest_a:"";
                             $_ptg_speedtest_b = isset($v->_ptg_speedtest_b) ? $v->_ptg_speedtest_b:"";
                             $_ptg_speedtest_c = isset($v->_ptg_speedtest_c) ? $v->_ptg_speedtest_c:"";
@@ -69,19 +95,6 @@ if (strlen($month) != 0 && strlen($year) != 0)
                             $_ptg_speedtest_d1 = isset($v->_ptg_speedtest_d1) ? $v->_ptg_speedtest_d1:"";
                             $_ptg_speedtest_e1 = isset($v->_ptg_speedtest_e1) ? $v->_ptg_speedtest_e1:"";
                             $_ptg_speedtest_f1 = isset($v->_ptg_speedtest_f1) ? $v->_ptg_speedtest_f1:"";
-
-                            $daily_DPG_DIRECT_FEED[] = array($i, floatval($v->_speedtest_f));
-                            $daily_DPG_ZOOM_A[] = array($i, floatval($v->_speedtest_a));
-                            $daily_DPG_ZOOM_B[] = array($i, floatval($v->_speedtest_b));
-                            $daily_DPG_ZOOM_C[] = array($i, floatval($v->_speedtest_c));
-                            $daily_DPG_SUPER_ZOOM_A[] = array($i, floatval($v->_speedtest_d));
-                            $daily_DPG_SUPER_ZOOM_B[] = array($i, floatval($v->_speedtest_e));
-                            $daily_UPG_DIRECT_FEED[] = array($i, floatval($v->_speedtest_f1));
-                            $daily_UPG_ZOOM_A[] = array($i, floatval($v->_speedtest_a1));
-                            $daily_UPG_ZOOM_B[] = array($i, floatval($v->_speedtest_b1));
-                            $daily_UPG_ZOOM_C[] = array($i, floatval($v->_speedtest_c1));
-                            $daily_UPG_SUPER_ZOOM_A[] = array($i, floatval($v->_speedtest_d1));
-                            $daily_UPG_SUPER_ZOOM_B[] = array($i, floatval($v->_speedtest_e1));
 
                             $daily_DPTG_DIRECT_FEED[] = array($i, floatval($_ptg_speedtest_f));
                             $daily_DPTG_ZOOM_A[] = array($i, floatval($_ptg_speedtest_a));
