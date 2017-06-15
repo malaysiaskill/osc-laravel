@@ -554,7 +554,7 @@ function DeleteSenaraiSemakan(id) {
 function Semakan() {
     $('#SemakanDialog').modal();
     setTimeout(function(){
-        $('#_speedtest_a').select();
+        $('#_speedtest_f').select();
     },500);
 }
 function EditTugasanHarian(id) {

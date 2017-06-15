@@ -1394,18 +1394,29 @@ class JTKController extends Controller
 
                 if ($sshid == '1')
                 {
-                    echo "$('#_speedtest_a').val('".$_val->_speedtest_a."');";
+                    /*echo "$('#_speedtest_a').val('".$_val->_speedtest_a."');";
                     echo "$('#_speedtest_b').val('".$_val->_speedtest_b."');";
                     echo "$('#_speedtest_c').val('".$_val->_speedtest_c."');";
                     echo "$('#_speedtest_d').val('".$_val->_speedtest_d."');";
                     echo "$('#_speedtest_e').val('".$_val->_speedtest_e."');";
-                    echo "$('#_speedtest_f').val('".$_val->_speedtest_f."');";
                     echo "$('#_speedtest_a1').val('".$_val->_speedtest_a1."');";
                     echo "$('#_speedtest_b1').val('".$_val->_speedtest_b1."');";
                     echo "$('#_speedtest_c1').val('".$_val->_speedtest_c1."');";
                     echo "$('#_speedtest_d1').val('".$_val->_speedtest_d1."');";
-                    echo "$('#_speedtest_e1').val('".$_val->_speedtest_e1."');";
-                    echo "$('#_speedtest_f1').val('".$_val->_speedtest_f1."');";
+                    echo "$('#_speedtest_e1').val('".$_val->_speedtest_e1."');";*/
+
+                    if (isset($_val->_speedtest_a)) echo "$('#_speedtest_a').val('".$_val->_speedtest_a."');";
+                    if (isset($_val->_speedtest_b)) echo "$('#_speedtest_b').val('".$_val->_speedtest_b."');";
+                    if (isset($_val->_speedtest_c)) echo "$('#_speedtest_c').val('".$_val->_speedtest_c."');";
+                    if (isset($_val->_speedtest_d)) echo "$('#_speedtest_d').val('".$_val->_speedtest_d."');";
+                    if (isset($_val->_speedtest_e)) echo "$('#_speedtest_e').val('".$_val->_speedtest_e."');";
+                    if (isset($_val->_speedtest_f)) echo "$('#_speedtest_f').val('".$_val->_speedtest_f."');";
+                    if (isset($_val->_speedtest_a1)) echo "$('#_speedtest_a1').val('".$_val->_speedtest_a1."');";
+                    if (isset($_val->_speedtest_b1)) echo "$('#_speedtest_b1').val('".$_val->_speedtest_b1."');";
+                    if (isset($_val->_speedtest_c1)) echo "$('#_speedtest_c1').val('".$_val->_speedtest_c1."');";
+                    if (isset($_val->_speedtest_d1)) echo "$('#_speedtest_d1').val('".$_val->_speedtest_d1."');";
+                    if (isset($_val->_speedtest_e1)) echo "$('#_speedtest_e1').val('".$_val->_speedtest_e1."');";                    
+                    if (isset($_val->_speedtest_f1)) echo "$('#_speedtest_f1').val('".$_val->_speedtest_f1."');";
 
                     if (isset($_val->_ptg_speedtest_a)) echo "$('#_ptg_speedtest_a').val('".$_val->_ptg_speedtest_a."');";
                     if (isset($_val->_ptg_speedtest_b)) echo "$('#_ptg_speedtest_b').val('".$_val->_ptg_speedtest_b."');";
