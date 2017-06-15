@@ -1216,22 +1216,28 @@ class JTKController extends Controller
                 eval("\$_speedtest_c = \$r->_speedtest_c;");
                 eval("\$_speedtest_d = \$r->_speedtest_d;");
                 eval("\$_speedtest_e = \$r->_speedtest_e;");
+                eval("\$_speedtest_f = \$r->_speedtest_f;");
+                
                 eval("\$_speedtest_a1 = \$r->_speedtest_a1;");
                 eval("\$_speedtest_b1 = \$r->_speedtest_b1;");
                 eval("\$_speedtest_c1 = \$r->_speedtest_c1;");
                 eval("\$_speedtest_d1 = \$r->_speedtest_d1;");
                 eval("\$_speedtest_e1 = \$r->_speedtest_e1;");
+                eval("\$_speedtest_f1 = \$r->_speedtest_f1;");
                 
                 eval("\$_ptg_speedtest_a = \$r->_ptg_speedtest_a;");
                 eval("\$_ptg_speedtest_b = \$r->_ptg_speedtest_b;");
                 eval("\$_ptg_speedtest_c = \$r->_ptg_speedtest_c;");
                 eval("\$_ptg_speedtest_d = \$r->_ptg_speedtest_d;");
                 eval("\$_ptg_speedtest_e = \$r->_ptg_speedtest_e;");
+                eval("\$_ptg_speedtest_f = \$r->_ptg_speedtest_f;");
+
                 eval("\$_ptg_speedtest_a1 = \$r->_ptg_speedtest_a1;");
                 eval("\$_ptg_speedtest_b1 = \$r->_ptg_speedtest_b1;");
                 eval("\$_ptg_speedtest_c1 = \$r->_ptg_speedtest_c1;");
                 eval("\$_ptg_speedtest_d1 = \$r->_ptg_speedtest_d1;");
                 eval("\$_ptg_speedtest_e1 = \$r->_ptg_speedtest_e1;");
+                eval("\$_ptg_speedtest_f1 = \$r->_ptg_speedtest_f1;");
                 
                 eval("\$catatan = \$r->_catatan_".$ss->id.";");
                 $record[] = array(
@@ -1241,21 +1247,25 @@ class JTKController extends Controller
                     '_speedtest_c' => $_speedtest_c,
                     '_speedtest_d' => $_speedtest_d,
                     '_speedtest_e' => $_speedtest_e,
+                    '_speedtest_f' => $_speedtest_f,
                     '_speedtest_a1' => $_speedtest_a1,
                     '_speedtest_b1' => $_speedtest_b1,
                     '_speedtest_c1' => $_speedtest_c1,
                     '_speedtest_d1' => $_speedtest_d1,
                     '_speedtest_e1' => $_speedtest_e1,
+                    '_speedtest_f1' => $_speedtest_f1,
                     '_ptg_speedtest_a' => $_ptg_speedtest_a,
                     '_ptg_speedtest_b' => $_ptg_speedtest_b,
                     '_ptg_speedtest_c' => $_ptg_speedtest_c,
                     '_ptg_speedtest_d' => $_ptg_speedtest_d,
                     '_ptg_speedtest_e' => $_ptg_speedtest_e,
+                    '_ptg_speedtest_f' => $_ptg_speedtest_f,
                     '_ptg_speedtest_a1' => $_ptg_speedtest_a1,
                     '_ptg_speedtest_b1' => $_ptg_speedtest_b1,
                     '_ptg_speedtest_c1' => $_ptg_speedtest_c1,
                     '_ptg_speedtest_d1' => $_ptg_speedtest_d1,
                     '_ptg_speedtest_e1' => $_ptg_speedtest_e1,
+                    '_ptg_speedtest_f1' => $_ptg_speedtest_f1,
                     'catatan' => $catatan
                 );
             }
@@ -1389,22 +1399,26 @@ class JTKController extends Controller
                     echo "$('#_speedtest_c').val('".$_val->_speedtest_c."');";
                     echo "$('#_speedtest_d').val('".$_val->_speedtest_d."');";
                     echo "$('#_speedtest_e').val('".$_val->_speedtest_e."');";
+                    echo "$('#_speedtest_f').val('".$_val->_speedtest_f."');";
                     echo "$('#_speedtest_a1').val('".$_val->_speedtest_a1."');";
                     echo "$('#_speedtest_b1').val('".$_val->_speedtest_b1."');";
                     echo "$('#_speedtest_c1').val('".$_val->_speedtest_c1."');";
                     echo "$('#_speedtest_d1').val('".$_val->_speedtest_d1."');";
                     echo "$('#_speedtest_e1').val('".$_val->_speedtest_e1."');";
+                    echo "$('#_speedtest_f1').val('".$_val->_speedtest_f1."');";
 
                     if (isset($_val->_ptg_speedtest_a)) echo "$('#_ptg_speedtest_a').val('".$_val->_ptg_speedtest_a."');";
                     if (isset($_val->_ptg_speedtest_b)) echo "$('#_ptg_speedtest_b').val('".$_val->_ptg_speedtest_b."');";
                     if (isset($_val->_ptg_speedtest_c)) echo "$('#_ptg_speedtest_c').val('".$_val->_ptg_speedtest_c."');";
                     if (isset($_val->_ptg_speedtest_d)) echo "$('#_ptg_speedtest_d').val('".$_val->_ptg_speedtest_d."');";
                     if (isset($_val->_ptg_speedtest_e)) echo "$('#_ptg_speedtest_e').val('".$_val->_ptg_speedtest_e."');";
+                    if (isset($_val->_ptg_speedtest_f)) echo "$('#_ptg_speedtest_f').val('".$_val->_ptg_speedtest_f."');";
                     if (isset($_val->_ptg_speedtest_a1)) echo "$('#_ptg_speedtest_a1').val('".$_val->_ptg_speedtest_a1."');";
                     if (isset($_val->_ptg_speedtest_b1)) echo "$('#_ptg_speedtest_b1').val('".$_val->_ptg_speedtest_b1."');";
                     if (isset($_val->_ptg_speedtest_c1)) echo "$('#_ptg_speedtest_c1').val('".$_val->_ptg_speedtest_c1."');";
                     if (isset($_val->_ptg_speedtest_d1)) echo "$('#_ptg_speedtest_d1').val('".$_val->_ptg_speedtest_d1."');";
                     if (isset($_val->_ptg_speedtest_e1)) echo "$('#_ptg_speedtest_e1').val('".$_val->_ptg_speedtest_e1."');";
+                    if (isset($_val->_ptg_speedtest_f1)) echo "$('#_ptg_speedtest_f1').val('".$_val->_ptg_speedtest_f1."');";
 
                     $catatan = addslashes(html_entity_decode($_val->catatan,ENT_QUOTES));
                     $catatan = str_replace('<br />', '\n', nl2br($catatan));
@@ -1503,11 +1517,13 @@ class JTKController extends Controller
                                 $_ptg_speedtest_c = isset($_val->_ptg_speedtest_c) ? $_val->_ptg_speedtest_c:"";
                                 $_ptg_speedtest_d = isset($_val->_ptg_speedtest_d) ? $_val->_ptg_speedtest_d:"";
                                 $_ptg_speedtest_e = isset($_val->_ptg_speedtest_e) ? $_val->_ptg_speedtest_e:"";
+                                $_ptg_speedtest_f = isset($_val->_ptg_speedtest_f) ? $_val->_ptg_speedtest_f:"";
                                 $_ptg_speedtest_a1 = isset($_val->_ptg_speedtest_a1) ? $_val->_ptg_speedtest_a1:"";
                                 $_ptg_speedtest_b1 = isset($_val->_ptg_speedtest_b1) ? $_val->_ptg_speedtest_b1:"";
                                 $_ptg_speedtest_c1 = isset($_val->_ptg_speedtest_c1) ? $_val->_ptg_speedtest_c1:"";
                                 $_ptg_speedtest_d1 = isset($_val->_ptg_speedtest_d1) ? $_val->_ptg_speedtest_d1:"";
                                 $_ptg_speedtest_e1 = isset($_val->_ptg_speedtest_e1) ? $_val->_ptg_speedtest_e1:"";
+                                $_ptg_speedtest_f1 = isset($_val->_ptg_speedtest_f1) ? $_val->_ptg_speedtest_f1:"";
 
                                 $data .= '<tr>
                                         <td width="20" align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
@@ -1526,7 +1542,14 @@ class JTKController extends Controller
                                                 <td align="center" valign="middle" width="50">Upload</td>
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
-                                                <td>ZOOM-A / DIRECT FEED</td>
+                                                <td>DIRECT FEED</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_f.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_f1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_f.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_f1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>ZOOM-A</td>
                                                 <td align="center" valign="middle">'.$_val->_speedtest_a.'</td>
                                                 <td align="center" valign="middle">'.$_val->_speedtest_a1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_a.'</td>
@@ -1559,7 +1582,7 @@ class JTKController extends Controller
                                                 <td align="center" valign="middle">'.$_val->_speedtest_e1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_e.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_e1.'</td>
-                                              </tr>
+                                              </tr>                                              
                                             </table>
                                         </td>
                                         <td valign="top" bgcolor="#FFFFFF">'.nl2br($_val->catatan).'</td>
@@ -1732,11 +1755,13 @@ class JTKController extends Controller
                                 $_ptg_speedtest_c = isset($_val->_ptg_speedtest_c) ? $_val->_ptg_speedtest_c:"";
                                 $_ptg_speedtest_d = isset($_val->_ptg_speedtest_d) ? $_val->_ptg_speedtest_d:"";
                                 $_ptg_speedtest_e = isset($_val->_ptg_speedtest_e) ? $_val->_ptg_speedtest_e:"";
+                                $_ptg_speedtest_f = isset($_val->_ptg_speedtest_f) ? $_val->_ptg_speedtest_f:"";
                                 $_ptg_speedtest_a1 = isset($_val->_ptg_speedtest_a1) ? $_val->_ptg_speedtest_a1:"";
                                 $_ptg_speedtest_b1 = isset($_val->_ptg_speedtest_b1) ? $_val->_ptg_speedtest_b1:"";
                                 $_ptg_speedtest_c1 = isset($_val->_ptg_speedtest_c1) ? $_val->_ptg_speedtest_c1:"";
                                 $_ptg_speedtest_d1 = isset($_val->_ptg_speedtest_d1) ? $_val->_ptg_speedtest_d1:"";
                                 $_ptg_speedtest_e1 = isset($_val->_ptg_speedtest_e1) ? $_val->_ptg_speedtest_e1:"";
+                                $_ptg_speedtest_f1 = isset($_val->_ptg_speedtest_f1) ? $_val->_ptg_speedtest_f1:"";
 
                                 $data .= '<tr>
                                         <td width="20" align="center" valign="top" bgcolor="#FFFFFF">'.$i++.'.</td>
@@ -1755,7 +1780,14 @@ class JTKController extends Controller
                                                 <td align="center" valign="middle" width="50">Upload</td>
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
-                                                <td>ZOOM-A / DIRECT FEED</td>
+                                                <td>DIRECT FEED</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_f.'</td>
+                                                <td align="center" valign="middle">'.$_val->_speedtest_f1.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_f.'</td>
+                                                <td align="center" valign="middle">'.$_ptg_speedtest_f1.'</td>
+                                              </tr>
+                                              <tr bgcolor="#FFFFFF">
+                                                <td>ZOOM-A</td>
                                                 <td align="center" valign="middle">'.$_val->_speedtest_a.'</td>
                                                 <td align="center" valign="middle">'.$_val->_speedtest_a1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_a.'</td>

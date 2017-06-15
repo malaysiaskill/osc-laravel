@@ -118,22 +118,26 @@ function ClearSemakan() {
     $('#_speedtest_c').val('');
     $('#_speedtest_d').val('');
     $('#_speedtest_e').val('');
+    $('#_speedtest_f').val('');
     $('#_speedtest_a1').val('');
     $('#_speedtest_b1').val('');
     $('#_speedtest_c1').val('');
     $('#_speedtest_d1').val('');
     $('#_speedtest_e1').val('');
+    $('#_speedtest_f1').val('');
 
     $('#_ptg_speedtest_a').val('');
     $('#_ptg_speedtest_b').val('');
     $('#_ptg_speedtest_c').val('');
     $('#_ptg_speedtest_d').val('');
     $('#_ptg_speedtest_e').val('');
+    $('#_ptg_speedtest_f').val('');
     $('#_ptg_speedtest_a1').val('');
     $('#_ptg_speedtest_b1').val('');
     $('#_ptg_speedtest_c1').val('');
     $('#_ptg_speedtest_d1').val('');
     $('#_ptg_speedtest_e1').val('');
+    $('#_ptg_speedtest_f1').val('');
 
     @foreach ($ss_semua as $ss_h)
         $('#_catatan_{{ $ss_h->id }}').val('');
@@ -596,6 +600,20 @@ function ClearSemakan() {
                                             <tr>
                                                 <td valign="top" class="text-left">
                                                     <div class="row items-push">
+                                                        <div class="col-xs-12 push-5"><b>DIRECT FEED</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_speedtest_f" name="_speedtest_f" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_speedtest_f1" name="_speedtest_f1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+
                                                         <div class="col-xs-12 push-5"><b>ZOOM-A</b></div>
                                                         <div class="col-xs-6">
                                                             <div class="input-group">
@@ -669,6 +687,20 @@ function ClearSemakan() {
                                                 </td>
                                                 <td valign="top" class="text-left">
                                                     <div class="row items-push">
+                                                        <div class="col-xs-12 push-5"><b>DIRECT FEED</b></div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-down"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_f" name="_ptg_speedtest_f" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Download">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xs-6">
+                                                            <div class="input-group">
+                                                                <span class="input-group-addon"><i class="fa fa-arrow-up"></i></span>
+                                                                <input type="text" id="_ptg_speedtest_f1" name="_ptg_speedtest_f1" class="form-control input-sm js-masked-speedtest" placeholder="0.00" title="Upload">
+                                                            </div>
+                                                        </div>
+
                                                         <div class="col-xs-12 push-5"><b>ZOOM-A</b></div>
                                                         <div class="col-xs-6">
                                                             <div class="input-group">

@@ -24,22 +24,26 @@ if (strlen($month) != 0 && strlen($year) != 0)
             $tarikh = "$year-$mon-$i";
             $th = \App\TugasanHarian::whereYear('tarikh_semakan',$year)->whereMonth('tarikh_semakan',$mon)->whereDay('tarikh_semakan',$i)->where('user_id',$user_id)->first();
             if (count($th) == 0) {
+                $daily_DPG_DIRECT_FEED[] = array($i, intval(0));
                 $daily_DPG_ZOOM_A[] = array($i, intval(0));
                 $daily_DPG_ZOOM_B[] = array($i, intval(0));
                 $daily_DPG_ZOOM_C[] = array($i, intval(0));                
                 $daily_DPG_SUPER_ZOOM_A[] = array($i, intval(0));
                 $daily_DPG_SUPER_ZOOM_B[] = array($i, intval(0));
+                $daily_UPG_DIRECT_FEED[] = array($i, intval(0));
                 $daily_UPG_ZOOM_A[] = array($i, intval(0));
                 $daily_UPG_ZOOM_B[] = array($i, intval(0));
                 $daily_UPG_ZOOM_C[] = array($i, intval(0));                
                 $daily_UPG_SUPER_ZOOM_A[] = array($i, intval(0));
                 $daily_UPG_SUPER_ZOOM_B[] = array($i, intval(0));
 
+                $daily_DPTG_DIRECT_FEED[] = array($i, intval(0));
                 $daily_DPTG_ZOOM_A[] = array($i, intval(0));
                 $daily_DPTG_ZOOM_B[] = array($i, intval(0));
                 $daily_DPTG_ZOOM_C[] = array($i, intval(0));
                 $daily_DPTG_SUPER_ZOOM_A[] = array($i, intval(0));
                 $daily_DPTG_SUPER_ZOOM_B[] = array($i, intval(0));
+                $daily_UPTG_DIRECT_FEED[] = array($i, intval(0));
                 $daily_UPTG_ZOOM_A[] = array($i, intval(0));
                 $daily_UPTG_ZOOM_B[] = array($i, intval(0));
                 $daily_UPTG_ZOOM_C[] = array($i, intval(0));
@@ -58,28 +62,34 @@ if (strlen($month) != 0 && strlen($year) != 0)
                             $_ptg_speedtest_c = isset($v->_ptg_speedtest_c) ? $v->_ptg_speedtest_c:"";
                             $_ptg_speedtest_d = isset($v->_ptg_speedtest_d) ? $v->_ptg_speedtest_d:"";
                             $_ptg_speedtest_e = isset($v->_ptg_speedtest_e) ? $v->_ptg_speedtest_e:"";
+                            $_ptg_speedtest_f = isset($v->_ptg_speedtest_f) ? $v->_ptg_speedtest_f:"";
                             $_ptg_speedtest_a1 = isset($v->_ptg_speedtest_a1) ? $v->_ptg_speedtest_a1:"";
                             $_ptg_speedtest_b1 = isset($v->_ptg_speedtest_b1) ? $v->_ptg_speedtest_b1:"";
                             $_ptg_speedtest_c1 = isset($v->_ptg_speedtest_c1) ? $v->_ptg_speedtest_c1:"";
                             $_ptg_speedtest_d1 = isset($v->_ptg_speedtest_d1) ? $v->_ptg_speedtest_d1:"";
                             $_ptg_speedtest_e1 = isset($v->_ptg_speedtest_e1) ? $v->_ptg_speedtest_e1:"";
+                            $_ptg_speedtest_f1 = isset($v->_ptg_speedtest_f1) ? $v->_ptg_speedtest_f1:"";
 
+                            $daily_DPG_DIRECT_FEED[] = array($i, floatval($v->_speedtest_f));
                             $daily_DPG_ZOOM_A[] = array($i, floatval($v->_speedtest_a));
                             $daily_DPG_ZOOM_B[] = array($i, floatval($v->_speedtest_b));
                             $daily_DPG_ZOOM_C[] = array($i, floatval($v->_speedtest_c));
                             $daily_DPG_SUPER_ZOOM_A[] = array($i, floatval($v->_speedtest_d));
                             $daily_DPG_SUPER_ZOOM_B[] = array($i, floatval($v->_speedtest_e));
+                            $daily_UPG_DIRECT_FEED[] = array($i, floatval($v->_speedtest_f1));
                             $daily_UPG_ZOOM_A[] = array($i, floatval($v->_speedtest_a1));
                             $daily_UPG_ZOOM_B[] = array($i, floatval($v->_speedtest_b1));
                             $daily_UPG_ZOOM_C[] = array($i, floatval($v->_speedtest_c1));
                             $daily_UPG_SUPER_ZOOM_A[] = array($i, floatval($v->_speedtest_d1));
                             $daily_UPG_SUPER_ZOOM_B[] = array($i, floatval($v->_speedtest_e1));
 
+                            $daily_DPTG_DIRECT_FEED[] = array($i, floatval($_ptg_speedtest_f));
                             $daily_DPTG_ZOOM_A[] = array($i, floatval($_ptg_speedtest_a));
                             $daily_DPTG_ZOOM_B[] = array($i, floatval($_ptg_speedtest_b));
                             $daily_DPTG_ZOOM_C[] = array($i, floatval($_ptg_speedtest_c));
                             $daily_DPTG_SUPER_ZOOM_A[] = array($i, floatval($_ptg_speedtest_d));
                             $daily_DPTG_SUPER_ZOOM_B[] = array($i, floatval($_ptg_speedtest_e));
+                            $daily_UPTG_DIRECT_FEED[] = array($i, floatval($_ptg_speedtest_f1));
                             $daily_UPTG_ZOOM_A[] = array($i, floatval($_ptg_speedtest_a1));
                             $daily_UPTG_ZOOM_B[] = array($i, floatval($_ptg_speedtest_b1));
                             $daily_UPTG_ZOOM_C[] = array($i, floatval($_ptg_speedtest_c1));
@@ -93,22 +103,26 @@ if (strlen($month) != 0 && strlen($year) != 0)
     }
 }
 
+$stats_daily_DPG_DIRECT_FEED = json_encode($daily_DPG_DIRECT_FEED);
 $stats_daily_DPG_ZOOM_A = json_encode($daily_DPG_ZOOM_A);
 $stats_daily_DPG_ZOOM_B = json_encode($daily_DPG_ZOOM_B);
 $stats_daily_DPG_ZOOM_C = json_encode($daily_DPG_ZOOM_C);
 $stats_daily_DPG_SUPER_ZOOM_A = json_encode($daily_DPG_SUPER_ZOOM_A);
 $stats_daily_DPG_SUPER_ZOOM_B = json_encode($daily_DPG_SUPER_ZOOM_B);
+$stats_daily_DPTG_DIRECT_FEED = json_encode($daily_DPTG_DIRECT_FEED);
 $stats_daily_DPTG_ZOOM_A = json_encode($daily_DPTG_ZOOM_A);
 $stats_daily_DPTG_ZOOM_B = json_encode($daily_DPTG_ZOOM_B);
 $stats_daily_DPTG_ZOOM_C = json_encode($daily_DPTG_ZOOM_C);
 $stats_daily_DPTG_SUPER_ZOOM_A = json_encode($daily_DPTG_SUPER_ZOOM_A);
 $stats_daily_DPTG_SUPER_ZOOM_B = json_encode($daily_DPTG_SUPER_ZOOM_B);
 
+$stats_daily_UPG_DIRECT_FEED = json_encode($daily_UPG_DIRECT_FEED);
 $stats_daily_UPG_ZOOM_A = json_encode($daily_UPG_ZOOM_A);
 $stats_daily_UPG_ZOOM_B = json_encode($daily_UPG_ZOOM_B);
 $stats_daily_UPG_ZOOM_C = json_encode($daily_UPG_ZOOM_C);
 $stats_daily_UPG_SUPER_ZOOM_A = json_encode($daily_UPG_SUPER_ZOOM_A);
 $stats_daily_UPG_SUPER_ZOOM_B = json_encode($daily_UPG_SUPER_ZOOM_B);
+$stats_daily_UPTG_DIRECT_FEED = json_encode($daily_UPTG_DIRECT_FEED);
 $stats_daily_UPTG_ZOOM_A = json_encode($daily_UPTG_ZOOM_A);
 $stats_daily_UPTG_ZOOM_B = json_encode($daily_UPTG_ZOOM_B);
 $stats_daily_UPTG_ZOOM_C = json_encode($daily_UPTG_ZOOM_C);
@@ -118,6 +132,7 @@ $stats_daily_UPTG_SUPER_ZOOM_B = json_encode($daily_UPTG_SUPER_ZOOM_B);
 ?>
 
 var DPG_StatDaily = [
+    {label: "DIRECT FEED", data: {{ $stats_daily_DPG_DIRECT_FEED }} },
     {label: "ZOOM-A", data: {{ $stats_daily_DPG_ZOOM_A }} },
     {label: "ZOOM-B", data: {{ $stats_daily_DPG_ZOOM_B }} },
     {label: "ZOOM-C", data: {{ $stats_daily_DPG_ZOOM_C }} },
@@ -125,6 +140,7 @@ var DPG_StatDaily = [
     {label: "SUPER ZOOM (B)", data: {{ $stats_daily_DPG_SUPER_ZOOM_B }} },
 ];
 var DPTG_StatDaily = [
+    {label: "DIRECT FEED", data: {{ $stats_daily_DPTG_DIRECT_FEED }} },
     {label: "ZOOM-A", data: {{ $stats_daily_DPTG_ZOOM_A }} },
     {label: "ZOOM-B", data: {{ $stats_daily_DPTG_ZOOM_B }} },
     {label: "ZOOM-C", data: {{ $stats_daily_DPTG_ZOOM_C }} },
@@ -132,6 +148,7 @@ var DPTG_StatDaily = [
     {label: "SUPER ZOOM (B)", data: {{ $stats_daily_DPTG_SUPER_ZOOM_B }} },
 ];
 var UPG_StatDaily = [
+    {label: "DIRECT FEED", data: {{ $stats_daily_UPG_DIRECT_FEED }} },
     {label: "ZOOM-A", data: {{ $stats_daily_UPG_ZOOM_A }} },
     {label: "ZOOM-B", data: {{ $stats_daily_UPG_ZOOM_B }} },
     {label: "ZOOM-C", data: {{ $stats_daily_UPG_ZOOM_C }} },
@@ -139,6 +156,7 @@ var UPG_StatDaily = [
     {label: "SUPER ZOOM (B)", data: {{ $stats_daily_UPG_SUPER_ZOOM_B }} },
 ];
 var UPTG_StatDaily = [
+    {label: "DIRECT FEED", data: {{ $stats_daily_UPTG_DIRECT_FEED }} },
     {label: "ZOOM-A", data: {{ $stats_daily_UPTG_ZOOM_A }} },
     {label: "ZOOM-B", data: {{ $stats_daily_UPTG_ZOOM_B }} },
     {label: "ZOOM-C", data: {{ $stats_daily_UPTG_ZOOM_C }} },
