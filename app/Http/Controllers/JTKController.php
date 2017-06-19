@@ -1523,6 +1523,19 @@ class JTKController extends Controller
                             $sshid = $_val->id;
                             if ($sshid == '1')
                             {
+                                $_speedtest_a = isset($_val->_speedtest_a) ? $_val->_speedtest_a:"";
+                                $_speedtest_b = isset($_val->_speedtest_b) ? $_val->_speedtest_b:"";
+                                $_speedtest_c = isset($_val->_speedtest_c) ? $_val->_speedtest_c:"";
+                                $_speedtest_d = isset($_val->_speedtest_d) ? $_val->_speedtest_d:"";
+                                $_speedtest_e = isset($_val->_speedtest_e) ? $_val->_speedtest_e:"";
+                                $_speedtest_f = isset($_val->_speedtest_f) ? $_val->_speedtest_f:"";
+                                $_speedtest_a1 = isset($_val->_speedtest_a1) ? $_val->_speedtest_a1:"";
+                                $_speedtest_b1 = isset($_val->_speedtest_b1) ? $_val->_speedtest_b1:"";
+                                $_speedtest_c1 = isset($_val->_speedtest_c1) ? $_val->_speedtest_c1:"";
+                                $_speedtest_d1 = isset($_val->_speedtest_d1) ? $_val->_speedtest_d1:"";
+                                $_speedtest_e1 = isset($_val->_speedtest_e1) ? $_val->_speedtest_e1:"";
+                                $_speedtest_f1 = isset($_val->_speedtest_f1) ? $_val->_speedtest_f1:"";
+
                                 $_ptg_speedtest_a = isset($_val->_ptg_speedtest_a) ? $_val->_ptg_speedtest_a:"";
                                 $_ptg_speedtest_b = isset($_val->_ptg_speedtest_b) ? $_val->_ptg_speedtest_b:"";
                                 $_ptg_speedtest_c = isset($_val->_ptg_speedtest_c) ? $_val->_ptg_speedtest_c:"";
@@ -1554,43 +1567,43 @@ class JTKController extends Controller
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
                                                 <td>DIRECT FEED</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_f.'</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_f1.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_f.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_f1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_f.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_f1.'</td>
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
                                                 <td>ZOOM-A</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_a.'</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_a1.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_a.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_a1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_a.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_a1.'</td>
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
                                                 <td>ZOOM-B</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_b.'</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_b1.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_b.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_b1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_b.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_b1.'</td>
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
                                                 <td>ZOOM-C</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_c.'</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_c1.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_c.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_c1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_c.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_c1.'</td>
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
                                                 <td>SUPER ZOOM (A)</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_d.'</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_d1.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_d.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_d1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_d.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_d1.'</td>
                                               </tr>
                                               <tr bgcolor="#FFFFFF">
                                                 <td>SUPER ZOOM (B)</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_e.'</td>
-                                                <td align="center" valign="middle">'.$_val->_speedtest_e1.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_e.'</td>
+                                                <td align="center" valign="middle">'.$_speedtest_e1.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_e.'</td>
                                                 <td align="center" valign="middle">'.$_ptg_speedtest_e1.'</td>
                                               </tr>                                              
@@ -1964,7 +1977,7 @@ class JTKController extends Controller
                 $mail->Subject = "LOG TUGASAN & SENARAI SEMAK HARIAN ($tarikh_smkan)";
                 $mail->Body = "Assalamualaikum & Salam Sejahtera. Salam Perak Excellent. Salam ICT Excellent.<br><br>\n\nBerikut adalah maklumat Log Tugasan & Senarai Semak Harian Juruteknik Komputer di sekolah <b>$nama_sekolah</b> pada <b>$tarikh_smkan</b>.<br><br>\n\nSila rujuk lampiran berformat PDF di bawah untuk rujukan tuan/puan.<br><br>\n\nSekian, Terima Kasih.<br><br>\n\n<small>E-mel ini dihantar secara automatik melalui Portal Juruteknik Komputer Negeri Perak (JTKPK).</small>";
 
-                $mail->AddStringAttachment($tugasan_harian_output,"$kod_jabatan_Tugasan-Harian-$tarikh_smkan.pdf");
+                $mail->AddStringAttachment($tugasan_harian_output,strtoupper($kod_jabatan)."_Tugasan-Harian-".$tarikh_smkan.".pdf");
 
                 if (!$mail->send()) {
                     echo "SweetAlert('error','Ops !','Terdapat ralat semasa penghantaran e-mel !<br><br><b>Nota :<br></b> Sila pastikan kata laluan anda yang betul serta semak <a target=\'_blank\' href=\'https://www.google.com/settings/security/lesssecureapps\'><b>https://www.google.com/settings/security/lesssecureapps</b></a> dan Pilih <b>\'Turn on\'</b> dan cuba semula.');";
