@@ -18,9 +18,9 @@ return [
 
     # Upload Gambar Aktiviti (Perkhidmatan Cloudinary)
     'cloudinary' => [
-        'cloud_name' => 'jtkpk',
-        'api_key' => '976168352674446',
-        'api_secret' => '_g3AClxTvOj7kNfL7YEHkt5X_XQ',
+        'cloud_name' => '',
+        'api_key' => '',
+        'api_secret' => '',
     ],
 
 ];
