@@ -1,4 +1,4 @@
-## Portal Juruteknik Komputer Negeri Perak (JTKPK)
+## Portal One Stop Center (OSC) Pendidikan Perak - Laravel 5.3
 
 ![Versi Template](http://img.shields.io/badge/Versi-v1.0-green.svg)
 
