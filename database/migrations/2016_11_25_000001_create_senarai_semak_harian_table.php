@@ -13,7 +13,7 @@ class CreateSenaraiSemakHarianTable extends Migration
      */
     public function up()
     {
-        Schema::create('senarai_semak_harian', function (Blueprint $table)
+        Schema::create('senarai_semakan', function (Blueprint $table)
         {
             $table->engine = 'InnoDB';
             $table->increments('id');
@@ -32,6 +32,6 @@ class CreateSenaraiSemakHarianTable extends Migration
      */
     public function down()
     {
-        Schema::drop('senarai_semak_harian');
+        Schema::drop('senarai_semakan');
     }
 }
